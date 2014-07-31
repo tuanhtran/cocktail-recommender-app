@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class StartActivity extends ActionBarActivity {
+public class MenuActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,7 @@ public class StartActivity extends ActionBarActivity {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.start, new PlaceholderFragment()).commit();
+					.add(R.id.menu, new PlaceholderFragment()).commit();
 		}
 	}
 
