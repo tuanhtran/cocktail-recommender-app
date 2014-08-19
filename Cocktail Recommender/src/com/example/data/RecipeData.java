@@ -3,7 +3,6 @@ package com.example.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -55,7 +54,7 @@ public class RecipeData {
 
 	public Cursor selectByName(String name){
 		String[] columns = new String[]{NAME_KEY,ING_KEY,TAG_KEY,PREP_KEY};
-		String selection = NAME_KEY+" LIKE '%name%'";
+		String selection = NAME_KEY+" LIKE '%"+name+"%'";
 		Cursor cursor = db.query(TABLE_NAME,columns,selection,null,null,null,null);
 		return cursor;
 		
