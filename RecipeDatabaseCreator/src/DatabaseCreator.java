@@ -5,7 +5,9 @@ import java.sql.Statement;
 //Modified example from http://www.tutorialspoint.com/sqlite/sqlite_java.htm
 public class DatabaseCreator {
 	private static final String COCKTAIL_RECOMMENDER = "C:/Users/faqxt/Documents/GitHub/cocktail-recommender-app/Cocktail Recommender/assets/databases/recipes.db";
-	private static final String DATABASE_TEST = "C:/Users/faqxt/Documents/GitHub/DatabaseTest/assets/databases/test.db";
+	
+//	private static final String DATABASE_TEST_TUAN = "C:/Users/faqxt/Documents/GitHub/DatabaseTest/assets/databases/test.db";
+
 	
 	public static void main(String args[]) {
 		Connection c = null;
@@ -13,7 +15,7 @@ public class DatabaseCreator {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:"
-					+ COCKTAIL_RECOMMENDER);
+					+ COCKTAIL_RECOMMENDER); // hier Namen austauschen 
 			System.out.println("Opened database successfully");
 			stmt = c.createStatement();
 			String sql = "CREATE TABLE Cocktails "

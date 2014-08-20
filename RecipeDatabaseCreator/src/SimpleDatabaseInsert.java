@@ -11,8 +11,13 @@ public class SimpleDatabaseInsert
 {
 	//DB-PATH ist der Pfad zu der Datenbank der App. Sollte unter dem Projektverzeichniss im */assets/databases/recipes.db sein.
 	//* muss ersetzt werden.
-	private static final String DB_PATH = "C:/Users/faqxt/Documents/GitHub/cocktail-recommender-app/Cocktail Recommender/assets/databases/recipes.db";
-	//private static final String DB_TEST_PATH = "C:/Users/faqxt/Documents/GitHub/DatabaseTest/assets/databases/test.db";
+	private static final String DB_PATH_TUAN = "C:/Users/faqxt/Documents/GitHub/cocktail-recommender-app/Cocktail Recommender/assets/databases/recipes.db";
+	private static final String DB_PATH_SEVERIN = "C:/Severin/eclipse/workspace/cocktail-recommender-app/Cocktail Recommender App/assets/databases/recipes.db";
+	private static final String DB_PATH_ISABELL = "";
+	
+	//private static final String DB_TEST_PATH_TUAN = "C:/Users/faqxt/Documents/GitHub/DatabaseTest/assets/databases/test.db";
+	//private static final String DB_TEST_PATH_SEVERIN = "C:/Severin/eclipse/workspace/cocktail-recommender-app/RecipeDataBaseCreator/test2.db";
+
 	private static final String TABLE_NAME = "Cocktails";
 	private static final String INGREDIENTS_JSON_HEAD = "{\"ingredients\":[";
 	private static final String TAGS_JSON_HEAD = "{\"tags\":[";
@@ -30,7 +35,7 @@ public class SimpleDatabaseInsert
 		Scanner input = new Scanner(System.in);
 		try {
 		      Class.forName("org.sqlite.JDBC");
-		      c = DriverManager.getConnection("jdbc:sqlite:"+DB_PATH);
+		      c = DriverManager.getConnection("jdbc:sqlite:"+ DB_PATH_SEVERIN); //Hier Namen austauschen
 		      c.setAutoCommit(false);
 		      System.out.println("Opened database successfully");
 
