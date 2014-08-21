@@ -17,6 +17,8 @@ $RECYCLE.BIN/
 # =========================
 # Operating System Files
 # =========================
+[Bb]in
+
 
 # OSX
 # =========================
@@ -26,7 +28,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
