@@ -7,8 +7,9 @@ public class Ingredients {
 	private static SparseArray alcohol;
 	private static SparseArray juices;
 	private static SparseArray other;
-
-	public Ingredients() {
+	
+	//Static initialization for the SparseArrays
+	static {
 		alcohol = new SparseArray();
 		juices = new SparseArray();
 		other = new SparseArray();
@@ -19,24 +20,24 @@ public class Ingredients {
 		initOtherValues();
 	}
 
-	private void initAlcoholValues() {
+	private static void initAlcoholValues() {
 		// alcohol.append(1, "Rum");
 
 	}
 
-	private void initJuiceValues() {
+	private static void initJuiceValues() {
 		// juices.append(100, "Orangensaft");
 
 	}
 
-	private void initOtherValues() {
+	private static void initOtherValues() {
 		// other.append(200, "Olive");
 
 	}
 
 	// SparseArray keys are ordered, the SparseArray indices correspond to the
 	// keys - index 0 corresponds to the smallest key
-	public int getAlcoholKey(String alcoholString) {
+	public static int getAlcoholKey(String alcoholString) {
 		for (int i = 0; i < alcohol.size(); i++) {
 			if (alcohol.valueAt(i).equals(alcoholString))
 				return alcohol.keyAt(i);
@@ -44,7 +45,7 @@ public class Ingredients {
 		return -1;
 	}
 
-	public int getJuiceKey(String juiceString) {
+	public static int getJuiceKey(String juiceString) {
 		for (int i = 0; i < juices.size(); i++) {
 			if (juices.valueAt(i).equals(juiceString))
 				return juices.keyAt(i);
@@ -52,7 +53,7 @@ public class Ingredients {
 		return -1;
 	}
 
-	public int getOtherKey(String otherString) {
+	public static int getOtherKey(String otherString) {
 		for (int i = 0; i < other.size(); i++) {
 			if (other.valueAt(i).equals(otherString))
 				return other.keyAt(i);
@@ -60,16 +61,16 @@ public class Ingredients {
 		return -1;
 	}
 
-	public String getAlcoholString(int alcoholKey) {
+	public static String getAlcoholString(int alcoholKey) {
 		return (String) alcohol.get(alcoholKey);
 	}
 
-	public String getJuiceString(int juiceKey) {
+	public static String getJuiceString(int juiceKey) {
 		return (String) juices.get(juiceKey);
 	}
 
-	public String getOtherString(int otherKey) {
+	public static String getOtherString(int otherKey) {
 		return (String) other.get(otherKey);
 	}
-
+	
 }
