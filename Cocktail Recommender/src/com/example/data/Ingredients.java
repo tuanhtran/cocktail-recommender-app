@@ -4,15 +4,20 @@ import android.util.SparseArray;
 
 public class Ingredients {
 
-	private static SparseArray alcohol;
-	private static SparseArray juices;
-	private static SparseArray other;
+	private static SparseArray<String> alcohol;
+	private static SparseArray<String> juices;
+	private static SparseArray<String> other;
+	
+	//Arbitrary numbers to get clear ingredient ID separation 
+	public static final int ALCOHOL_END = 99;
+	public static final int JUICES_END = 199;
+	public static final int OTHER_START = 200;
 	
 	//Static initialization for the SparseArrays
 	static {
-		alcohol = new SparseArray();
-		juices = new SparseArray();
-		other = new SparseArray();
+		alcohol = new SparseArray<String>();
+		juices = new SparseArray<String>();
+		other = new SparseArray<String>();
 
 		// Enter the ingredients into the following methods
 		initAlcoholValues();

@@ -35,7 +35,7 @@ public class SimpleDatabaseInsert
 		Scanner input = new Scanner(System.in);
 		try {
 		      Class.forName("org.sqlite.JDBC");
-		      c = DriverManager.getConnection("jdbc:sqlite:"+ DB_PATH_SEVERIN); //Hier Namen austauschen
+		      c = DriverManager.getConnection("jdbc:sqlite:"+ DB_PATH_TUAN); //Hier Namen austauschen
 		      c.setAutoCommit(false);
 		      System.out.println("Opened database successfully");
 
@@ -81,7 +81,7 @@ public class SimpleDatabaseInsert
 		for (int i = 0; i < parseInt; i++){
 			if (jsonHead.contains("ingredients")){
 				System.out.println("Enter ingredient no."+(i+1)+": ");
-				json += input.nextLine()+":";
+				json += "\""+input.nextLine()+"\":";
 				System.out.println("Enter ingredient quantity: ");
 				json += "\""+input.nextLine()+"\",";
 			}
@@ -90,7 +90,7 @@ public class SimpleDatabaseInsert
 				json += "\""+input.nextLine()+"\",";
 			}		
 		}
-		json += "]}";
+		json = json.substring(0, json.length()-1)+"]}";
 		return json;
 	}
 	
