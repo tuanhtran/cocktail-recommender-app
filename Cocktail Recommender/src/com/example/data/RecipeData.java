@@ -60,13 +60,41 @@ public class RecipeData {
 		
 	}
 	
-	public Cursor selectByTags(String[] tags){
+	//If all of the tags have to be present set strict to true
+	public Cursor selectByTags(String[] tags, boolean strict){
 		String[] columns = new String[]{NAME_KEY,ING_KEY,TAG_KEY,PREP_KEY};
-		String selection = TAG_KEY+" IN ";
-		for (int i = 0; i < tags.length; i++){
-			//Does a "where TAG_KEY in ('tags[0]',...,'tags[n]')" statement return the desired rows?
+		String selection = TAG_KEY+" LIKE '";
+		if(strict){
+			for (int i = 0; i < tags.length; i++){
+				selection += "%"+tags[i];
+			}		
+			selection += "%'";
+		} else{
+			for (int i = 0; i < tags.length-1; i++){
+				selection += "%"+tags[i]+"%' OR "+TAG_KEY+" LIKE '";
+			}
+			selection += "%"+tags[tags.length-1]+"%'";
 		}
-		Cursor cursor = db.query(TABLE_NAME,columns,selection,tags,null,null,null);
+		Cursor cursor = db.query(TABLE_NAME,columns,selection,null,null,null,null);
+		return cursor;
+	}
+	
+	//If all of the ingredients have to be present set strict to true
+	public Cursor selectByIngredients(String[] ingredients, boolean strict){
+		String[] columns = new String[]{NAME_KEY,ING_KEY,TAG_KEY,PREP_KEY};
+		String selection = ING_KEY+" LIKE '";
+		if(strict){
+			for (int i = 0; i < ingredients.length; i++){
+				selection += "%"+ingredients[i];
+			}		
+			selection += "%'";
+		} else{
+			for (int i = 0; i < ingredients.length-1; i++){
+				selection += "%"+ingredients[i]+"%' OR "+TAG_KEY+" LIKE '";
+			}
+			selection += "%"+ingredients[ingredients.length-1]+"%'";
+		}
+		Cursor cursor = db.query(TABLE_NAME,columns,selection,null,null,null,null);
 		return cursor;
 	}
 }
