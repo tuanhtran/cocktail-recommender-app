@@ -1,0 +1,78 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:id="@+id/ingredient_selection_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:orientation="vertical"
+            android:weightSum="1" >
+
+            <SearchView
+                android:id="@+id/ingredient_filter_bar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.15" />
+
+            <ListView
+                android:id="@+id/ingredient_listview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.85" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:orientation="vertical"
+            android:weightSum="1" >
+
+            <Button
+                android:id="@+id/category_button_alcoholic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:text="@string/category_button_alc" />
+
+            <Button
+                android:id="@+id/category_button_non_alcoholic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:text="@string/category_button_nonalc" />
+
+            <Button
+                android:id="@+id/category_button_misc"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:text="@string/category_button_misc" />
+
+            <Button
+                android:id="@+id/category_button_unknown"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:text="@string/category_button_tags" />
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TableRow>
+
+</TableLayout>

@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    tools:context="com.example.cocktailrecommender.SearchByIngActivity"
+    tools:ignore="MergeRootFrame">
+     
+     <FrameLayout
+        android:id="@+id/ingredient_selection_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:padding="10dp" />
+     
+     <FrameLayout
+        android:id="@+id/selected_ingredient_overview_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:padding="10dp" />
+     
+     </LinearLayout>

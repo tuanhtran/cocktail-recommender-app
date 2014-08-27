@@ -5,4 +5,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+<!--     Related to Search by Ing Activity -->
+    <string name="category_button_alc">Alk</string>
+    <string name="category_button_nonalc">Non-Alk</string>
+    <string name="category_button_misc">Misc</string>
+    <string name="category_button_tags">Tags</string>
+    
 </resources>
