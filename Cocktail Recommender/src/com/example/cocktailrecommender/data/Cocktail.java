@@ -4,11 +4,11 @@ import android.util.SparseArray;
 
 public class Cocktail {
 	private String name;
-	private SparseArray<String> ingredients;
-	private String[] tags;
+	private SparseArray<Ingredient> ingredients;
+	private int[] tags;
 	private String preparation;
 	
-	public Cocktail(String name, SparseArray<String> ingredients, String[] tags, String preparation){
+	public Cocktail(String name, SparseArray<Ingredient> ingredients, int[] tags, String preparation){
 		this.name = name;
 		this.ingredients = ingredients;
 		this.tags = tags;
@@ -19,11 +19,11 @@ public class Cocktail {
 		return name;
 	}
 	
-	public SparseArray<String> getIngredients(){
+	public SparseArray<Ingredient> getIngredients(){
 		return ingredients;
 	}
 	
-	public String[] getTags(){
+	public int[] getTags(){
 		return tags;
 	}
 	
@@ -35,12 +35,12 @@ public class Cocktail {
 		String cocktailString="";
 		String ingredientsString="Ingredients: ";
 		for (int i = 0; i < ingredients.size(); i++){
-			if (ingredients.keyAt(i) <= Ingredients.ALCOHOL_END){
-				ingredientsString += Ingredients.getAlcoholString(ingredients.keyAt(i))+"="+ingredients.valueAt(i)+", ";
-			} else if (ingredients.keyAt(i) <= Ingredients.JUICES_END){
-				ingredientsString += Ingredients.getJuiceString(ingredients.keyAt(i))+"="+ingredients.valueAt(i)+", ";
+			if (ingredients.keyAt(i) <= IngredientsData.ALCOHOL_END){
+				ingredientsString += IngredientsData.getAlcoholString(ingredients.keyAt(i))+"="+ingredients.valueAt(i)+", ";
+			} else if (ingredients.keyAt(i) <= IngredientsData.JUICES_END){
+				ingredientsString += IngredientsData.getJuiceString(ingredients.keyAt(i))+"="+ingredients.valueAt(i)+", ";
 			} else {
-				ingredientsString += Ingredients.getOtherString(ingredients.keyAt(i))+"="+ingredients.valueAt(i)+", ";
+				ingredientsString += IngredientsData.getOtherString(ingredients.keyAt(i))+"="+ingredients.valueAt(i)+", ";
 			}
 		}
 		String tagsString="Tags: ";

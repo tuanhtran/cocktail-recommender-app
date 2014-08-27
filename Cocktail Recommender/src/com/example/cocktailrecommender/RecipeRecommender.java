@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.util.SparseArray;
 
 import com.example.cocktailrecommender.data.Cocktail;
+import com.example.cocktailrecommender.data.Ingredient;
+import com.example.cocktailrecommender.data.JSONDataParser;
 import com.example.cocktailrecommender.data.RecipeData;
 
 public class RecipeRecommender {
@@ -46,16 +48,16 @@ public class RecipeRecommender {
 		if (cocktailCursor.moveToFirst()) {
 			do {
 				String cocktailName = cocktailCursor.getString(0);
-				SparseArray<String> ingredients = new SparseArray<String>();
+				SparseArray<Ingredient> ingredients = new SparseArray<Ingredient>();
 				try {
-					ingredients = getIngredientsFromJSON(cocktailCursor
+					ingredients = JSONDataParser.getIngredientsFromJson(cocktailCursor
 							.getString(1));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				String[] tags = null;
+				int[] tags = null;
 				try {
-					tags = getTagsFromJSON(cocktailCursor.getString(2));
+					tags = JSONDataParser.getTagsFromJson(cocktailCursor.getString(2));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -67,40 +69,4 @@ public class RecipeRecommender {
 		}
 		return cocktailList;
 	}
-
-	// JSONArray should only contain Strings
-	private String[] getTagsFromJSON(String tagsJSON) throws JSONException {
-		JSONObject tags = new JSONObject(tagsJSON);
-		JSONArray tagsJSONArray = tags.getJSONArray("tags");
-		String[] tagsArray = new String[tagsJSONArray.length()];
-		for (int i = 0; i < tagsJSONArray.length(); i++) {
-			tagsArray[i] = tagsJSONArray.getString(i);
-		}
-		return tagsArray;
-	}
-
-	// Expected JSON format: {name:[name1:value1, name2:value2,...]}, where
-	// namex is a String representing an Integer (unknown).
-	// namex is needed to create SparseArray, so an iterator is created for each
-	// JSONArray element (even though the elements have only one key).
-	// ToDo: find better way to access namex.
-	private SparseArray<String> getIngredientsFromJSON(String ingredientsJSON)
-			throws JSONException {
-		SparseArray<String> ingredientsArray = new SparseArray<String>();
-		JSONObject ingredients = new JSONObject(ingredientsJSON);
-		JSONArray ingredientsJSONArray = ingredients
-				.getJSONArray("ingredients");
-
-		for (int i = 0; i < ingredientsJSONArray.length(); i++) {
-			JSONObject ingredientObject = ingredientsJSONArray.getJSONObject(i);
-			Iterator<?> iterator = ingredientObject.keys();
-			String name = (String) iterator.next();
-			int id = Integer.parseInt(name);
-			String amount = ingredientObject.getString(name);
-			ingredientsArray.append(id, amount);
-		}
-
-		return ingredientsArray;
-	}
-
 }
