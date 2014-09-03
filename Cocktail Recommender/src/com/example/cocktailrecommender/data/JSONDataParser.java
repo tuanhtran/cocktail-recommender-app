@@ -15,6 +15,8 @@ public class JSONDataParser {
 	private static final String TAG_ARRAY_KEY = "Tags";
 	private static final String TAG_ID_KEY = "ID";
 
+	
+	
 	public static SparseArray<Ingredient> getIngredientsFromJson(
 			String jsonString) throws JSONException {
 

@@ -16,4 +16,8 @@ public class Ingredient {
 		return ingName;
 	}
 	
+	public String getQuantity() {
+		return quantity;
+	}
+	
 }

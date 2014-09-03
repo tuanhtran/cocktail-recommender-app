@@ -1,5 +1,10 @@
 package com.example.cocktailrecommender;
 
+import com.example.cocktailrecommender.fragments.IngredientSelectionFragment;
+import com.example.cocktailrecommender.fragments.SelectedIngredientsFragment;
+
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -11,17 +16,18 @@ import android.view.ViewGroup;
 
 public class SearchActivity extends ActionBarActivity {
 
+	private IngredientSelectionFragment ingSelFrag;
+	private SelectedIngredientsFragment selectedIngsFrag;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_start);
+		setContentView(R.layout.activity_search_by_ing);
 
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.search, new PlaceholderFragment()).commit();
-		}
+		initUI();
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -42,6 +48,18 @@ public class SearchActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void initUI() {
+		ingSelFrag = new IngredientSelectionFragment();
+		selectedIngsFrag = new SelectedIngredientsFragment();
+		FragmentManager manager = getFragmentManager();
+		FragmentTransaction transaction = manager.beginTransaction();
+		transaction.add(R.id.ingredient_selection_container, ingSelFrag);
+		transaction.add(R.id.selected_ingredient_overview_container, selectedIngsFrag);
+		transaction.commit();
+		
+	}
+
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

@@ -1,16 +1,35 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</TableLayout>
+    android:layout_height="match_parent"
+    android:background="@color/test_background_blue"
+    android:weightSum="1" >
+
+    <ListView
+        android:id="@+id/selected_ingredients_listview"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/start_search_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:text="@string/start_search" />
+
+        <Button
+            android:id="@+id/search_properties_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3" />
+    </LinearLayout>
+
+</TableRow>

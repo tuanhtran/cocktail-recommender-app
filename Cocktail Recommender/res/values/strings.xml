@@ -10,5 +10,5 @@
     <string name="category_button_nonalc">Non-Alk</string>
     <string name="category_button_misc">Misc</string>
     <string name="category_button_tags">Tags</string>
-    
+    <string name="start_search">GO!</string>
 </resources>
