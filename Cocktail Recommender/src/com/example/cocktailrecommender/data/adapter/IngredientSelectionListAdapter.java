@@ -22,7 +22,6 @@ public class IngredientSelectionListAdapter extends
 	private Context context;
 	private ArrayList<IngredientType> ingredientList;
 	private ArrayList<IngredientType> notShownIngList = new ArrayList<IngredientType>();
-	private ArrayList<Integer> selected = new ArrayList<Integer>();
 	private String searchViewInsert = "";
 	private int selectedCategoryButton = 0;
 
