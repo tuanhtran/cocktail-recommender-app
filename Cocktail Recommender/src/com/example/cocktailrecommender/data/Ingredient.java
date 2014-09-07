@@ -2,6 +2,7 @@ package com.example.cocktailrecommender.data;
 
 public class Ingredient {
 	private int ingID;
+	private String name;
 	private String quantity;
 	
 	

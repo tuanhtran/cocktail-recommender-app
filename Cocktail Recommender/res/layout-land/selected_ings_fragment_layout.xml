@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_background_blue"
     android:weightSum="1" >
 
     <TableRow
@@ -13,7 +12,8 @@
         <ListView
             android:id="@+id/selected_ingredients_listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/test_background_blue" />
     </TableRow>
 
     <TableRow
@@ -25,6 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
+            android:background="@color/test_background_dark_blue"
             android:orientation="horizontal"
             android:weightSum="1" >
 
