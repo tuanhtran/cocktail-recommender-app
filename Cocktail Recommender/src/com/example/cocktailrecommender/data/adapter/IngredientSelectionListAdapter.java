@@ -101,9 +101,7 @@ public class IngredientSelectionListAdapter extends
 				ingredientList.clear();
 				ingredientList
 						.addAll((ArrayList<IngredientType>) results.values);
-
-				int total = ingredientList.size() + notShownIngList.size();
-				System.out.println("Total Entries: "+ ingredientList.size()+" + " + notShownIngList.size()+" = " + total + "");
+				
 				notifyDataSetChanged();
 			}
 
