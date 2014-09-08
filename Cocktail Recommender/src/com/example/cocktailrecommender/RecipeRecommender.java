@@ -12,8 +12,7 @@ import android.database.Cursor;
 import android.util.SparseArray;
 
 import com.example.cocktailrecommender.data.Cocktail;
-import com.example.cocktailrecommender.data.Ingredient;
-import com.example.cocktailrecommender.data.JSONDataParser;
+import com.example.cocktailrecommender.data.RecipeIngredient;
 import com.example.cocktailrecommender.data.RecipeData;
 
 public class RecipeRecommender {
@@ -47,24 +46,24 @@ public class RecipeRecommender {
 		ArrayList<Cocktail> cocktailList = new ArrayList<Cocktail>();
 		if (cocktailCursor.moveToFirst()) {
 			do {
-				String cocktailName = cocktailCursor.getString(0);
-				SparseArray<Ingredient> ingredients = new SparseArray<Ingredient>();
-				try {
-					ingredients = JSONDataParser.getIngredientsFromJson(cocktailCursor
-							.getString(1));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				int[] tags = null;
-				try {
-					tags = JSONDataParser.getTagsFromJson(cocktailCursor.getString(2));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				String preparation = cocktailCursor.getString(3);
-				Cocktail cocktail = new Cocktail(cocktailName, ingredients,
-						tags, preparation);
-				cocktailList.add(cocktail);
+//				String cocktailName = cocktailCursor.getString(0);
+//				SparseArray<RecipeIngredient> ingredients = new SparseArray<RecipeIngredient>();
+//				try {
+//					ingredients = JSONDataParser.getIngredientsFromJson(cocktailCursor
+//							.getString(1));
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//				int[] tags = null;
+//				try {
+//					tags = JSONDataParser.getTagsFromJson(cocktailCursor.getString(2));
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//				String preparation = cocktailCursor.getString(3);
+//				Cocktail cocktail = new Cocktail(cocktailName, ingredients,
+//						tags, preparation);
+//				cocktailList.add(cocktail);
 			} while (cocktailCursor.moveToNext());
 		}
 		return cocktailList;

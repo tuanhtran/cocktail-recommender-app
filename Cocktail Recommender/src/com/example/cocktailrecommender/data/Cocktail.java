@@ -4,11 +4,11 @@ import android.util.SparseArray;
 
 public class Cocktail {
 	private String name;
-	private SparseArray<Ingredient> ingredients;
+	private SparseArray<RecipeIngredient> ingredients;
 	private int[] tags;
 	private String preparation;
 	
-	public Cocktail(String name, SparseArray<Ingredient> ingredients, int[] tags, String preparation){
+	public Cocktail(String name, SparseArray<RecipeIngredient> ingredients, int[] tags, String preparation){
 		this.name = name;
 		this.ingredients = ingredients;
 		this.tags = tags;
@@ -19,7 +19,7 @@ public class Cocktail {
 		return name;
 	}
 	
-	public SparseArray<Ingredient> getIngredients(){
+	public SparseArray<RecipeIngredient> getIngredients(){
 		return ingredients;
 	}
 	

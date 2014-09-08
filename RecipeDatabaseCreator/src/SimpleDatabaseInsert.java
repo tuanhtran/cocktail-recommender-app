@@ -12,7 +12,7 @@ public class SimpleDatabaseInsert {
 	// Projektverzeichniss im */assets/databases/recipes.db sein.
 	// * muss ersetzt werden.
 	private static final String DB_PATH_TUAN = "C:/Users/faqxt/Documents/GitHub/cocktail-recommender-app/Cocktail Recommender/assets/databases/recipes.db";
-	private static final String DB_PATH_SEVERIN = "C:/Users/Severin/workspace/cocktail-recommender-app/Cocktail Recommender/assets/databases/recipes.db";
+	private static final String DB_PATH_SEVERIN = "C:/Users/Severin/workspace/cocktail-recommender-app/Cocktail Recommender/assets/databases/crDatabase.db";
 	private static final String DB_PATH_ISABELL = "";
 
 	// private static final String DB_TEST_PATH_TUAN =
@@ -117,7 +117,7 @@ public class SimpleDatabaseInsert {
 				System.out
 						.println("Enter tag no." + (i + 1) + " (as int ID): ");
 				String id = getLegitInput(input);
-				json += "{\"" + TAG_ID_KEY + ":" + id + "},";
+				json += "{\"" + TAG_ID_KEY + "\"" + ":" + id + "},";
 			}
 		}
 		json = json.substring(0, json.length() - 1) + "]}";

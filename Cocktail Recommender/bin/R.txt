@@ -357,7 +357,9 @@ int layout activity_shopping_list 0x7f03001b
 int layout activity_start 0x7f03001c
 int layout fragment_start 0x7f03001d
 int layout listitem_ing_selection 0x7f03001e
-int layout support_simple_spinner_dropdown_item 0x7f03001f
+int layout recipe_fragment_layout 0x7f03001f
+int layout result_list_fragment_layout 0x7f030020
+int layout support_simple_spinner_dropdown_item 0x7f030021
 int menu start 0x7f0c0000
 int string abc_action_bar_home_description 0x7f0a0001
 int string abc_action_bar_up_description 0x7f0a0002

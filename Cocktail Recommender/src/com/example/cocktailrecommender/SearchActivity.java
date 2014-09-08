@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.example.cocktailrecommender.data.CRDatabase;
 import com.example.cocktailrecommender.data.IngredientType;
+import com.example.cocktailrecommender.data.Recipe;
+import com.example.cocktailrecommender.data.RecipeIngredient;
+import com.example.cocktailrecommender.data.Tag;
 import com.example.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 
 import android.os.Bundle;
@@ -15,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 
 public class SearchActivity extends ActionBarActivity {
@@ -47,7 +49,7 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void initData() {
 		ings.clear();
-		ings.addAll(db.getIngList());
+		ings.addAll(db.getFullIngList());
 	}
 
 	@Override
@@ -74,8 +76,6 @@ public class SearchActivity extends ActionBarActivity {
 		SearchView filterBar = (SearchView) findViewById(R.id.ingredient_selection_filter_bar);
 		filterBar.setOnQueryTextListener(new OnQueryTextListener() {
 			public boolean onQueryTextSubmit(String queryString) {
-				// searchViewInsert = queryString;
-				// startFilter();
 				return true;
 			}
 
@@ -210,19 +210,6 @@ public class SearchActivity extends ActionBarActivity {
 				R.color.test_button_gray_green));
 	}
 
-	private int getColorFromState(int state) {
-		switch (state) {
-		case 0:
-			return getResources().getColor(R.color.test_button_gray);
-		case 1:
-			return getResources().getColor(R.color.test_button_gray_green);
-		case 2:
-			return getResources().getColor(R.color.test_button_gray_red);
-		default:
-			return -1;
-		}
-	}
-
 	private void startFilter() {
 		selectionListAdapter.getFilter().filter("");
 	}
@@ -234,8 +221,7 @@ public class SearchActivity extends ActionBarActivity {
 
 	@Override
 	protected void onDestroy() {
-		// db.close();
+		db.close();
 		super.onDestroy();
 	}
-
 }

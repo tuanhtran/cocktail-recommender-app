@@ -99,8 +99,7 @@ public class IngredientSelectionListAdapter extends
 
 				ingredientList.clear();
 				ingredientList
-						.addAll((ArrayList<IngredientType>) results.values);
-				
+						.addAll((ArrayList<IngredientType>) results.values);				
 				notifyDataSetChanged();
 			}
 

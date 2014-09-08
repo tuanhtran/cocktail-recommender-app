@@ -1228,7 +1228,9 @@ containing a value of this type.
         public static final int activity_start=0x7f03001c;
         public static final int fragment_start=0x7f03001d;
         public static final int listitem_ing_selection=0x7f03001e;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
+        public static final int recipe_fragment_layout=0x7f03001f;
+        public static final int result_list_fragment_layout=0x7f030020;
+        public static final int support_simple_spinner_dropdown_item=0x7f030021;
     }
     public static final class menu {
         public static final int start=0x7f0c0000;
