@@ -12,4 +12,8 @@ public class RecipeIngredient extends IngredientType {
 		return quantity;
 	}
 	
+	public String getFullIngredientString() {
+		return quantity + " " + getIngName();
+	}
+	
 }

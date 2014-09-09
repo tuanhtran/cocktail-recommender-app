@@ -12,5 +12,6 @@
     <string name="category_button_selected">Selected</string>
     <string name="category_button_tags">Tags</string>
     <string name="start_search">GO!</string>
+    <string name="recipe_page_test">Wählen Sie ein Rezept aus!</string>
 
 </resources>

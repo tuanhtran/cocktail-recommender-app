@@ -73,6 +73,12 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void initUI() {
+		initSearchView();
+		initListView();
+		initButtonViews();
+	}
+
+	private void initSearchView() {
 		SearchView filterBar = (SearchView) findViewById(R.id.ingredient_selection_filter_bar);
 		filterBar.setOnQueryTextListener(new OnQueryTextListener() {
 			public boolean onQueryTextSubmit(String queryString) {
@@ -82,16 +88,19 @@ public class SearchActivity extends ActionBarActivity {
 			public boolean onQueryTextChange(String queryString) {
 				selectionListAdapter.setSearchViewInsert(queryString);
 				startFilter();
-
 				return true;
 			}
-		});
+		});		
+	}
 
+	private void initListView() {
 		ListView ingredientListView = (ListView) findViewById(R.id.ingredient_selection_listview);
 		selectionListAdapter = new IngredientSelectionListAdapter(this, ings);
 		ingredientListView.setAdapter(selectionListAdapter);
-		selectionListAdapter.notifyDataSetChanged();
+		selectionListAdapter.notifyDataSetChanged();		
+	}
 
+	private void initButtonViews() {
 		categoryButtonAlc = (Button) findViewById(R.id.category_button_alcoholic);
 		categoryButtonAlc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -123,7 +132,7 @@ public class SearchActivity extends ActionBarActivity {
 				buttonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
-		});
+		});		
 	}
 
 	private void buttonPressed(int buttonId) {

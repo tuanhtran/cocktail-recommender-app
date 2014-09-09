@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listitem_recipe_page_ingredient"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="12dp" >
+
+    <TextView
+        android:id="@+id/recipe_page_ingredient"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:background="@color/test_background_white"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+
+</LinearLayout>

@@ -1,6 +1,6 @@
 package com.example.cocktailrecommender.data;
 
-public class Tag {
+public class Tag implements Comparable<Tag>{
 	private int tagID;
 	private String tagName;
 	
@@ -15,5 +15,10 @@ public class Tag {
 	
 	public String getTagName() {
 		return tagName;
+	}
+
+	@Override
+	public int compareTo(Tag another) {
+		return ((Integer)tagID).compareTo((Integer)another.getTagID());
 	}
 }

@@ -63,7 +63,7 @@ public class IngredientSelectionListAdapter extends
 				getBGColor(ingType.isSelected())));
 
 		view.setOnClickListener(new View.OnClickListener() {
-			public void onClick(final View v) {
+			public void onClick(View v) {
 				ingType.toggleSelection();
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ingType.isSelected())));
@@ -96,10 +96,9 @@ public class IngredientSelectionListAdapter extends
 			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults results) {
-
 				ingredientList.clear();
 				ingredientList
-						.addAll((ArrayList<IngredientType>) results.values);				
+						.addAll((ArrayList<IngredientType>) results.values);
 				notifyDataSetChanged();
 			}
 
@@ -124,7 +123,6 @@ public class IngredientSelectionListAdapter extends
 						}
 					}
 				} else if (selectedCategoryButton == FILTER_FOR_CATEGORY_SELECTED) {
-
 					for (int idx = 0; idx < ingredientList.size(); idx++) {
 						if (ingredientList.get(idx).isSelected()) {
 							filteredIngredientList.add(ingredientList.get(idx));
@@ -137,8 +135,8 @@ public class IngredientSelectionListAdapter extends
 				if (!(searchViewInsert.equals("") || searchViewInsert == null)) {
 					searchViewInsert = searchViewInsert.toLowerCase();
 					for (int idx = 0; idx < filteredIngredientList.size(); idx++) {
-						if (!(filteredIngredientList.get(idx).getIngName().toLowerCase()
-								.contains(searchViewInsert))) {
+						if (!(filteredIngredientList.get(idx).getIngName()
+								.toLowerCase().contains(searchViewInsert))) {
 							notShownIngList
 									.add(filteredIngredientList.get(idx));
 							filteredIngredientList.remove(idx);

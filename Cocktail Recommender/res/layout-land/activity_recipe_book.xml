@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recipe_book"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1" >
+
+    <FrameLayout
+        android:id="@+id/recipe_book_container_main"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.45"
+        android:animateLayoutChanges="true" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/test_background_black" />
+
+    <FrameLayout
+        android:id="@+id/recipe_book_container_side"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.55"
+        android:animateLayoutChanges="true" >
+
+        <TextView
+            android:id="@+id/recipe_page_temp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/test_background_white"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="@string/recipe_page_test"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+</LinearLayout>
