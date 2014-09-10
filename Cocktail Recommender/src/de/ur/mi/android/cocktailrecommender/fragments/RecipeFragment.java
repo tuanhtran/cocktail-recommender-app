@@ -8,7 +8,9 @@ import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -22,6 +24,7 @@ public class RecipeFragment extends Fragment {
 	private TextView recipePreparation;
 	private RecipePageIngredientListAdapter adapter;
 	private ArrayList<RecipeIngredient> ingredients;
+	private OnFlingListener listener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,6 +33,13 @@ public class RecipeFragment extends Fragment {
 				container, false);
 		initData();
 		initUI();
+		final GestureDetector detector = getNewDetector();
+		fragmentView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return detector.onTouchEvent(event);
+			}
+		});
 		return fragmentView;
 	}
 
@@ -47,19 +57,19 @@ public class RecipeFragment extends Fragment {
 		initAdapter();
 		updateData();
 	}
-	
+
 	private void initAdapter() {
 		adapter = new RecipePageIngredientListAdapter(getActivity(),
 				ingredients);
-		recipeIngredients.setAdapter(adapter);		
+		recipeIngredients.setAdapter(adapter);
 	}
 
 	public void updateData() {
 		ingredients.clear();
 		ingredients.addAll(recipe.getIngredientsAsList());
 		adapter.notifyDataSetChanged();
-		recipeName.setText(recipe.getName());
 		adjustListViewHeight(recipeIngredients);
+		recipeName.setText(recipe.getName());
 		recipePreparation.setText(recipe.getPreparation());
 	}
 
@@ -87,5 +97,41 @@ public class RecipeFragment extends Fragment {
 		this.recipe = recipe;
 	}
 
-	
+	private GestureDetector getNewDetector() {
+		return new GestureDetector(getActivity(),
+				new GestureDetector.SimpleOnGestureListener() {
+					@Override
+					public boolean onFling(MotionEvent e1, MotionEvent e2,
+							float velocityX, float velocityY) {
+						final int FLING_MIN_HORIZONTAL = 200;
+						final int FLING_MAX_VERTICAL = 100;
+						final int FLING_MIN_VELOCITY = 300;
+
+						if (e1 == null
+								|| e2 == null
+								|| (Math.abs(e1.getY() - e2.getY()) > FLING_MAX_VERTICAL)) {
+							return false;
+						}
+						if (e1.getX() - e2.getX() > FLING_MIN_HORIZONTAL
+								&& Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+							listener.onLeftToRightFling();
+						} else if (e2.getX() - e1.getX() > FLING_MIN_HORIZONTAL
+								&& Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+							listener.onRightToLeftFling();
+						}
+						return super.onFling(e1, e2, velocityX, velocityY);
+					}
+				});
+
+	}
+
+	public interface OnFlingListener {
+		public void onRightToLeftFling();
+		public void onLeftToRightFling();
+	}
+
+	public void setOnFlingListener(OnFlingListener listener) {
+		this.listener = listener;
+	}
+
 }

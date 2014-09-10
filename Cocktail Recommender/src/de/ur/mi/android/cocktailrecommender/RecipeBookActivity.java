@@ -7,9 +7,9 @@ import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.SearchRecipeResult;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment;
+import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFlingListener;
 import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment.OnRecipeSelectedListener;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -17,10 +17,11 @@ import android.view.Surface;
 import android.widget.TextView;
 
 public class RecipeBookActivity extends ActionBarActivity implements
-		OnRecipeSelectedListener {
+		OnRecipeSelectedListener, OnFlingListener {
 	private RecipeFragment recipeFragment;
 	private ResultListFragment resultListFragment;
 	private ArrayList<SearchRecipeResult> resultList;
+	private int recipePageIdx = 0;
 	private boolean onRecipePage = false;
 
 	@Override
@@ -36,6 +37,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		resultListFragment = new ResultListFragment(resultList);
 		resultListFragment.setOnRecipeSelectedListener(this);
 		recipeFragment = new RecipeFragment();
+		recipeFragment.setOnFlingListener(this);
 		FragmentTransaction transaction = getFragmentManager()
 				.beginTransaction();
 		transaction.add(R.id.recipe_book_container_main, resultListFragment);
@@ -44,11 +46,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	@Override
 	public void onRecipeSelected(Recipe recipe) {
+		recipePageIdx = findPage(recipe);
 		recipeFragment.setRecipe(recipe);
 		FragmentTransaction transaction = getFragmentManager()
 				.beginTransaction();
 		if (isInLandscapeMode()) {
-
 			if (!(recipeFragment.isAdded())) {
 				findViewById(R.id.recipe_page_temp).setVisibility(
 						TextView.INVISIBLE);
@@ -64,6 +66,15 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			onRecipePage = true;
 		}
 		transaction.commit();
+	}
+
+	private int findPage(Recipe recipe) {
+		for (int idx = 0; idx < resultList.size(); idx++) {
+			if (resultList.get(idx).getRecipe().equals(recipe)) {
+				return idx;
+			}
+		}
+		return -1;
 	}
 
 	private boolean isInLandscapeMode() {
@@ -89,6 +100,27 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			onRecipePage = false;
 		} else {
 			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public void onRightToLeftFling() {
+		if (!isInLandscapeMode()) {
+			// if (recipePageIdx == 0) {
+			// recipePageIdx = resultList.size();
+			// }
+			recipePageIdx = ((recipePageIdx - 1) + resultList.size())  % resultList.size();
+			recipeFragment.setRecipe(resultList.get(recipePageIdx).getRecipe());
+			recipeFragment.updateData();
+		}
+	}
+
+	@Override
+	public void onLeftToRightFling() {
+		if (!isInLandscapeMode()) {
+			recipePageIdx = (recipePageIdx + 1) % resultList.size();
+			recipeFragment.setRecipe(resultList.get(recipePageIdx).getRecipe());
+			recipeFragment.updateData();
 		}
 	}
 
