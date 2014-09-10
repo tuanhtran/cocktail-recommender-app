@@ -1,0 +1,7 @@
+<resources>
+
+    <integer name="fling_min_horizontal">200</integer>
+    <integer name="fling_max_vertical">100</integer>
+    <integer name="fling_min_velocity">300</integer>
+
+</resources>

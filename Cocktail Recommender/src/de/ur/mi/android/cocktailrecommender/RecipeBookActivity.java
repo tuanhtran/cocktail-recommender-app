@@ -106,9 +106,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	@Override
 	public void onRightToLeftFling() {
 		if (!isInLandscapeMode()) {
-			// if (recipePageIdx == 0) {
-			// recipePageIdx = resultList.size();
-			// }
 			recipePageIdx = ((recipePageIdx - 1) + resultList.size())  % resultList.size();
 			recipeFragment.setRecipe(resultList.get(recipePageIdx).getRecipe());
 			recipeFragment.updateData();

@@ -103,9 +103,12 @@ public class RecipeFragment extends Fragment {
 					@Override
 					public boolean onFling(MotionEvent e1, MotionEvent e2,
 							float velocityX, float velocityY) {
-						final int FLING_MIN_HORIZONTAL = 200;
-						final int FLING_MAX_VERTICAL = 100;
-						final int FLING_MIN_VELOCITY = 300;
+						final int FLING_MIN_HORIZONTAL = getResources()
+								.getInteger(R.integer.fling_min_horizontal);
+						final int FLING_MAX_VERTICAL = getResources()
+								.getInteger(R.integer.fling_max_vertical);
+						final int FLING_MIN_VELOCITY = getResources()
+								.getInteger(R.integer.fling_min_velocity);
 
 						if (e1 == null
 								|| e2 == null
@@ -127,6 +130,7 @@ public class RecipeFragment extends Fragment {
 
 	public interface OnFlingListener {
 		public void onRightToLeftFling();
+
 		public void onLeftToRightFling();
 	}
 
