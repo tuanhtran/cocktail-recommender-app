@@ -5,16 +5,16 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="de.ur.mi.android.cocktailrecommender.RecipeBookActivity"
+            android:name="de.ur.mi.android.cocktailrecommender.SearchActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
@@ -22,6 +22,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="de.ur.mi.android.cocktailrecommender.RecipeBookActivity"
+            android:label="@string/title_activity_recipe_book"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
     </application>
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
-import de.ur.mi.android.cocktailrecommender.data.SearchRecipeResult;
+import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFlingListener;
 import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment;
@@ -18,9 +18,14 @@ import android.widget.TextView;
 
 public class RecipeBookActivity extends ActionBarActivity implements
 		OnRecipeSelectedListener, OnFlingListener {
+	
+	public static final String RESULT_LIST_KEY = "ResultList";
+	public static final String RESULT_LIST_BUNDLE_KEY = "ResultListBundle";
+
+	
 	private RecipeFragment recipeFragment;
 	private ResultListFragment resultListFragment;
-	private ArrayList<SearchRecipeResult> resultList;
+	private ArrayList<RecipeSearchResult> resultList;
 	private int recipePageIdx = 0;
 	private boolean onRecipePage = false;
 
@@ -28,9 +33,16 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_book);
-		initTestData();
-		// initData();
+		initData();
 		initUIFragments();
+	}
+
+	private void initData() {
+		//später durch DB-Zugriff durch Singleton
+		CRDatabase db = new CRDatabase(this);
+		db.open();
+		resultList = db.getSearchResults();
+		db.close();
 	}
 
 	private void initUIFragments() {
@@ -82,16 +94,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 				.getDefaultDisplay().getRotation() == Surface.ROTATION_270);
 	}
 
-	private void initTestData() {
-		CRDatabase db = new CRDatabase(this);
-		db.open();
-		resultList = new ArrayList<SearchRecipeResult>();
-		ArrayList<Recipe> recipes = db.getFullRecipeList();
-		for (Recipe r : recipes) {
-			resultList.add(new SearchRecipeResult(r, 0));
-		}
-		db.close();
-	}
 
 	@Override
 	public void onBackPressed() {
@@ -119,6 +121,17 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			recipeFragment.setRecipe(resultList.get(recipePageIdx).getRecipe());
 			recipeFragment.updateData();
 		}
+	}
+	
+	private void initTestData() {
+		CRDatabase db = new CRDatabase(this);
+		db.open();
+		resultList = new ArrayList<RecipeSearchResult>();
+		ArrayList<Recipe> recipes = db.getFullRecipeList();
+		for (Recipe r : recipes) {
+			resultList.add(new RecipeSearchResult(r, 0));
+		}
+		db.close();
 	}
 
 }

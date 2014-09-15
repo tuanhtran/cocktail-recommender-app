@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.SearchRecipeResult;
+import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +14,15 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-public class ResultListAdapter extends ArrayAdapter<SearchRecipeResult>
+public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 		implements Filterable {
 
 	private Context context;
-	private ArrayList<SearchRecipeResult> resultList;
-	private ArrayList<SearchRecipeResult> notShownResults = new ArrayList<SearchRecipeResult>();
+	private ArrayList<RecipeSearchResult> resultList;
+	private ArrayList<RecipeSearchResult> notShownResults = new ArrayList<RecipeSearchResult>();
 
 	public ResultListAdapter(Context context,
-			ArrayList<SearchRecipeResult> results) {
+			ArrayList<RecipeSearchResult> results) {
 		super(context, R.layout.listitem_recipe_result_list, results);
 
 		this.context = context;
@@ -43,13 +43,13 @@ public class ResultListAdapter extends ArrayAdapter<SearchRecipeResult>
 
 		}
 
-		final SearchRecipeResult searchResult = resultList.get(position);
+		final RecipeSearchResult searchResult = resultList.get(position);
 
 		if (searchResult != null) {
 			TextView searchResultName = (TextView) view
 					.findViewById(R.id.recipe_result_name);
 
-			searchResultName.setText(searchResult.getRecipe().getName());
+			searchResultName.setText(searchResult.getRecipe().getName()+" - "+searchResult.getMatchRate()+"%");
 		}
 		return view;
 	}
@@ -71,14 +71,14 @@ public class ResultListAdapter extends ArrayAdapter<SearchRecipeResult>
 					FilterResults results) {
 				resultList.clear();
 				resultList
-						.addAll((ArrayList<SearchRecipeResult>) results.values);
+						.addAll((ArrayList<RecipeSearchResult>) results.values);
 				notifyDataSetChanged();
 			}
 
 			@Override
 			protected FilterResults performFiltering(CharSequence constraint) {
 				FilterResults results = new FilterResults();
-				ArrayList<SearchRecipeResult> filteredResultList = new ArrayList<SearchRecipeResult>();
+				ArrayList<RecipeSearchResult> filteredResultList = new ArrayList<RecipeSearchResult>();
 
 				if (constraint.equals("")) {
 					filteredResultList.addAll(resultList);

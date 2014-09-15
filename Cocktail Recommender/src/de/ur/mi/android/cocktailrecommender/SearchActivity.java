@@ -5,17 +5,24 @@ import java.util.ArrayList;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
+import de.ur.mi.android.cocktailrecommender.data.Recipe;
+import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Switch;
 
 public class SearchActivity extends ActionBarActivity {
 
@@ -23,12 +30,17 @@ public class SearchActivity extends ActionBarActivity {
 	private IngredientSelectionListAdapter selectionListAdapter;
 	private ArrayList<IngredientType> ings = new ArrayList<IngredientType>();
 
-	private static final int BUTTON_STATE_IDX_NEUTRAL = 0;
+	private Dialog searchSettings;
+	private boolean mustContainAllSelectedIngs = false;
+	private boolean canContainNonSelectedIngs = true;
 
-	private int categoryButtonAlcStateIdx = BUTTON_STATE_IDX_NEUTRAL;
-	private int categoryButtonNonAlcStateIdx = BUTTON_STATE_IDX_NEUTRAL;
-	private int categoryButtonMiscStateIdx = BUTTON_STATE_IDX_NEUTRAL;
-	private int categoryButtonSelectedStateIdx = BUTTON_STATE_IDX_NEUTRAL;
+	private static final int CATEGORY_BUTTON_STATE_IDX_NEUTRAL = 0;
+	private static final int CATEGORY_BUTTON_STATE_NUM = 2;
+
+	private int categoryButtonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
+	private int categoryButtonNonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
+	private int categoryButtonMiscStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
+	private int categoryButtonSelectedStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 
 	private Button categoryButtonAlc;
 	private Button categoryButtonNonAlc;
@@ -38,7 +50,7 @@ public class SearchActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search_by_ing);
+		setContentView(R.layout.activity_search);
 		initDB();
 		initData();
 		initUI();
@@ -70,6 +82,7 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void initUI() {
+		initSearchSettingsDialog();
 		initSearchView();
 		initListView();
 		initButtonViews();
@@ -87,21 +100,21 @@ public class SearchActivity extends ActionBarActivity {
 				startFilter();
 				return true;
 			}
-		});		
+		});
 	}
 
 	private void initListView() {
 		ListView ingredientListView = (ListView) findViewById(R.id.ingredient_selection_listview);
 		selectionListAdapter = new IngredientSelectionListAdapter(this, ings);
 		ingredientListView.setAdapter(selectionListAdapter);
-		selectionListAdapter.notifyDataSetChanged();		
+		selectionListAdapter.notifyDataSetChanged();
 	}
 
 	private void initButtonViews() {
 		categoryButtonAlc = (Button) findViewById(R.id.category_button_alcoholic);
 		categoryButtonAlc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				buttonPressed(v.getId());
+				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
@@ -109,7 +122,7 @@ public class SearchActivity extends ActionBarActivity {
 		categoryButtonNonAlc = (Button) findViewById(R.id.category_button_non_alcoholic);
 		categoryButtonNonAlc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				buttonPressed(v.getId());
+				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
 			}
@@ -118,7 +131,7 @@ public class SearchActivity extends ActionBarActivity {
 		categoryButtonMisc = (Button) findViewById(R.id.category_button_misc);
 		categoryButtonMisc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				buttonPressed(v.getId());
+				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
@@ -126,14 +139,54 @@ public class SearchActivity extends ActionBarActivity {
 		categoryButtonSelected = (Button) findViewById(R.id.category_button_selected);
 		categoryButtonSelected.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				buttonPressed(v.getId());
+				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
-		});		
+		});
+
+		Button startSearchButton = (Button) findViewById(R.id.start_search_button);
+		startSearchButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				searchForDrinks();
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
+
+		Button openSearchSettingsButton = (Button) findViewById(R.id.search_settings_button);
+		openSearchSettingsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				searchSettings.show();
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
 	}
 
-	private void buttonPressed(int buttonId) {
-		if (getButtonStateIdxAndCycle(buttonId) == BUTTON_STATE_IDX_NEUTRAL) {
+	private void searchForDrinks() {
+		ArrayList<Integer> selectedIngIDs = getSelectedIngredientIDs();
+		int[] selectedTags = getSelectedTags();
+		if ((selectedIngIDs.size() == 0) && (selectedTags.length == 0)) {
+			// Throw no Items selected Error with option for whole book
+			return;
+		}
+		ArrayList<RecipeSearchResult> results = db.searchByIngredient(
+				selectedIngIDs, selectedTags, mustContainAllSelectedIngs,
+				canContainNonSelectedIngs);		
+		if (results.size() > 0) {
+			db.setSearchResults(results);
+			openRecipeBook();
+		} else {
+			//No results message
+		}
+	}
+
+	private void openRecipeBook() {
+		Intent intent = new Intent(SearchActivity.this,
+				RecipeBookActivity.class);
+		startActivity(intent);
+	}
+
+	private void categoryButtonPressed(int buttonId) {
+		if (getButtonStateIdxAndCycle(buttonId) == CATEGORY_BUTTON_STATE_IDX_NEUTRAL) {
 			setAllButtonsToRed();
 			setButtonToGreen((Button) findViewById(buttonId));
 			selectionListAdapter
@@ -166,19 +219,23 @@ public class SearchActivity extends ActionBarActivity {
 		switch (buttonId) {
 		case R.id.category_button_alcoholic:
 			buttonStateIdx = categoryButtonAlcStateIdx;
-			categoryButtonAlcStateIdx = (categoryButtonAlcStateIdx + 1) % 2;
+			categoryButtonAlcStateIdx = (categoryButtonAlcStateIdx + 1)
+					% CATEGORY_BUTTON_STATE_NUM;
 			break;
 		case R.id.category_button_non_alcoholic:
 			buttonStateIdx = categoryButtonNonAlcStateIdx;
-			categoryButtonNonAlcStateIdx = (categoryButtonNonAlcStateIdx + 1) % 2;
+			categoryButtonNonAlcStateIdx = (categoryButtonNonAlcStateIdx + 1)
+					% CATEGORY_BUTTON_STATE_NUM;
 			break;
 		case R.id.category_button_misc:
 			buttonStateIdx = categoryButtonMiscStateIdx;
-			categoryButtonMiscStateIdx = (categoryButtonMiscStateIdx + 1) % 2;
+			categoryButtonMiscStateIdx = (categoryButtonMiscStateIdx + 1)
+					% CATEGORY_BUTTON_STATE_NUM;
 			break;
 		case R.id.category_button_selected:
 			buttonStateIdx = categoryButtonSelectedStateIdx;
-			categoryButtonSelectedStateIdx = (categoryButtonSelectedStateIdx + 1) % 2;
+			categoryButtonSelectedStateIdx = (categoryButtonSelectedStateIdx + 1)
+					% CATEGORY_BUTTON_STATE_NUM;
 			break;
 		}
 		return buttonStateIdx;
@@ -194,10 +251,10 @@ public class SearchActivity extends ActionBarActivity {
 				R.color.test_button_gray));
 		categoryButtonSelected.setBackgroundColor(getResources().getColor(
 				R.color.test_button_gray));
-		categoryButtonAlcStateIdx = BUTTON_STATE_IDX_NEUTRAL;
-		categoryButtonNonAlcStateIdx = BUTTON_STATE_IDX_NEUTRAL;
-		categoryButtonMiscStateIdx = BUTTON_STATE_IDX_NEUTRAL;
-		categoryButtonSelectedStateIdx = BUTTON_STATE_IDX_NEUTRAL;
+		categoryButtonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
+		categoryButtonNonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
+		categoryButtonMiscStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
+		categoryButtonSelectedStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 	}
 
 	private void setAllButtonsToRed() {
@@ -218,6 +275,49 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void startFilter() {
 		selectionListAdapter.getFilter().filter("");
+	}
+
+	private ArrayList<Integer> getSelectedIngredientIDs() {
+		setAllButtonsToNeutral();
+		selectionListAdapter
+				.setSelectedCategoryButton(IngredientSelectionListAdapter.DONT_FILTER_FOR_CATEGORY);
+		startFilter();
+		ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
+		for (int idx = 0; idx < ings.size(); idx++) {
+			if (ings.get(idx).isSelected()) {
+				selectedIngIDs.add(ings.get(idx).getID());
+			}
+		}
+		return selectedIngIDs;
+	}
+
+	private int[] getSelectedTags() {
+		int[] selectedTags = new int[0];
+		return selectedTags;
+	}
+
+	private void initSearchSettingsDialog() {
+		searchSettings = new Dialog(this);
+		searchSettings.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		searchSettings.setContentView(R.layout.dialog_search_settings_layout);
+		Switch switchButtonOne = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_one_switch);
+		switchButtonOne.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mustContainAllSelectedIngs = !mustContainAllSelectedIngs;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
+		Switch switchButtonTwo = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_two_switch);
+		switchButtonTwo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				canContainNonSelectedIngs = !canContainNonSelectedIngs;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
 	}
 
 	private void initDB() {

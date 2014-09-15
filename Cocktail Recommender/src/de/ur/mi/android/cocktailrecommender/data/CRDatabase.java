@@ -40,35 +40,48 @@ public class CRDatabase {
 
 	private static final String DATABASE_TABLE_FAVORITES = "Favorites";
 	private static final String FAVORITES_KEY_ID = "ID"; // Integer
-	private static final String FAVORITES_KEY_DRINK_ID = "DringID"; // Integer
+	private static final String FAVORITES_KEY_RECIPEID = "DrinkID"; // Integer
 	private static final int FAVORITES_COLUMN_IDX_ID = 0;
-	private static final int FAVORITES_COLUMN_IDX_DRINK_ID = 1;
+	private static final int FAVORITES_COLUMN_IDX_RECIPEID = 1;
 
 	private static final String DATABASE_TABLE_HISTORY = "History";
 	private static final String HISTORY_KEY_ID = "ID"; // Integer
-	private static final String HISTORY_KEY_DRINK_ID = "DringID"; // Integer
+	private static final String HISTORY_KEY_RECIPEID = "DrinkID"; // Integer
 	private static final int HISTORY_COLUMN_IDX_ID = 0;
-	private static final int HISTORY_COLUMN_IDX_DRINK_ID = 1;
+	private static final int HISTORY_COLUMN_IDX_RECIPEID = 1;
 
 	private static final String DATABASE_TABLE_SHOPPINGLISTS = "ShoppingLists";
 	private static final String SHOPPINGLISTS_KEY_ID = "ID"; // Integer
-	private static final String SHOPPINGLISTS_NAME_ID = "List_Name"; // String
-	private static final String SHOPPINGLISTS_INGREDIENT_IDS = "IngredientIDs"; // (JSON)String
+	private static final String SHOPPINGLISTS_KEY_NAME = "List_Name"; // String
+	private static final String SHOPPINGLISTS_KEY_INGREDIENTIDS = "IngredientIDs"; // (JSON)String
 	private static final int SHOPPINGLISTS_COLUMN_IDX_ID = 0;
 	private static final int SHOPPINGLISTS_COLUMN_IDX_NAME = 1;
-	private static final int SHOPPINGLISTS_COLUMN_IDX_INGRREDIENT_IDS = 2;
+	private static final int SHOPPINGLISTS_COLUMN_IDX_INGRREDIENTIDS = 2;
+
+	private static final String DATABASE_TABLE_SEARCHRESULTS = "SearchResults";
+	private static final String SEARCHRESULTS_KEY_ID = "ID"; // Integer
+	private static final String SEARCHRESULTS_KEY_RECIPEID = "RecipeID"; // Integer
+	private static final String SEARCHRESULTS_KEY_MATCH_RATE = "MatchRate"; // Integer
+	private static final int SEARCHRESULTS_COLUMN_IDX_ID = 0;
+	private static final int SEARCHRESULTS_COLUMN_IDX_RECIPEID = 1;
+	private static final int SEARCHRESULTS_COLUMN_IDX_MATCHRATE = 2;
 
 	public static final char ALCOHOLIC_ING_PREFIX = '1';
 	public static final char NON_ALCOHOLIC_ING_PREFIX = '2';
 	public static final char MISC_ING_PREFIX = '3';
 
+	public static final int SEARCH_TYPE_FAVORITES = 0;
+	public static final int SEARCH_TYPE_HISTORY = 1;
+
 	private CRDatabaseHelper helper;
 	private SQLiteDatabase db;
 	private JSONDataParser jsonDataParser;
+	private SearchEngine searchEngine;
 
 	public CRDatabase(Context context) {
 		helper = new CRDatabaseHelper(context);
 		jsonDataParser = new JSONDataParser();
+		searchEngine = new SearchEngine();
 	}
 
 	public void open() {
@@ -78,6 +91,24 @@ public class CRDatabase {
 	public void close() {
 		db.close();
 		helper.close();
+	}
+
+	public ArrayList<RecipeSearchResult> searchByIngredient(
+			ArrayList<Integer> selectedIngIDs, int[] selectedTags,
+			boolean containAllSelectedIngs, boolean containNonSelectedIngs) {
+		if ((selectedIngIDs == null)) {
+			return null;
+		}
+		return searchEngine.searchByIngredients(selectedIngIDs, selectedTags,
+				containAllSelectedIngs, containNonSelectedIngs);
+	}
+
+	public ArrayList<RecipeSearchResult> searchForFavorites() {
+		return searchEngine.searchForFavorites();
+	}
+
+	public ArrayList<RecipeSearchResult> searchForHistory() {
+		return searchEngine.getHistory();
 	}
 
 	public ArrayList<Recipe> getFullRecipeList() {
@@ -90,33 +121,23 @@ public class CRDatabase {
 
 		if (cursor.moveToFirst()) {
 			do {
-				int recipeID = cursor.getInt(COCKTAILS_COLUMN_IDX_ID);
-				String name = cursor.getString(COCKTAILS_COLUMN_IDX_NAME);
-
-				String ingredientsJsonString = cursor
-						.getString(COCKTAILS_COLUMN_IDX_INGREDIENTS);
-				String tagsJsonString = cursor
-						.getString(COCKTAILS_COLUMN_IDX_TAGS);
-
-				RecipeIngredient[] ingredients = null;
-				Tag[] tags = null;
-				try {
-					ingredients = jsonDataParser
-							.getIngredientsFromJson(ingredientsJsonString);
-					tags = jsonDataParser.getTagsFromJson(tagsJsonString);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				String preparation = cursor
-						.getString(COCKTAILS_COLUMN_IDX_PREPARATION);
-
-				Recipe recipeToAdd = new Recipe(recipeID, name, ingredients,
-						tags, preparation);
+				Recipe recipeToAdd = getRecipeFromCursor(cursor);
 				recipeList.add(recipeToAdd);
 			} while (cursor.moveToNext());
 		}
 
 		return recipeList;
+
+	}
+
+	public Recipe getRecipeFromID(int recipeID) {
+		Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
+				COCKTAILS_KEY_ID, COCKTAILS_KEY_NAME,
+				COCKTAILS_KEY_INGREDIENTS, COCKTAILS_KEY_TAGS,
+				COCKTAILS_KEY_PREPARATION }, COCKTAILS_KEY_ID + "=" + recipeID,
+				null, null, null, null);
+		cursor.moveToFirst();
+		return getRecipeFromCursor(cursor);
 
 	}
 
@@ -153,6 +174,68 @@ public class CRDatabase {
 			} while (cursor.moveToNext());
 		}
 		return tagList;
+	}
+	
+	public ArrayList<RecipeSearchResult> getSearchResults() {
+		ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
+
+		Cursor cursor = db.query(DATABASE_TABLE_SEARCHRESULTS, new String[] {
+				SEARCHRESULTS_KEY_RECIPEID, SEARCHRESULTS_KEY_MATCH_RATE },
+				null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				int recipeID = cursor
+						.getInt(SEARCHRESULTS_COLUMN_IDX_RECIPEID - 1);
+				Recipe recipe = getRecipeFromID(recipeID);
+				int matchRate = cursor
+						.getInt(SEARCHRESULTS_COLUMN_IDX_MATCHRATE - 1);
+
+				RecipeSearchResult result = new RecipeSearchResult(recipe,
+						matchRate);
+				searchResults.add(result);
+			} while (cursor.moveToNext());
+		}
+		return searchResults;
+	}
+
+	public void setSearchResults(ArrayList<RecipeSearchResult> results) {
+		if ((results.size() == 0) || (results == null)) {
+			return;
+		}
+		db.execSQL("delete from " + DATABASE_TABLE_SEARCHRESULTS);
+		db.execSQL("vacuum");
+		for (RecipeSearchResult searchResult : results) {
+			String sqlInsert = "INSERT INTO " + DATABASE_TABLE_SEARCHRESULTS
+					+ " (" + SEARCHRESULTS_KEY_RECIPEID + ","
+					+ SEARCHRESULTS_KEY_MATCH_RATE + ") VALUES ("
+					+ searchResult.getRecipe().getRecipeID() + ","
+					+ searchResult.getMatchRate() + ");";
+			db.execSQL(sqlInsert);
+		}
+	}
+
+	private Recipe getRecipeFromCursor(Cursor cursor) {
+		int recipeID = cursor.getInt(COCKTAILS_COLUMN_IDX_ID);
+		String name = cursor.getString(COCKTAILS_COLUMN_IDX_NAME);
+
+		String ingredientsJsonString = cursor
+				.getString(COCKTAILS_COLUMN_IDX_INGREDIENTS);
+		String tagsJsonString = cursor.getString(COCKTAILS_COLUMN_IDX_TAGS);
+
+		RecipeIngredient[] ingredients = null;
+		Tag[] tags = null;
+		try {
+			ingredients = jsonDataParser
+					.getIngredientsFromJson(ingredientsJsonString);
+			tags = jsonDataParser.getTagsFromJson(tagsJsonString);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		String preparation = cursor.getString(COCKTAILS_COLUMN_IDX_PREPARATION);
+
+		Recipe recipe = new Recipe(recipeID, name, ingredients, tags,
+				preparation);
+		return recipe;
 	}
 
 	private String getIngNameFromID(int ingID) {
@@ -244,6 +327,95 @@ public class CRDatabase {
 			return tags;
 
 		}
+	}
+
+	private class SearchEngine {
+		public ArrayList<RecipeSearchResult> searchByIngredients(
+				ArrayList<Integer> selectedIngIDs, int[] selectedTags,
+				boolean containAllSelectedIngs, boolean containNonSelectedIngs) {
+			ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
+
+			String searchTerm = getSearchTerm(selectedIngIDs, selectedTags,
+					containAllSelectedIngs);
+
+			Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
+					COCKTAILS_KEY_ID, COCKTAILS_KEY_INGREDIENTS,
+					COCKTAILS_KEY_TAGS }, searchTerm, null, null, null, null);
+
+			if (cursor.moveToFirst()) {
+				do {
+					Recipe recipe = getRecipeFromID(cursor
+							.getInt(COCKTAILS_COLUMN_IDX_ID));
+
+					int matchRate = determineMatchRate(
+							recipe.getIngredients(), selectedIngIDs);
+					RecipeSearchResult result = new RecipeSearchResult(recipe,
+							matchRate);
+					searchResults.add(result);
+
+				} while (cursor.moveToNext());
+			}
+			return searchResults;
+		}
+
+		private int determineMatchRate(RecipeIngredient[] recipeIngs,
+				ArrayList<Integer> selectedIngIDs) {
+			int rate = 0;
+			for (int ingIdx = 0; ingIdx < recipeIngs.length; ingIdx++) {
+				if (selectedIngIDs.contains((Integer) recipeIngs[ingIdx]
+						.getID())) {
+					rate++;
+				}
+			}
+			rate *= 100;
+			rate /= selectedIngIDs.size();
+			return rate;
+		}
+
+		private String getSearchTerm(ArrayList<Integer> selectedIngIDs,
+				int[] selectedTags, boolean containAllSelectedIngs) {
+			String term = "";
+			for (int ingIdx = 0; ingIdx < selectedIngIDs.size(); ingIdx++) {
+				term = term + COCKTAILS_KEY_INGREDIENTS + " LIKE " + "'%"
+						+ selectedIngIDs.get(ingIdx) + "%'";
+				if (ingIdx + 1 != selectedIngIDs.size()) {
+					term = term + getConj(containAllSelectedIngs);
+				}
+			}
+			if ((selectedIngIDs.size() != 0) && (selectedTags.length != 0)) {
+				term = term + " AND ";
+			}
+			if (selectedTags.length != 0) {
+				for (int tagIdx = 0; tagIdx < selectedTags.length; tagIdx++) {
+					term = term + COCKTAILS_KEY_TAGS + " LIKE " + "'%"
+							+ selectedTags[tagIdx] + "%'";
+					if (tagIdx + 1 != selectedTags.length) {
+						term = term + " AND ";
+					}
+				}
+			}
+
+			return term;
+		}
+
+		private String getConj(boolean containAllSelectedIngs) {
+			if (containAllSelectedIngs) {
+				return " AND ";
+			} else {
+				return " OR ";
+			}
+		}
+
+		public ArrayList<RecipeSearchResult> searchForFavorites() {
+			ArrayList<RecipeSearchResult> faves = null;
+
+			return faves;
+		}
+
+		public ArrayList<RecipeSearchResult> getHistory() {
+			return null;
+		}
+
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
-import de.ur.mi.android.cocktailrecommender.data.SearchRecipeResult;
+import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.adapter.ResultListAdapter;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -19,15 +19,15 @@ import android.widget.SearchView.OnQueryTextListener;
 
 public class ResultListFragment extends Fragment implements OnItemClickListener {
 	View fragmentView;
-	ArrayList<SearchRecipeResult> resultList;
+	ArrayList<RecipeSearchResult> resultList;
 	ResultListAdapter adapter;
 	private OnRecipeSelectedListener listener;
 
 	public ResultListFragment(){
-		resultList = new ArrayList<SearchRecipeResult>();
+		resultList = new ArrayList<RecipeSearchResult>();
 	}
 	
-	public ResultListFragment(ArrayList<SearchRecipeResult> resultList) {
+	public ResultListFragment(ArrayList<RecipeSearchResult> resultList) {
 		this.resultList = resultList;
 	}
 
