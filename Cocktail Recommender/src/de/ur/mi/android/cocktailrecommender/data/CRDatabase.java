@@ -14,6 +14,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class CRDatabase {
 
+	private static CRDatabase instance = null;
+
 	private static final String DATABASE_TABLE_COCKTAILS = "Cocktails";
 	private static final String COCKTAILS_KEY_ID = "ID"; // Integer
 	private static final String COCKTAILS_KEY_NAME = "Name"; // String
@@ -73,8 +75,8 @@ public class CRDatabase {
 	public static final int SEARCH_TYPE_FAVORITES = 0;
 	public static final int SEARCH_TYPE_HISTORY = 1;
 
-	private CRDatabaseHelper helper;
-	private SQLiteDatabase db;
+	private static CRDatabaseHelper helper;
+	private static SQLiteDatabase db;
 	private JSONDataParser jsonDataParser;
 	private SearchEngine searchEngine;
 
@@ -91,6 +93,13 @@ public class CRDatabase {
 	public void close() {
 		db.close();
 		helper.close();
+	}
+
+	public static CRDatabase getInstance(Context context) {
+		if (instance == null) {
+			instance = new CRDatabase(context);
+		}
+		return instance;
 	}
 
 	public ArrayList<RecipeSearchResult> searchByIngredient(
@@ -175,7 +184,7 @@ public class CRDatabase {
 		}
 		return tagList;
 	}
-	
+
 	public ArrayList<RecipeSearchResult> getSearchResults() {
 		ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
 
@@ -256,13 +265,13 @@ public class CRDatabase {
 		return name;
 	}
 
-	private class CRDatabaseHelper extends SQLiteAssetHelper {
+	public static class CRDatabaseHelper extends SQLiteAssetHelper {
 		private static final int DB_VERSION = 1;
 		private static final String DB_NAME = "crDatabase.db";
 
 		public CRDatabaseHelper(Context context) {
 			super(context, DB_NAME, null, DB_VERSION);
-		}
+		}		
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -347,8 +356,8 @@ public class CRDatabase {
 					Recipe recipe = getRecipeFromID(cursor
 							.getInt(COCKTAILS_COLUMN_IDX_ID));
 
-					int matchRate = determineMatchRate(
-							recipe.getIngredients(), selectedIngIDs);
+					int matchRate = determineMatchRate(recipe.getIngredients(),
+							selectedIngIDs);
 					RecipeSearchResult result = new RecipeSearchResult(recipe,
 							matchRate);
 					searchResults.add(result);

@@ -11,6 +11,7 @@ import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFlingList
 import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment.OnRecipeSelectedListener;
 import android.app.FragmentTransaction;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Surface;
@@ -22,7 +23,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	public static final String RESULT_LIST_KEY = "ResultList";
 	public static final String RESULT_LIST_BUNDLE_KEY = "ResultListBundle";
 
-	
 	private RecipeFragment recipeFragment;
 	private ResultListFragment resultListFragment;
 	private ArrayList<RecipeSearchResult> resultList;
@@ -38,11 +38,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	private void initData() {
-		//später durch DB-Zugriff durch Singleton
-		CRDatabase db = new CRDatabase(this);
-		db.open();
-		resultList = db.getSearchResults();
-		db.close();
+		resultList = CRDatabase.getInstance(this).getSearchResults();
 	}
 
 	private void initUIFragments() {

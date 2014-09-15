@@ -1104,7 +1104,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05005d;
+        public static final int action_settings=0x7f05005e;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1131,14 +1131,15 @@ containing a value of this type.
         public static final int ingredient_selection_listview=0x7f050044;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
-        public static final int listitem_recipe_page_ingredient=0x7f050053;
-        public static final int listitem_recipe_result=0x7f050055;
-        public static final int listitem_selection_ingredient=0x7f050051;
+        public static final int listitem_recipe_page_ingredient=0x7f050054;
+        public static final int listitem_recipe_result=0x7f050056;
+        public static final int listitem_selection_ingredient=0x7f050052;
         public static final int menu=0x7f05003c;
         public static final int middle=0x7f050012;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
         public static final int normal=0x7f050000;
+        public static final int progressBar1=0x7f05004f;
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
@@ -1146,13 +1147,13 @@ containing a value of this type.
         public static final int recipe_book=0x7f05003e;
         public static final int recipe_book_container_main=0x7f05003f;
         public static final int recipe_book_container_side=0x7f050040;
-        public static final int recipe_page_create_shopping_list_button=0x7f050059;
-        public static final int recipe_page_ingredient=0x7f050054;
-        public static final int recipe_page_ingredient_list=0x7f050058;
-        public static final int recipe_page_name=0x7f050057;
-        public static final int recipe_page_preparation=0x7f05005a;
+        public static final int recipe_page_create_shopping_list_button=0x7f05005a;
+        public static final int recipe_page_ingredient=0x7f050055;
+        public static final int recipe_page_ingredient_list=0x7f050059;
+        public static final int recipe_page_name=0x7f050058;
+        public static final int recipe_page_preparation=0x7f05005b;
         public static final int recipe_page_temp=0x7f050041;
-        public static final int recipe_result_name=0x7f050056;
+        public static final int recipe_result_name=0x7f050057;
         public static final int search=0x7f050042;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
@@ -1163,15 +1164,15 @@ containing a value of this type.
         public static final int search_mag_icon=0x7f050035;
         public static final int search_plate=0x7f050036;
         public static final int search_properties_button=0x7f05004c;
-        public static final int search_result_filter_bar=0x7f05005b;
-        public static final int search_result_listview=0x7f05005c;
+        public static final int search_result_filter_bar=0x7f05005c;
+        public static final int search_result_listview=0x7f05005d;
         public static final int search_settings_button=0x7f05004b;
-        public static final int search_settings_option_one_switch=0x7f05004f;
-        public static final int search_settings_option_two_switch=0x7f050050;
+        public static final int search_settings_option_one_switch=0x7f050050;
+        public static final int search_settings_option_two_switch=0x7f050051;
         public static final int search_src_text=0x7f050037;
         public static final int search_voice_btn=0x7f05003b;
         public static final int selected_ingredients_listview=0x7f050049;
-        public static final int selection_ingredient_name=0x7f050052;
+        public static final int selection_ingredient_name=0x7f050053;
         public static final int shopping_list=0x7f05004d;
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
@@ -1300,28 +1301,29 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int action_settings=0x7f0a0010;
+        public static final int action_settings=0x7f0a0011;
         public static final int app_name=0x7f0a000d;
         /**  Related to SearchActivity 
          */
-        public static final int category_button_alc=0x7f0a0011;
-        public static final int category_button_misc=0x7f0a0013;
-        public static final int category_button_nonalc=0x7f0a0012;
-        public static final int category_button_selected=0x7f0a0014;
-        public static final int category_button_tags=0x7f0a0015;
-        public static final int hello_world=0x7f0a000f;
-        public static final int recipe_page_test=0x7f0a0017;
-        public static final int search_settings_option_one_choice_all=0x7f0a001c;
-        public static final int search_settings_option_one_choice_any=0x7f0a001b;
-        public static final int search_settings_option_one_title=0x7f0a0019;
-        public static final int search_settings_option_two_choice_no=0x7f0a001e;
-        public static final int search_settings_option_two_choice_yes=0x7f0a001d;
-        public static final int search_settings_option_two_title=0x7f0a001a;
+        public static final int category_button_alc=0x7f0a0012;
+        public static final int category_button_misc=0x7f0a0014;
+        public static final int category_button_nonalc=0x7f0a0013;
+        public static final int category_button_selected=0x7f0a0015;
+        public static final int category_button_tags=0x7f0a0016;
+        public static final int hello_world=0x7f0a0010;
+        public static final int recipe_page_test=0x7f0a0018;
+        public static final int search_settings_option_one_choice_all=0x7f0a001d;
+        public static final int search_settings_option_one_choice_any=0x7f0a001c;
+        public static final int search_settings_option_one_title=0x7f0a001a;
+        public static final int search_settings_option_two_choice_no=0x7f0a001f;
+        public static final int search_settings_option_two_choice_yes=0x7f0a001e;
+        public static final int search_settings_option_two_title=0x7f0a001b;
         /**  Related to search settings dialog in SearchActivity 
          */
-        public static final int search_settings_title=0x7f0a0018;
-        public static final int start_search=0x7f0a0016;
-        public static final int title_activity_recipe_book=0x7f0a000e;
+        public static final int search_settings_title=0x7f0a0019;
+        public static final int start_search=0x7f0a0017;
+        public static final int title_activity_recipe_book=0x7f0a000f;
+        public static final int title_activity_search=0x7f0a000e;
     }
     public static final class style {
         /** 

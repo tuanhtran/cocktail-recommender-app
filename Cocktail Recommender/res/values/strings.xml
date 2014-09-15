@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Cocktail Recommender</string>
+    <string name="title_activity_search">Rezeptsuche</string>
     <string name="title_activity_recipe_book">Rezeptbuch</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

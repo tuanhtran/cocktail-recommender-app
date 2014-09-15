@@ -26,7 +26,6 @@ import android.widget.Switch;
 
 public class SearchActivity extends ActionBarActivity {
 
-	private CRDatabase db;
 	private IngredientSelectionListAdapter selectionListAdapter;
 	private ArrayList<IngredientType> ings = new ArrayList<IngredientType>();
 
@@ -51,14 +50,13 @@ public class SearchActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-		initDB();
 		initData();
 		initUI();
 	}
 
 	private void initData() {
 		ings.clear();
-		ings.addAll(db.getFullIngList());
+		ings.addAll(CRDatabase.getInstance(this).getFullIngList());
 	}
 
 	@Override
@@ -168,14 +166,14 @@ public class SearchActivity extends ActionBarActivity {
 			// Throw no Items selected Error with option for whole book
 			return;
 		}
-		ArrayList<RecipeSearchResult> results = db.searchByIngredient(
+		ArrayList<RecipeSearchResult> results = CRDatabase.getInstance(this).searchByIngredient(
 				selectedIngIDs, selectedTags, mustContainAllSelectedIngs,
-				canContainNonSelectedIngs);		
+				canContainNonSelectedIngs);
 		if (results.size() > 0) {
-			db.setSearchResults(results);
+			CRDatabase.getInstance(this).setSearchResults(results);
 			openRecipeBook();
 		} else {
-			//No results message
+			// No results message
 		}
 	}
 
@@ -318,16 +316,5 @@ public class SearchActivity extends ActionBarActivity {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
-	}
-
-	private void initDB() {
-		db = new CRDatabase(this);
-		db.open();
-	}
-
-	@Override
-	protected void onDestroy() {
-		db.close();
-		super.onDestroy();
 	}
 }
