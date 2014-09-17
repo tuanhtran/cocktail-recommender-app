@@ -3,6 +3,7 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 import java.util.ArrayList;
 
 import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.adapter.ResultListAdapter;
@@ -23,10 +24,10 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 	ResultListAdapter adapter;
 	private OnRecipeSelectedListener listener;
 
-	public ResultListFragment(){
+	public ResultListFragment() {
 		resultList = new ArrayList<RecipeSearchResult>();
 	}
-	
+
 	public ResultListFragment(ArrayList<RecipeSearchResult> resultList) {
 		this.resultList = resultList;
 	}
@@ -44,6 +45,8 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		CRDatabase.getInstance(getActivity()).addToHistory(
+				resultList.get(position));
 		listener.onRecipeSelected(resultList.get(position).getRecipe());
 
 	}
@@ -58,8 +61,8 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 	}
 
 	private void initSearchView() {
-		SearchView filterBar = (SearchView) fragmentView.findViewById(
-				R.id.search_result_filter_bar);
+		SearchView filterBar = (SearchView) fragmentView
+				.findViewById(R.id.search_result_filter_bar);
 		filterBar.setOnQueryTextListener(new OnQueryTextListener() {
 			public boolean onQueryTextSubmit(String queryString) {
 				return true;
@@ -73,8 +76,8 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 	}
 
 	private void initListView() {
-		ListView resultListView = (ListView) fragmentView.findViewById(
-				R.id.search_result_listview);
+		ListView resultListView = (ListView) fragmentView
+				.findViewById(R.id.search_result_listview);
 		resultListView.setOnItemClickListener(this);
 		adapter = new ResultListAdapter(getActivity(), resultList);
 		resultListView.setAdapter(adapter);

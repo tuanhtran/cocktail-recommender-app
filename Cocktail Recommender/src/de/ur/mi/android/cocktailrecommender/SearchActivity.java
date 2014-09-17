@@ -166,9 +166,9 @@ public class SearchActivity extends ActionBarActivity {
 			// Throw no Items selected Error with option for whole book
 			return;
 		}
-		ArrayList<RecipeSearchResult> results = CRDatabase.getInstance(this).searchByIngredient(
-				selectedIngIDs, selectedTags, mustContainAllSelectedIngs,
-				canContainNonSelectedIngs);
+		ArrayList<RecipeSearchResult> results = CRDatabase.getInstance(this)
+				.searchByIngredient(selectedIngIDs, selectedTags,
+						mustContainAllSelectedIngs, canContainNonSelectedIngs);
 		if (results.size() > 0) {
 			CRDatabase.getInstance(this).setSearchResults(results);
 			openRecipeBook();
