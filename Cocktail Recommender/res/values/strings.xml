@@ -39,5 +39,6 @@
     <string name="ingredients_to_buy">Folgende Zutaten sind Einzukaufen:</string>
     <string name="shopping_list_creation_dialog_no_lists">Es existiert noch keine Einkaufsliste!</string>
     <string name="shopping_list_delete">Diese Einkaufsliste löschen?</string>
+    <string name="shopping_list_creation_dialog_name_entry_error">Bitte einen Namen eingeben!</string>
     
 </resources>

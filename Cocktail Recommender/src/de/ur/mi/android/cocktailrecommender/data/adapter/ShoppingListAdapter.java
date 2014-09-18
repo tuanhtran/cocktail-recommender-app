@@ -62,19 +62,21 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 						
 					}
 				});
-				RecipeIngredient[] ingredients = list.getIngredients();
-				CharSequence[] ingredientNames = new CharSequence[ingredients.length];
-				for (int ingIdx = 0; ingIdx < ingredients.length; ingIdx++){
-					ingredientNames[ingIdx] = ingredients[ingIdx].getIngName();
-				}
-				alertDialogBuilder.setItems(ingredientNames, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-						
+				if (list.getIngredients()!=null){
+					RecipeIngredient[] ingredients = list.getIngredients();
+					CharSequence[] ingredientNames = new CharSequence[ingredients.length];
+					for (int ingIdx = 0; ingIdx < ingredients.length; ingIdx++){
+						ingredientNames[ingIdx] = ingredients[ingIdx].getIngName();
 					}
-				});
+					alertDialogBuilder.setItems(ingredientNames, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+				}
 				alertDialogBuilder.create();
 				alertDialogBuilder.show();
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);

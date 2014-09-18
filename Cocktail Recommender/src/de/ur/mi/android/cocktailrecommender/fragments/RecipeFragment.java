@@ -67,8 +67,11 @@ public class RecipeFragment extends Fragment {
 		ingredientsToShoppingList
 				.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
-						shoppingListener.onAddToShoppingList(adapter.getSelectedIngredients());
-						v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+						RecipeIngredient[] selectedIngs = adapter.getSelectedIngredients();
+						if (selectedIngs.length>0){
+							shoppingListener.onAddToShoppingList(adapter.getSelectedIngredients());
+							v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+						}
 					}
 				});
 		initAdapter();

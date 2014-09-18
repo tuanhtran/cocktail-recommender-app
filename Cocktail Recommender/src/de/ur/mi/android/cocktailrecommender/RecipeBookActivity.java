@@ -214,14 +214,18 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						int genericId = -1;
-						String name = listName.getText().toString();
-						ShoppingList shoppingList = new ShoppingList(genericId,
-								name, selectedIngredients);
-						CRDatabase.getInstance(RecipeBookActivity.this)
-								.addShoppingList(shoppingList, isNewList);
-						initDialog();
-						startShoppingListActivity();
+						if (!listName.getText().toString().equals("")){
+							int genericId = -1;
+							String name = listName.getText().toString();
+							ShoppingList shoppingList = new ShoppingList(genericId,
+									name, selectedIngredients);
+							CRDatabase.getInstance(RecipeBookActivity.this)
+									.addShoppingList(shoppingList, isNewList);
+							initDialog();
+							startShoppingListActivity();
+						}else{
+							createNewShoppingList();
+						}
 					}
 
 				});

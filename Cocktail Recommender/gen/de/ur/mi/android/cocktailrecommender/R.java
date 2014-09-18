@@ -1328,6 +1328,7 @@ containing a value of this type.
         public static final int search_settings_title=0x7f0a001c;
         public static final int shopping_list_creation_dialog_entry_hint=0x7f0a0027;
         public static final int shopping_list_creation_dialog_name_entry=0x7f0a0026;
+        public static final int shopping_list_creation_dialog_name_entry_error=0x7f0a002c;
         public static final int shopping_list_creation_dialog_no_lists=0x7f0a002a;
         public static final int shopping_list_creation_dialog_option_one=0x7f0a0024;
         public static final int shopping_list_creation_dialog_option_two=0x7f0a0025;
