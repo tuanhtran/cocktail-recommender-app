@@ -31,6 +31,11 @@
             android:label="@string/title_activity_recipe_book"
             android:windowSoftInputMode="adjustPan" >
         </activity>
+        <activity
+            android:name="de.ur.mi.android.cocktailrecommender.ShoppingListActivity"
+            android:label="@string/title_activity_shopping_list"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
     </application>
 
 </manifest>

@@ -2,19 +2,25 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.Recipe;
-import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
-import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.GestureDetector;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.Recipe;
+import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
+import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
 
 public class RecipeFragment extends Fragment {
 	private View fragmentView;
@@ -22,9 +28,11 @@ public class RecipeFragment extends Fragment {
 	private TextView recipeName;
 	private ListView recipeIngredients;
 	private TextView recipePreparation;
+	private Button ingredientsToShoppingList;
 	private RecipePageIngredientListAdapter adapter;
 	private ArrayList<RecipeIngredient> ingredients;
 	private OnFlingListener listener;
+	private OnShoppingListAddListener shoppingListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +62,15 @@ public class RecipeFragment extends Fragment {
 				.findViewById(R.id.recipe_page_ingredient_list);
 		recipePreparation = (TextView) fragmentView
 				.findViewById(R.id.recipe_page_preparation);
+		ingredientsToShoppingList = (Button) fragmentView
+				.findViewById(R.id.recipe_page_create_shopping_list_button);
+		ingredientsToShoppingList
+				.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						shoppingListener.onAddToShoppingList(adapter.getSelectedIngredients());
+						v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+					}
+				});
 		initAdapter();
 		updateData();
 	}
@@ -136,6 +153,16 @@ public class RecipeFragment extends Fragment {
 
 	public void setOnFlingListener(OnFlingListener listener) {
 		this.listener = listener;
+	}
+
+	
+	
+	public interface OnShoppingListAddListener {
+		public void onAddToShoppingList(RecipeIngredient[] ingredients);
+	}
+	
+	public void setOnShoppingListAddListener(OnShoppingListAddListener listener) {
+		shoppingListener = listener;
 	}
 
 }

@@ -2,14 +2,16 @@ package de.ur.mi.android.cocktailrecommender.data.adapter;
 
 import java.util.ArrayList;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import android.content.Context;
+import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 
 public class RecipePageIngredientListAdapter extends
 		ArrayAdapter<RecipeIngredient> {
@@ -23,7 +25,7 @@ public class RecipePageIngredientListAdapter extends
 		this.context = context;
 		this.ingredients = ingredients;
 	}
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -32,11 +34,12 @@ public class RecipePageIngredientListAdapter extends
 		if (view == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.listitem_recipe_page_ingredient, null);
+			view = inflater.inflate(R.layout.listitem_recipe_page_ingredient,
+					null);
 
 		}
 
-		RecipeIngredient ing = ingredients.get(position);
+		final RecipeIngredient ing = ingredients.get(position);
 
 		if (ing != null) {
 			TextView ingredientTextView = (TextView) view
@@ -44,7 +47,39 @@ public class RecipePageIngredientListAdapter extends
 
 			ingredientTextView.setText(ing.getFullIngredientString());
 		}
+		view.setBackgroundColor(view.getResources().getColor(
+				getBGColor(ing.isSelected())));
+
+		view.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				ing.toggleSelection();
+				v.setBackgroundColor(v.getResources().getColor(
+						getBGColor(ing.isSelected())));
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
 		return view;
+	}
+
+	private int getBGColor(boolean isSelected) {
+		if (isSelected) {
+			return R.color.test_background_red;
+		} else {
+			return R.color.test_background_white;
+		}
+
+	}
+
+	public RecipeIngredient[] getSelectedIngredients() {
+		ArrayList<RecipeIngredient> selectedIngredientsTemp = new ArrayList<RecipeIngredient>();
+		for (int ingIdx = 0; ingIdx < ingredients.size(); ingIdx++) {
+			if (ingredients.get(ingIdx).isSelected())
+				selectedIngredientsTemp.add(ingredients.get(ingIdx));
+		}
+		RecipeIngredient[] selectedIngredients = selectedIngredientsTemp
+				.toArray(new RecipeIngredient[selectedIngredientsTemp.size()]);
+		return selectedIngredients;
+
 	}
 
 }

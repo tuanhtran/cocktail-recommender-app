@@ -1,5 +1,7 @@
 package de.ur.mi.android.cocktailrecommender;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -8,19 +10,39 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import de.ur.mi.android.cocktailrecommender.R;
+import android.widget.ListView;
+import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
+import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
+import de.ur.mi.android.cocktailrecommender.data.adapter.ShoppingListAdapter;
 
 public class ShoppingListActivity extends ActionBarActivity {
+
+	private ArrayList<ShoppingList> shoppingLists;
+	private ShoppingListAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_start);
+		setContentView(R.layout.activity_shopping_list);
 
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.recipe, new PlaceholderFragment()).commit();
-		}
+		getShoppingLists();
+		setShoppingListAdapter();
+		setViews();
+	}
+
+	private void setViews() {
+		ListView shoppingListView = (ListView) findViewById(R.id.shopping_list_view);
+		shoppingListView.setAdapter(adapter);
+	}
+
+	private void getShoppingLists() {
+		shoppingLists = CRDatabase.getInstance(this).getAllShoppingLists();
+
+	}
+
+	private void setShoppingListAdapter() {
+		adapter = new ShoppingListAdapter(this, shoppingLists);
+
 	}
 
 	@Override

@@ -4,8 +4,12 @@
     <string name="app_name">Cocktail Recommender</string>
     <string name="title_activity_search">Rezeptsuche</string>
     <string name="title_activity_recipe_book">Rezeptbuch</string>
+    <string name="title_activity_shopping_list">Einkaufslisten</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    
+    <string name="generic_positive">Ok</string>
+    <string name="generic_cancel">Abbrechen</string>
 
     <!-- Related to SearchActivity -->
     <string name="category_button_alc">Alk</string>
@@ -24,5 +28,16 @@
     <string name="search_settings_option_one_choice_all">Alle</string>
     <string name="search_settings_option_two_choice_yes">Ja</string>
     <string name="search_settings_option_two_choice_no">Nein</string>
-
+	
+    <!-- Related to ShoppingList dialogs -->
+    <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>
+    <string name="shopping_list_creation_dialog_option_one">Neue Einkaufsliste erstellen</string>
+    <string name="shopping_list_creation_dialog_option_two">Vorhandene Einkaufsliste verwenden</string>
+    <string name="shopping_list_creation_dialog_name_entry">Geben Sie der Einkaufsliste einen Namen!</string>
+    <string name="shopping_list_creation_dialog_entry_hint">Hier Namen eingeben</string>
+    <string name="shopping_list_creation_dialog_selection_list">Wählen Sie eine Einkaufsliste aus!</string>
+    <string name="ingredients_to_buy">Folgende Zutaten sind Einzukaufen:</string>
+    <string name="shopping_list_creation_dialog_no_lists">Es existiert noch keine Einkaufsliste!</string>
+    <string name="shopping_list_delete">Diese Einkaufsliste löschen?</string>
+    
 </resources>

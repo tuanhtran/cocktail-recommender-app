@@ -6,11 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
-
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class CRDatabase {
 
@@ -126,7 +127,8 @@ public class CRDatabase {
 		Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 				COCKTAILS_KEY_ID, COCKTAILS_KEY_NAME,
 				COCKTAILS_KEY_INGREDIENTS, COCKTAILS_KEY_TAGS,
-				COCKTAILS_KEY_PREPARATION }, null, null, null, null, null);
+				COCKTAILS_KEY_PREPARATION }, null, null, null, null,
+				COCKTAILS_KEY_NAME);
 
 		if (cursor.moveToFirst()) {
 			do {
@@ -183,6 +185,58 @@ public class CRDatabase {
 			} while (cursor.moveToNext());
 		}
 		return tagList;
+	}
+
+	public ArrayList<ShoppingList> getAllShoppingLists() {
+		ArrayList<ShoppingList> shoppingLists = new ArrayList<ShoppingList>();
+
+		Cursor cursor = db
+				.query(DATABASE_TABLE_SHOPPINGLISTS, new String[] {
+						SHOPPINGLISTS_KEY_ID, SHOPPINGLISTS_KEY_NAME,
+						SHOPPINGLISTS_KEY_INGREDIENTIDS }, null, null, null,
+						null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				int id = cursor.getInt(SHOPPINGLISTS_COLUMN_IDX_ID);
+				String name = cursor.getString(SHOPPINGLISTS_COLUMN_IDX_NAME);
+				RecipeIngredient[] ingredients = null;
+				try {
+					ingredients = jsonDataParser
+							.getIngredientsFromJson(cursor
+									.getString(SHOPPINGLISTS_COLUMN_IDX_INGRREDIENTIDS));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ShoppingList list = new ShoppingList(id, name, ingredients);
+				shoppingLists.add(list);
+			} while (cursor.moveToNext());
+		}
+		return shoppingLists;
+	}
+
+	public void addShoppingList(ShoppingList shoppingList, boolean isNewList) {
+		ContentValues values = new ContentValues();
+
+		if (isNewList) {
+			String ingredientJSONString = jsonDataParser
+					.getIngredientJSONString(shoppingList.getIngredients());
+			values.put(SHOPPINGLISTS_KEY_NAME, shoppingList.getListName());
+			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, ingredientJSONString);
+			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
+		} else {
+			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, jsonDataParser
+					.getIngredientJSONString(shoppingList.getIngredients()));
+			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
+					SHOPPINGLISTS_KEY_ID + "=?",
+					new String[] { String.valueOf(shoppingList.getId()) });
+		}
+	}
+
+	public void deleteShoppingList(ShoppingList list) {
+		db.delete(DATABASE_TABLE_SHOPPINGLISTS, SHOPPINGLISTS_KEY_ID + "=?",
+				new String[] { String.valueOf(list.getId()) });
+
 	}
 
 	public ArrayList<RecipeSearchResult> getSearchResults() {
@@ -271,7 +325,7 @@ public class CRDatabase {
 
 		public CRDatabaseHelper(Context context) {
 			super(context, DB_NAME, null, DB_VERSION);
-		}		
+		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -335,6 +389,18 @@ public class CRDatabase {
 
 			return tags;
 
+		}
+
+		public String getIngredientJSONString(RecipeIngredient[] ingredients) {
+			String jsonString = "{\"" + ING_ARRAY_KEY + "\":[";
+			for (RecipeIngredient ingredient : ingredients) {
+				jsonString = jsonString + "{\"" + ING_ID_KEY + "\":"
+						+ ingredient.getID() + ", \"" + ING_QUANTITY_KEY
+						+ "\":\"" + ingredient.getQuantity() + "\"},";
+			}
+			jsonString = jsonString.substring(0, jsonString.length() - 1)
+					+ "]}";
+			return jsonString;
 		}
 	}
 
