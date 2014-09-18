@@ -1,12 +1,19 @@
 package de.ur.mi.android.cocktailrecommender.data;
 
 public class RecipeSearchResult implements Comparable<RecipeSearchResult> {
+	public static final int DEFAULT_MATCH_RATE = 0;
+
 	private Recipe recipe;
 	private int matchRate;
 
 	public RecipeSearchResult(Recipe recipe, int matchRate) {
 		this.recipe = recipe;
 		this.matchRate = matchRate;
+	}
+
+	public RecipeSearchResult(Recipe recipe) {
+		this.recipe = recipe;
+		matchRate = DEFAULT_MATCH_RATE;
 	}
 
 	public Recipe getRecipe() {
