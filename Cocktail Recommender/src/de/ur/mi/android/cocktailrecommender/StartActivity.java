@@ -2,13 +2,7 @@ package de.ur.mi.android.cocktailrecommender;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 

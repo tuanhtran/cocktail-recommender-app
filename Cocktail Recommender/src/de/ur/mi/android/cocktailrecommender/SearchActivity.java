@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
-import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import android.app.Dialog;

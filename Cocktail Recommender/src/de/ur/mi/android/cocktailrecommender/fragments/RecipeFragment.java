@@ -2,12 +2,9 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -157,8 +154,6 @@ public class RecipeFragment extends Fragment {
 	public void setOnFlingListener(OnFlingListener listener) {
 		this.listener = listener;
 	}
-
-	
 	
 	public interface OnShoppingListAddListener {
 		public void onAddToShoppingList(RecipeIngredient[] ingredients);
