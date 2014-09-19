@@ -1,8 +1,5 @@
 package de.ur.mi.android.cocktailrecommender.data;
 
-import java.util.ArrayList;
-
-//Favorites, History, Shoppinglist database
 public class ShoppingList {
 	private int id;
 	private String name;
