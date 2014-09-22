@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 		implements Filterable {
 
+	private static final int ING_PREVIEW_SIZE_THRESHOLD = 30;
+
 	private Context context;
 	private ArrayList<RecipeSearchResult> resultList;
 	private ArrayList<RecipeSearchResult> notShownResults = new ArrayList<RecipeSearchResult>();
@@ -29,8 +32,6 @@ public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 		this.resultList = results;
 	}
 
-	
-	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -48,13 +49,32 @@ public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 		if (searchResult != null) {
 			TextView searchResultName = (TextView) view
 					.findViewById(R.id.recipe_result_name);
-
-			searchResultName.setText(searchResult.getRecipe().getName()+" - "+searchResult.getMatchRate()+"%");
+			TextView searchResultIngPreview = (TextView) view
+					.findViewById(R.id.recipe_result_ing_preview);
+			searchResultName.setText(searchResult.getRecipe().getName() + " - "
+					+ searchResult.getMatchRate() + "%");
+			searchResultIngPreview.setText(getIngPreview(searchResult
+					.getRecipe().getIngredients()));
 		}
 		return view;
 	}
-	
-	
+
+	private CharSequence getIngPreview(RecipeIngredient[] ingredients) {
+		String preview = "";
+
+		for (RecipeIngredient rIng : ingredients) {
+			preview += rIng.getIngName();
+			if (preview.length() >= ING_PREVIEW_SIZE_THRESHOLD) {
+				preview = preview.substring(0, ING_PREVIEW_SIZE_THRESHOLD - 3);
+				preview += "...";
+				return preview;
+			}
+			preview += ", ";
+		}
+		preview = preview.substring(0, preview.length() - 2);
+		return preview;
+	}
+
 	@Override
 	public void notifyDataSetChanged() {
 		Collections.sort(resultList);
@@ -86,13 +106,12 @@ public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 					for (int idx = 0; idx < resultList.size(); idx++) {
 						if (resultList.get(idx).getRecipe().getName()
 								.toLowerCase().contains(constraint)) {
-							filteredResultList
-									.add(resultList.get(idx));
+							filteredResultList.add(resultList.get(idx));
 						} else {
 							notShownResults.add(resultList.get(idx));
 						}
 					}
-				}				
+				}
 				results.count = filteredResultList.size();
 				results.values = filteredResultList;
 				return results;

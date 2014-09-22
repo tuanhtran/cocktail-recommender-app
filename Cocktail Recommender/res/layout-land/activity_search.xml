@@ -6,11 +6,56 @@
     android:orientation="horizontal"
     android:weightSum="1" >
 
-  <TableRow
+    <TableRow
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
         android:weightSum="1" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:orientation="vertical"
+            android:weightSum="1" >
+
+            <Button
+                android:id="@+id/category_button_alcoholic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.25"
+                android:background="@color/test_button_gray"
+                android:text="@string/category_button_alc" />
+
+            <Button
+                android:id="@+id/category_button_non_alcoholic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.25"
+                android:background="@color/test_button_gray"
+                android:text="@string/category_button_nonalc" />
+
+            <Button
+                android:id="@+id/category_button_misc"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.25"
+                android:background="@color/test_button_gray"
+                android:text="@string/category_button_misc" />
+
+            <Button
+                android:id="@+id/category_button_selected"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.25"
+                android:background="@color/test_button_gray"
+                android:text="@string/category_button_selected" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/test_background_black" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -23,8 +68,7 @@
                 android:id="@+id/ingredient_selection_filter_bar"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.14"
-                android:background="@color/test_background_light_green" />
+                android:layout_weight="0.14" />
 
             <View
                 android:layout_width="match_parent"
@@ -36,66 +80,32 @@
                 android:id="@+id/ingredient_selection_listview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.85"
-                android:background="@color/test_background_green" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:background="@color/test_background_dark_green"
-            android:orientation="vertical"
-            android:weightSum="1" >
-
-            <Button
-                android:id="@+id/category_button_alcoholic"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:text="@string/category_button_alc" />
-
-            <Button
-                android:id="@+id/category_button_non_alcoholic"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:text="@string/category_button_nonalc" />
-
-            <Button
-                android:id="@+id/category_button_misc"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:text="@string/category_button_misc" />
-
-            <Button
-                android:id="@+id/category_button_selected"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:text="@string/category_button_selected" />
+                android:layout_weight="0.85" />
         </LinearLayout>
     </TableRow>
-    
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/test_background_black" />
+
     <TableRow
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
         android:weightSum="1" >
 
-        <ListView
-            android:id="@+id/selected_ingredients_listview"
+        <GridView
+            android:id="@+id/tag_selection"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
-            android:background="@color/test_background_blue" />
+            android:numColumns="@integer/tag_list_column_num" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@color/test_background_dark_blue"
             android:orientation="vertical"
             android:weightSum="1" >
 

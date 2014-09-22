@@ -9,7 +9,6 @@
         android:id="@+id/selection_ingredient_name"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:background="@color/test_background_white"
         android:ellipsize="marquee"
         android:gravity="center"
         android:padding="5dp"

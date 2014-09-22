@@ -111,9 +111,10 @@ public class CRDatabase {
 	}
 
 	public ArrayList<RecipeSearchResult> searchByIngredient(
-			ArrayList<Integer> selectedIngIDs, int[] selectedTags,
-			boolean containAllSelectedIngs, boolean containNonSelectedIngs) {
-		return searchEngine.searchByIngredients(selectedIngIDs, selectedTags,
+			ArrayList<Integer> selectedIngIDs,
+			ArrayList<Integer> selectedTagIDs, boolean containAllSelectedIngs,
+			boolean containNonSelectedIngs) {
+		return searchEngine.searchByIngredients(selectedIngIDs, selectedTagIDs,
 				containAllSelectedIngs, containNonSelectedIngs);
 	}
 
@@ -209,7 +210,6 @@ public class CRDatabase {
 		return tagList;
 	}
 
-
 	public ArrayList<ShoppingList> getAllShoppingLists() {
 		ArrayList<ShoppingList> shoppingLists = new ArrayList<ShoppingList>();
 
@@ -262,12 +262,9 @@ public class CRDatabase {
 
 	}
 
-	
-
 	public ArrayList<RecipeSearchResult> getFavorites() {
 		return favorites;
 	}
-
 
 	public void addToFavorites(RecipeSearchResult recipeSR) {
 		if (!listAlreadyContainsRecipeSR(recipeSR, favorites)) {
@@ -503,11 +500,12 @@ public class CRDatabase {
 
 	private class SearchEngine {
 		public ArrayList<RecipeSearchResult> searchByIngredients(
-				ArrayList<Integer> selectedIngIDs, int[] selectedTags,
+				ArrayList<Integer> selectedIngIDs,
+				ArrayList<Integer> selectedTagIDs,
 				boolean containAllSelectedIngs, boolean containNonSelectedIngs) {
 			ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
 
-			String searchTerm = getSearchTerm(selectedIngIDs, selectedTags,
+			String searchTerm = getSearchTerm(selectedIngIDs, selectedTagIDs,
 					containAllSelectedIngs);
 
 			Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
@@ -545,32 +543,24 @@ public class CRDatabase {
 		}
 
 		private String getSearchTerm(ArrayList<Integer> selectedIngIDs,
-				int[] selectedTags, boolean containAllSelectedIngs) {
+				ArrayList<Integer> selectedTagIDs,
+				boolean containAllSelectedIngs) {
 			String term = "";
 			for (int ingIdx = 0; ingIdx < selectedIngIDs.size(); ingIdx++) {
 				term = term + COCKTAILS_KEY_INGREDIENTS + " LIKE " + "'%"
 						+ selectedIngIDs.get(ingIdx) + "%'";
 				if (ingIdx + 1 != selectedIngIDs.size()) {
-					term = term + getConj(containAllSelectedIngs);
+					term = term + getConjunction(containAllSelectedIngs);
 				}
 			}
-			if ((selectedIngIDs.size() != 0) && (selectedTags.length != 0)) {
-				term = term + " AND ";
-			}
-			if (selectedTags.length != 0) {
-				for (int tagIdx = 0; tagIdx < selectedTags.length; tagIdx++) {
-					term = term + COCKTAILS_KEY_TAGS + " LIKE " + "'%"
-							+ selectedTags[tagIdx] + "%'";
-					if (tagIdx + 1 != selectedTags.length) {
-						term = term + " AND ";
-					}
-				}
+			if ((!selectedIngIDs.isEmpty()) && (!selectedTagIDs.isEmpty())) {
+			//	term = term + " AND ";
 			}
 
 			return term;
 		}
 
-		private String getConj(boolean containAllSelectedIngs) {
+		private String getConjunction(boolean containAllSelectedIngs) {
 			if (containAllSelectedIngs) {
 				return " AND ";
 			} else {

@@ -18,8 +18,7 @@ public class MenuActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_start);
 
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.menu, new PlaceholderFragment()).commit();
+	
 		}
 	}
 
@@ -41,23 +40,6 @@ public class MenuActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_start,
-					container, false);
-			return rootView;
-		}
 	}
 
 }

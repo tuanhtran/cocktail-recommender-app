@@ -29,7 +29,6 @@
             android:id="@+id/recipe_page_temp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/test_background_white"
             android:ellipsize="marquee"
             android:gravity="center"
             android:padding="5dp"

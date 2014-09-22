@@ -10,6 +10,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -49,7 +50,7 @@ public class IngredientSelectionListAdapter extends
 			view = inflater.inflate(R.layout.listitem_ing_selection, null);
 
 		}
-
+		
 		final IngredientType ingType = ingredientList.get(position);
 
 		if (ingType != null) {
@@ -78,7 +79,6 @@ public class IngredientSelectionListAdapter extends
 		} else {
 			return R.color.test_background_white;
 		}
-
 	}
 
 	@Override

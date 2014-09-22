@@ -6,7 +6,9 @@ import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
+import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
+import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -25,8 +28,10 @@ import android.widget.Switch;
 
 public class SearchActivity extends ActionBarActivity {
 
-	private IngredientSelectionListAdapter selectionListAdapter;
+	private IngredientSelectionListAdapter ingListAdapter;
+	private TagSelectionListAdapter tagListAdapter;
 	private ArrayList<IngredientType> ings = new ArrayList<IngredientType>();
+	private ArrayList<Tag> tags = new ArrayList<Tag>();
 
 	private Dialog searchSettings;
 	private boolean mustContainAllSelectedIngs = false;
@@ -55,7 +60,9 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void initData() {
 		ings.clear();
+		tags.clear();
 		ings.addAll(CRDatabase.getInstance(this).getFullIngList());
+		tags.addAll(CRDatabase.getInstance(this).getFullTagList());
 	}
 
 	@Override
@@ -79,10 +86,24 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void initUI() {
-		initSearchSettingsDialog();
+		initDialogs();
 		initSearchView();
-		initListView();
+		initListViews();
 		initButtonViews();
+	}
+
+	private void initDialogs() {
+		initSearchSettingsDialog();
+		initNoIngTagDialog();
+		initNoSearchResultsDialog();
+	}
+
+	private void initNoIngTagDialog() {
+
+	}
+
+	private void initNoSearchResultsDialog() {
+
 	}
 
 	private void initSearchView() {
@@ -93,18 +114,23 @@ public class SearchActivity extends ActionBarActivity {
 			}
 
 			public boolean onQueryTextChange(String queryString) {
-				selectionListAdapter.setSearchViewInsert(queryString);
+				ingListAdapter.setSearchViewInsert(queryString);
 				startFilter();
 				return true;
 			}
 		});
 	}
 
-	private void initListView() {
+	private void initListViews() {
 		ListView ingredientListView = (ListView) findViewById(R.id.ingredient_selection_listview);
-		selectionListAdapter = new IngredientSelectionListAdapter(this, ings);
-		ingredientListView.setAdapter(selectionListAdapter);
-		selectionListAdapter.notifyDataSetChanged();
+		ingListAdapter = new IngredientSelectionListAdapter(this, ings);
+		ingredientListView.setAdapter(ingListAdapter);
+		ingListAdapter.notifyDataSetChanged();
+		
+		GridView tagListView = (GridView) findViewById(R.id.tag_selection);
+		tagListAdapter = new TagSelectionListAdapter(this,tags);
+		tagListView.setAdapter(tagListAdapter);
+		tagListAdapter.notifyDataSetChanged();
 	}
 
 	private void initButtonViews() {
@@ -160,13 +186,13 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void searchForDrinks() {
 		ArrayList<Integer> selectedIngIDs = getSelectedIngredientIDs();
-		int[] selectedTags = getSelectedTags();
-		if ((selectedIngIDs.size() == 0) && (selectedTags.length == 0)) {
+		ArrayList<Integer> selectedTagIDs = getSelectedTagIDs();
+		if ((selectedIngIDs.isEmpty()) && (selectedTagIDs.isEmpty())) {
 			// Throw no Items selected Error with option for whole book
 			return;
 		}
 		ArrayList<RecipeSearchResult> results = CRDatabase.getInstance(this)
-				.searchByIngredient(selectedIngIDs, selectedTags,
+				.searchByIngredient(selectedIngIDs, selectedTagIDs,
 						mustContainAllSelectedIngs, canContainNonSelectedIngs);
 		if (results.size() > 0) {
 			CRDatabase.getInstance(this).setSearchResults(results);
@@ -186,11 +212,11 @@ public class SearchActivity extends ActionBarActivity {
 		if (getButtonStateIdxAndCycle(buttonId) == CATEGORY_BUTTON_STATE_IDX_NEUTRAL) {
 			setAllButtonsToRed();
 			setButtonToGreen((Button) findViewById(buttonId));
-			selectionListAdapter
+			ingListAdapter
 					.setSelectedCategoryButton(getFilterQueryValue(buttonId));
 		} else {
 			setAllButtonsToNeutral();
-			selectionListAdapter
+			ingListAdapter
 					.setSelectedCategoryButton(IngredientSelectionListAdapter.DONT_FILTER_FOR_CATEGORY);
 		}
 		startFilter();
@@ -271,14 +297,16 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void startFilter() {
-		selectionListAdapter.getFilter().filter("");
+		ingListAdapter.getFilter().filter("");
 	}
 
 	private ArrayList<Integer> getSelectedIngredientIDs() {
 		setAllButtonsToNeutral();
-		selectionListAdapter
+		ingListAdapter
 				.setSelectedCategoryButton(IngredientSelectionListAdapter.DONT_FILTER_FOR_CATEGORY);
 		startFilter();
+		
+		
 		ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
 		for (int idx = 0; idx < ings.size(); idx++) {
 			if (ings.get(idx).isSelected()) {
@@ -288,9 +316,14 @@ public class SearchActivity extends ActionBarActivity {
 		return selectedIngIDs;
 	}
 
-	private int[] getSelectedTags() {
-		int[] selectedTags = new int[0];
-		return selectedTags;
+	private ArrayList<Integer> getSelectedTagIDs() {
+		ArrayList<Integer> selectedTagIDs = new ArrayList<Integer>();
+		for (int idx = 0; idx < tags.size(); idx++) {
+			if (tags.get(idx).isSelected()) {
+				selectedTagIDs.add(ings.get(idx).getID());
+			}
+		}
+		return selectedTagIDs;
 	}
 
 	private void initSearchSettingsDialog() {
