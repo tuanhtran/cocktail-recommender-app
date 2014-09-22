@@ -1253,15 +1253,16 @@ containing a value of this type.
         public static final int activity_search=0x7f03001a;
         public static final int activity_shopping_list=0x7f03001b;
         public static final int activity_start=0x7f03001c;
-        public static final int dialog_search_settings_layout=0x7f03001d;
-        public static final int listitem_ing_selection=0x7f03001e;
-        public static final int listitem_recipe_page_ingredient=0x7f03001f;
-        public static final int listitem_recipe_result_list=0x7f030020;
-        public static final int listitem_shopping_list=0x7f030021;
-        public static final int listitem_tag_selection=0x7f030022;
-        public static final int recipe_fragment_layout=0x7f030023;
-        public static final int result_list_fragment_layout=0x7f030024;
-        public static final int support_simple_spinner_dropdown_item=0x7f030025;
+        public static final int dialog_search_progress_layout=0x7f03001d;
+        public static final int dialog_search_settings_layout=0x7f03001e;
+        public static final int listitem_ing_selection=0x7f03001f;
+        public static final int listitem_recipe_page_ingredient=0x7f030020;
+        public static final int listitem_recipe_result_list=0x7f030021;
+        public static final int listitem_shopping_list=0x7f030022;
+        public static final int listitem_tag_selection=0x7f030023;
+        public static final int recipe_fragment_layout=0x7f030024;
+        public static final int result_list_fragment_layout=0x7f030025;
+        public static final int support_simple_spinner_dropdown_item=0x7f030026;
     }
     public static final class menu {
         public static final int start=0x7f0c0000;
@@ -1319,28 +1320,29 @@ containing a value of this type.
         public static final int generic_cancel=0x7f0a0014;
         public static final int generic_positive=0x7f0a0013;
         public static final int hello_world=0x7f0a0011;
-        public static final int ingredients_to_buy=0x7f0a002a;
+        public static final int ingredients_to_buy=0x7f0a002b;
         public static final int recipe_page_test=0x7f0a001b;
+        public static final int search_progress_text=0x7f0a0024;
         public static final int search_settings_option_one_choice_all=0x7f0a0021;
         public static final int search_settings_option_one_choice_any=0x7f0a0020;
         public static final int search_settings_option_one_title=0x7f0a001e;
         public static final int search_settings_option_two_choice_no=0x7f0a0023;
         public static final int search_settings_option_two_choice_yes=0x7f0a0022;
         public static final int search_settings_option_two_title=0x7f0a001f;
-        /**  Related to search settings dialog in SearchActivity 
+        /**  Related to dialogs in SearchActivity 
          */
         public static final int search_settings_title=0x7f0a001d;
-        public static final int shopping_list_creation_dialog_entry_hint=0x7f0a0028;
-        public static final int shopping_list_creation_dialog_name_entry=0x7f0a0027;
-        public static final int shopping_list_creation_dialog_name_entry_error=0x7f0a002d;
-        public static final int shopping_list_creation_dialog_no_lists=0x7f0a002b;
-        public static final int shopping_list_creation_dialog_option_one=0x7f0a0025;
-        public static final int shopping_list_creation_dialog_option_two=0x7f0a0026;
-        public static final int shopping_list_creation_dialog_selection_list=0x7f0a0029;
+        public static final int shopping_list_creation_dialog_entry_hint=0x7f0a0029;
+        public static final int shopping_list_creation_dialog_name_entry=0x7f0a0028;
+        public static final int shopping_list_creation_dialog_name_entry_error=0x7f0a002e;
+        public static final int shopping_list_creation_dialog_no_lists=0x7f0a002c;
+        public static final int shopping_list_creation_dialog_option_one=0x7f0a0026;
+        public static final int shopping_list_creation_dialog_option_two=0x7f0a0027;
+        public static final int shopping_list_creation_dialog_selection_list=0x7f0a002a;
         /**  Related to ShoppingList dialogs 
          */
-        public static final int shopping_list_creation_dialog_title=0x7f0a0024;
-        public static final int shopping_list_delete=0x7f0a002c;
+        public static final int shopping_list_creation_dialog_title=0x7f0a0025;
+        public static final int shopping_list_delete=0x7f0a002d;
         public static final int start_search=0x7f0a001a;
         public static final int tag_icon_content_description=0x7f0a001c;
         public static final int title_activity_recipe_book=0x7f0a000f;

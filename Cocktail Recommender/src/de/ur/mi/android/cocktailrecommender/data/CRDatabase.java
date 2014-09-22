@@ -110,12 +110,19 @@ public class CRDatabase {
 		return instance;
 	}
 
-	public ArrayList<RecipeSearchResult> searchByIngredient(
-			ArrayList<Integer> selectedIngIDs,
-			ArrayList<Integer> selectedTagIDs, boolean containAllSelectedIngs,
-			boolean containNonSelectedIngs) {
-		return searchEngine.searchByIngredients(selectedIngIDs, selectedTagIDs,
-				containAllSelectedIngs, containNonSelectedIngs);
+	public boolean searchByIngredient(ArrayList<Integer> selectedIngIDs,
+			ArrayList<Integer> selectedTagIDs,
+			boolean mustContainAllSelectedIngs,
+			boolean canContainNonSelectedIngs) {
+		searchEngine.setSearchParameters(selectedIngIDs, selectedTagIDs,
+				mustContainAllSelectedIngs, canContainNonSelectedIngs);
+		ArrayList<RecipeSearchResult> results = searchEngine
+				.searchByIngredients();
+		if (results.size() > 0) {
+			setSearchResults(results);
+			return true;
+		}
+		return false;
 	}
 
 	public ArrayList<RecipeSearchResult> getSearchResults() {
@@ -138,22 +145,6 @@ public class CRDatabase {
 			} while (cursor.moveToNext());
 		}
 		return searchResults;
-	}
-
-	public void setSearchResults(ArrayList<RecipeSearchResult> results) {
-		if ((results.size() == 0) || (results == null)) {
-			return;
-		}
-		db.execSQL("delete from " + DATABASE_TABLE_SEARCHRESULTS);
-		db.execSQL("vacuum");
-		for (RecipeSearchResult searchResult : results) {
-			String sqlInsert = "INSERT INTO " + DATABASE_TABLE_SEARCHRESULTS
-					+ " (" + SEARCHRESULTS_KEY_RECIPEID + ","
-					+ SEARCHRESULTS_KEY_MATCH_RATE + ") VALUES ("
-					+ searchResult.getRecipe().getRecipeID() + ","
-					+ searchResult.getMatchRate() + ");";
-			db.execSQL(sqlInsert);
-		}
 	}
 
 	public ArrayList<Recipe> getFullRecipeList() {
@@ -291,6 +282,22 @@ public class CRDatabase {
 			while (history.size() > HISTORY_MAX_SIZE) {
 				history.remove(history.size() - 1);
 			}
+		}
+	}
+
+	private void setSearchResults(ArrayList<RecipeSearchResult> results) {
+		if ((results.size() == 0) || (results == null)) {
+			return;
+		}
+		db.execSQL("delete from " + DATABASE_TABLE_SEARCHRESULTS);
+		db.execSQL("vacuum");
+		for (RecipeSearchResult searchResult : results) {
+			String sqlInsert = "INSERT INTO " + DATABASE_TABLE_SEARCHRESULTS
+					+ " (" + SEARCHRESULTS_KEY_RECIPEID + ","
+					+ SEARCHRESULTS_KEY_MATCH_RATE + ") VALUES ("
+					+ searchResult.getRecipe().getRecipeID() + ","
+					+ searchResult.getMatchRate() + ");";
+			db.execSQL(sqlInsert);
 		}
 	}
 
@@ -499,14 +506,25 @@ public class CRDatabase {
 	}
 
 	private class SearchEngine {
-		public ArrayList<RecipeSearchResult> searchByIngredients(
-				ArrayList<Integer> selectedIngIDs,
+		private boolean mustContainAllSelectedIngs = false;
+		private boolean canContainNonSelectedIngs = false;
+		private ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
+		private ArrayList<Integer> selectedTagIDs = new ArrayList<Integer>();
+
+		public void setSearchParameters(ArrayList<Integer> selectedIngIDs,
 				ArrayList<Integer> selectedTagIDs,
-				boolean containAllSelectedIngs, boolean containNonSelectedIngs) {
+				boolean mustContainAllSelectedIngs,
+				boolean canContainNonSelectedIngs) {
+			this.selectedIngIDs.addAll(selectedIngIDs);
+			this.selectedTagIDs.addAll(selectedTagIDs);
+			this.mustContainAllSelectedIngs = mustContainAllSelectedIngs;
+			this.canContainNonSelectedIngs = canContainNonSelectedIngs;
+		}
+
+		public ArrayList<RecipeSearchResult> searchByIngredients() {
 			ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
 
-			String searchTerm = getSearchTerm(selectedIngIDs, selectedTagIDs,
-					containAllSelectedIngs);
+			String searchTerm = getSearchTerm();
 
 			Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 					COCKTAILS_KEY_ID, COCKTAILS_KEY_INGREDIENTS,
@@ -525,6 +543,8 @@ public class CRDatabase {
 
 				} while (cursor.moveToNext());
 			}
+			this.selectedIngIDs.clear();
+			this.selectedTagIDs.clear();
 			return searchResults;
 		}
 
@@ -542,26 +562,24 @@ public class CRDatabase {
 			return rate;
 		}
 
-		private String getSearchTerm(ArrayList<Integer> selectedIngIDs,
-				ArrayList<Integer> selectedTagIDs,
-				boolean containAllSelectedIngs) {
+		private String getSearchTerm() {
 			String term = "";
 			for (int ingIdx = 0; ingIdx < selectedIngIDs.size(); ingIdx++) {
 				term = term + COCKTAILS_KEY_INGREDIENTS + " LIKE " + "'%"
 						+ selectedIngIDs.get(ingIdx) + "%'";
 				if (ingIdx + 1 != selectedIngIDs.size()) {
-					term = term + getConjunction(containAllSelectedIngs);
+					term = term + getConjunction();
 				}
 			}
 			if ((!selectedIngIDs.isEmpty()) && (!selectedTagIDs.isEmpty())) {
-			//	term = term + " AND ";
+				// term = term + " AND ";
 			}
 
 			return term;
 		}
 
-		private String getConjunction(boolean containAllSelectedIngs) {
-			if (containAllSelectedIngs) {
+		private String getConjunction() {
+			if (mustContainAllSelectedIngs) {
 				return " AND ";
 			} else {
 				return " OR ";

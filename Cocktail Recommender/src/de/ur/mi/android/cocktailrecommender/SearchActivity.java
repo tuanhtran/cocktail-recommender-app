@@ -10,6 +10,8 @@ import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -34,8 +36,10 @@ public class SearchActivity extends ActionBarActivity {
 	private ArrayList<Tag> tags = new ArrayList<Tag>();
 
 	private Dialog searchSettings;
+	private Dialog searchProgress;
 	private boolean mustContainAllSelectedIngs = false;
 	private boolean canContainNonSelectedIngs = true;
+	private boolean isSearchInProgress = false;
 
 	private static final int CATEGORY_BUTTON_STATE_IDX_NEUTRAL = 0;
 	private static final int CATEGORY_BUTTON_STATE_NUM = 2;
@@ -96,6 +100,31 @@ public class SearchActivity extends ActionBarActivity {
 		initSearchSettingsDialog();
 		initNoIngTagDialog();
 		initNoSearchResultsDialog();
+		initSearchProgressDialog();
+	}
+
+	private void initSearchSettingsDialog() {
+		searchSettings = new Dialog(this);
+		searchSettings.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		searchSettings.setContentView(R.layout.dialog_search_settings_layout);
+		Switch switchButtonOne = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_one_switch);
+		switchButtonOne.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mustContainAllSelectedIngs = !mustContainAllSelectedIngs;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
+		Switch switchButtonTwo = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_two_switch);
+		switchButtonTwo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				canContainNonSelectedIngs = !canContainNonSelectedIngs;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
 	}
 
 	private void initNoIngTagDialog() {
@@ -104,6 +133,12 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void initNoSearchResultsDialog() {
 
+	}
+
+	private void initSearchProgressDialog() {
+		searchProgress = new Dialog(this);
+		searchProgress.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		searchProgress.setContentView(R.layout.dialog_search_progress_layout);
 	}
 
 	private void initSearchView() {
@@ -126,9 +161,9 @@ public class SearchActivity extends ActionBarActivity {
 		ingListAdapter = new IngredientSelectionListAdapter(this, ings);
 		ingredientListView.setAdapter(ingListAdapter);
 		ingListAdapter.notifyDataSetChanged();
-		
+
 		GridView tagListView = (GridView) findViewById(R.id.tag_selection);
-		tagListAdapter = new TagSelectionListAdapter(this,tags);
+		tagListAdapter = new TagSelectionListAdapter(this, tags);
 		tagListView.setAdapter(tagListAdapter);
 		tagListAdapter.notifyDataSetChanged();
 	}
@@ -170,7 +205,11 @@ public class SearchActivity extends ActionBarActivity {
 		Button startSearchButton = (Button) findViewById(R.id.start_search_button);
 		startSearchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				searchForDrinks();
+				if (!isSearchInProgress) {
+					searchForDrinks();
+				} else {
+					searchProgress.show();
+				}
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
@@ -185,21 +224,23 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void searchForDrinks() {
+		isSearchInProgress = true;
 		ArrayList<Integer> selectedIngIDs = getSelectedIngredientIDs();
 		ArrayList<Integer> selectedTagIDs = getSelectedTagIDs();
 		if ((selectedIngIDs.isEmpty()) && (selectedTagIDs.isEmpty())) {
 			// Throw no Items selected Error with option for whole book
 			return;
 		}
-		ArrayList<RecipeSearchResult> results = CRDatabase.getInstance(this)
-				.searchByIngredient(selectedIngIDs, selectedTagIDs,
-						mustContainAllSelectedIngs, canContainNonSelectedIngs);
-		if (results.size() > 0) {
-			CRDatabase.getInstance(this).setSearchResults(results);
+		searchProgress.show();
+		if (CRDatabase.getInstance(this).searchByIngredient(selectedIngIDs,
+				selectedTagIDs, mustContainAllSelectedIngs,
+				canContainNonSelectedIngs)) {
 			openRecipeBook();
 		} else {
 			// No results message
 		}
+		searchProgress.dismiss();
+		isSearchInProgress = false;
 	}
 
 	private void openRecipeBook() {
@@ -305,8 +346,7 @@ public class SearchActivity extends ActionBarActivity {
 		ingListAdapter
 				.setSelectedCategoryButton(IngredientSelectionListAdapter.DONT_FILTER_FOR_CATEGORY);
 		startFilter();
-		
-		
+
 		ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
 		for (int idx = 0; idx < ings.size(); idx++) {
 			if (ings.get(idx).isSelected()) {
@@ -324,29 +364,5 @@ public class SearchActivity extends ActionBarActivity {
 			}
 		}
 		return selectedTagIDs;
-	}
-
-	private void initSearchSettingsDialog() {
-		searchSettings = new Dialog(this);
-		searchSettings.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		searchSettings.setContentView(R.layout.dialog_search_settings_layout);
-		Switch switchButtonOne = (Switch) searchSettings
-				.findViewById(R.id.search_settings_option_one_switch);
-		switchButtonOne.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mustContainAllSelectedIngs = !mustContainAllSelectedIngs;
-				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			}
-		});
-		Switch switchButtonTwo = (Switch) searchSettings
-				.findViewById(R.id.search_settings_option_two_switch);
-		switchButtonTwo.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				canContainNonSelectedIngs = !canContainNonSelectedIngs;
-				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			}
-		});
 	}
 }

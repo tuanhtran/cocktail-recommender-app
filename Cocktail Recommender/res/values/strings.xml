@@ -21,7 +21,7 @@
     <string name="recipe_page_test">Wählen Sie ein Rezept aus!</string>
     <string name="tag_icon_content_description">Tag Icon</string>
 
-    <!-- Related to search settings dialog in SearchActivity -->
+    <!-- Related to dialogs in SearchActivity -->
     <string name="search_settings_title">Sucheinstellungen</string>
     <string name="search_settings_option_one_title">Wie viele der ausgewählten Zutaten sollen enthalten sein?</string>
     <string name="search_settings_option_two_title">Sollen auch Ergebnisse mit nicht ausgewählten Zutaten gelistet werden?</string>
@@ -29,7 +29,8 @@
     <string name="search_settings_option_one_choice_all">Alle</string>
     <string name="search_settings_option_two_choice_yes">Ja</string>
     <string name="search_settings_option_two_choice_no">Nein</string>
-	
+    <string name="search_progress_text">Suche im Gang</string>
+    
     <!-- Related to ShoppingList dialogs -->
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>
     <string name="shopping_list_creation_dialog_option_one">Neue Einkaufsliste erstellen</string>
