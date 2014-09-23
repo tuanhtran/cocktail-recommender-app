@@ -524,19 +524,20 @@ public class CRDatabase {
 		public ArrayList<RecipeSearchResult> searchByIngredients() {
 			ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
 
-			String searchTerm = getSearchTerm();
+			String whereClause = getWhereClause();
+			String selectionArgs[] = getSelectionArgs();
 
 			Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 					COCKTAILS_KEY_ID, COCKTAILS_KEY_INGREDIENTS,
-					COCKTAILS_KEY_TAGS }, searchTerm, null, null, null, null);
+					COCKTAILS_KEY_TAGS }, whereClause, selectionArgs, null,
+					null, null);
 
 			if (cursor.moveToFirst()) {
 				do {
 					Recipe recipe = getRecipeFromID(cursor
 							.getInt(COCKTAILS_COLUMN_IDX_ID));
 
-					int matchRate = determineMatchRate(recipe.getIngredients(),
-							selectedIngIDs);
+					int matchRate = determineMatchRate(recipe.getIngredients());
 					RecipeSearchResult result = new RecipeSearchResult(recipe,
 							matchRate);
 					searchResults.add(result);
@@ -548,34 +549,63 @@ public class CRDatabase {
 			return searchResults;
 		}
 
-		private int determineMatchRate(RecipeIngredient[] recipeIngs,
-				ArrayList<Integer> selectedIngIDs) {
+		private int determineMatchRate(RecipeIngredient[] recipeIngs) {
 			int rate = 0;
-			for (int ingIdx = 0; ingIdx < recipeIngs.length; ingIdx++) {
-				if (selectedIngIDs.contains((Integer) recipeIngs[ingIdx]
-						.getID())) {
-					rate++;
+			if (!selectedIngIDs.isEmpty()) {
+				for (int ingIdx = 0; ingIdx < recipeIngs.length; ingIdx++) {
+					if (selectedIngIDs.contains((Integer) recipeIngs[ingIdx]
+							.getID())) {
+						rate++;
+					}
 				}
+				rate *= 100;
+				rate /= selectedIngIDs.size();
 			}
-			rate *= 100;
-			rate /= selectedIngIDs.size();
 			return rate;
 		}
 
-		private String getSearchTerm() {
-			String term = "";
-			for (int ingIdx = 0; ingIdx < selectedIngIDs.size(); ingIdx++) {
-				term = term + COCKTAILS_KEY_INGREDIENTS + " LIKE " + "'%"
-						+ selectedIngIDs.get(ingIdx) + "%'";
-				if (ingIdx + 1 != selectedIngIDs.size()) {
-					term = term + getConjunction();
+		private String getWhereClause() {
+			String whereClause = "";
+
+			if (!selectedIngIDs.isEmpty()) {
+				whereClause = whereClause + "(";
+				for (int ingIdx = 0; ingIdx < selectedIngIDs.size(); ingIdx++) {
+					whereClause = whereClause + COCKTAILS_KEY_INGREDIENTS
+							+ " LIKE ?";
+					if (ingIdx + 1 != selectedIngIDs.size()) {
+						whereClause = whereClause + getConjunction();
+					}
 				}
+				whereClause = whereClause + ")";
 			}
 			if ((!selectedIngIDs.isEmpty()) && (!selectedTagIDs.isEmpty())) {
-				// term = term + " AND ";
+				whereClause = whereClause + " AND ";
 			}
 
-			return term;
+			if (!selectedTagIDs.isEmpty()) {
+				whereClause = whereClause + "(";
+				for (int ingIdx = 0; ingIdx < selectedTagIDs.size(); ingIdx++) {
+					whereClause = whereClause + COCKTAILS_KEY_TAGS + " LIKE ?";
+					if (ingIdx + 1 != selectedTagIDs.size()) {
+						whereClause = whereClause + getConjunction();
+					}
+				}
+				whereClause = whereClause + ")";
+			}
+			return whereClause;
+		}
+
+		private String[] getSelectionArgs() {
+			String[] args = new String[selectedIngIDs.size()
+					+ selectedTagIDs.size()];
+			for (int idx = 0; idx < selectedIngIDs.size(); idx++) {
+				args[idx] = "%" + selectedIngIDs.get(idx).toString() + "%";
+			}
+			for (int idx = 0; idx < selectedTagIDs.size(); idx++) {
+				args[selectedIngIDs.size() + idx] = "%"
+						+ selectedTagIDs.get(idx).toString() + "%";
+			}
+			return args;
 		}
 
 		private String getConjunction() {

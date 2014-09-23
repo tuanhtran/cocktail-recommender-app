@@ -172,16 +172,16 @@ public class SearchActivity extends ActionBarActivity {
 		categoryButtonAlc = (Button) findViewById(R.id.category_button_alcoholic);
 		categoryButtonAlc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				categoryButtonPressed(v.getId());
 			}
 		});
 
 		categoryButtonNonAlc = (Button) findViewById(R.id.category_button_non_alcoholic);
 		categoryButtonNonAlc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				categoryButtonPressed(v.getId());
 
 			}
 		});
@@ -189,36 +189,36 @@ public class SearchActivity extends ActionBarActivity {
 		categoryButtonMisc = (Button) findViewById(R.id.category_button_misc);
 		categoryButtonMisc.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				categoryButtonPressed(v.getId());
 			}
 		});
 
 		categoryButtonSelected = (Button) findViewById(R.id.category_button_selected);
 		categoryButtonSelected.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				categoryButtonPressed(v.getId());
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				categoryButtonPressed(v.getId());
 			}
 		});
 
 		Button startSearchButton = (Button) findViewById(R.id.start_search_button);
 		startSearchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 				if (!isSearchInProgress) {
 					searchForDrinks();
 				} else {
 					searchProgress.show();
 				}
-				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
 
 		Button openSearchSettingsButton = (Button) findViewById(R.id.search_settings_button);
 		openSearchSettingsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				searchSettings.show();
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				searchSettings.show();
 			}
 		});
 	}
@@ -360,7 +360,7 @@ public class SearchActivity extends ActionBarActivity {
 		ArrayList<Integer> selectedTagIDs = new ArrayList<Integer>();
 		for (int idx = 0; idx < tags.size(); idx++) {
 			if (tags.get(idx).isSelected()) {
-				selectedTagIDs.add(ings.get(idx).getID());
+				selectedTagIDs.add(tags.get(idx).getTagID());
 			}
 		}
 		return selectedTagIDs;

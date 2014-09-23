@@ -7,7 +7,6 @@
     <string name="title_activity_shopping_list">Einkaufslisten</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    
     <string name="generic_positive">OK</string>
     <string name="generic_cancel">Abbrechen</string>
 
@@ -25,12 +24,21 @@
     <string name="search_settings_title">Sucheinstellungen</string>
     <string name="search_settings_option_one_title">Wie viele der ausgewählten Zutaten sollen enthalten sein?</string>
     <string name="search_settings_option_two_title">Sollen auch Ergebnisse mit nicht ausgewählten Zutaten gelistet werden?</string>
+    <string name="search_settings_option_three_title">Wie viele der ausgewählten Tags sollen zutreffen?</string>
+    <string name="search_settings_option_four_title">Sollen auch Ergebnisse mit nicht ausgewählten Tags gelistet werden?</string>
+    <string name="search_settings_option_five_title">[Müssen Optionen für Ings und Tags zutreffen?]</string>
     <string name="search_settings_option_one_choice_any">Beliebig</string>
     <string name="search_settings_option_one_choice_all">Alle</string>
     <string name="search_settings_option_two_choice_yes">Ja</string>
     <string name="search_settings_option_two_choice_no">Nein</string>
+    <string name="search_settings_option_three_choice_any">Beliebig</string>
+    <string name="search_settings_option_three_choice_all">Alle</string>
+    <string name="search_settings_option_four_choice_yes">Ja</string>
+    <string name="search_settings_option_four_choice_no">Nein</string>
+    <string name="search_settings_option_five_choice_yes">Ja</string>
+    <string name="search_settings_option_five_choice_no">Nein</string>
     <string name="search_progress_text">Suche im Gang</string>
-    
+
     <!-- Related to ShoppingList dialogs -->
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>
     <string name="shopping_list_creation_dialog_option_one">Neue Einkaufsliste erstellen</string>
@@ -42,5 +50,5 @@
     <string name="shopping_list_creation_dialog_no_lists">Es existiert noch keine Einkaufsliste!</string>
     <string name="shopping_list_delete">Diese Einkaufsliste löschen?</string>
     <string name="shopping_list_creation_dialog_name_entry_error">Bitte einen Namen eingeben!</string>
-    
+
 </resources>
