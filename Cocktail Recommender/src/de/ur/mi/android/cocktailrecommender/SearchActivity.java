@@ -34,12 +34,15 @@ public class SearchActivity extends ActionBarActivity {
 	private TagSelectionListAdapter tagListAdapter;
 	private ArrayList<IngredientType> ings = new ArrayList<IngredientType>();
 	private ArrayList<Tag> tags = new ArrayList<Tag>();
-
-	private Dialog searchSettings;
-	private Dialog searchProgress;
 	private boolean mustContainAllSelectedIngs = false;
 	private boolean canContainNonSelectedIngs = true;
-	private boolean isSearchInProgress = false;
+	private boolean mustContainAllSelectedTags = false;
+	private boolean canContainNonSelectedTags = true;
+	private boolean bothIngsAndTagsMustBeFound = true;
+	private boolean isSearchInProgress;
+	
+	private Dialog searchSettings;
+	private Dialog searchProgress;
 
 	private static final int CATEGORY_BUTTON_STATE_IDX_NEUTRAL = 0;
 	private static final int CATEGORY_BUTTON_STATE_NUM = 2;
@@ -63,6 +66,7 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void initData() {
+		isSearchInProgress = false;
 		ings.clear();
 		tags.clear();
 		ings.addAll(CRDatabase.getInstance(this).getFullIngList());
@@ -107,6 +111,7 @@ public class SearchActivity extends ActionBarActivity {
 		searchSettings = new Dialog(this);
 		searchSettings.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		searchSettings.setContentView(R.layout.dialog_search_settings_layout);
+
 		Switch switchButtonOne = (Switch) searchSettings
 				.findViewById(R.id.search_settings_option_one_switch);
 		switchButtonOne.setOnClickListener(new OnClickListener() {
@@ -116,6 +121,7 @@ public class SearchActivity extends ActionBarActivity {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
+
 		Switch switchButtonTwo = (Switch) searchSettings
 				.findViewById(R.id.search_settings_option_two_switch);
 		switchButtonTwo.setOnClickListener(new OnClickListener() {
@@ -125,6 +131,37 @@ public class SearchActivity extends ActionBarActivity {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
+
+		Switch switchButtonThree = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_three_switch);
+		switchButtonThree.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mustContainAllSelectedTags = !mustContainAllSelectedTags;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
+
+		Switch switchButtonFour = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_four_switch);
+		switchButtonFour.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				canContainNonSelectedTags = !canContainNonSelectedTags;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
+
+		Switch switchButtonFive = (Switch) searchSettings
+				.findViewById(R.id.search_settings_option_five_switch);
+		switchButtonFive.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				bothIngsAndTagsMustBeFound = !bothIngsAndTagsMustBeFound;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
+
 	}
 
 	private void initNoIngTagDialog() {
@@ -206,10 +243,9 @@ public class SearchActivity extends ActionBarActivity {
 		startSearchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				searchProgress.show();
 				if (!isSearchInProgress) {
 					searchForDrinks();
-				} else {
-					searchProgress.show();
 				}
 			}
 		});
@@ -231,10 +267,10 @@ public class SearchActivity extends ActionBarActivity {
 			// Throw no Items selected Error with option for whole book
 			return;
 		}
-		searchProgress.show();
 		if (CRDatabase.getInstance(this).searchByIngredient(selectedIngIDs,
 				selectedTagIDs, mustContainAllSelectedIngs,
-				canContainNonSelectedIngs)) {
+				canContainNonSelectedIngs, mustContainAllSelectedTags,
+				canContainNonSelectedTags, bothIngsAndTagsMustBeFound)) {
 			openRecipeBook();
 		} else {
 			// No results message

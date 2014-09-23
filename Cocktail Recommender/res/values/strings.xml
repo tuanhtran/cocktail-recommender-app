@@ -26,7 +26,7 @@
     <string name="search_settings_option_two_title">Sollen auch Ergebnisse mit nicht ausgewählten Zutaten gelistet werden?</string>
     <string name="search_settings_option_three_title">Wie viele der ausgewählten Tags sollen zutreffen?</string>
     <string name="search_settings_option_four_title">Sollen auch Ergebnisse mit nicht ausgewählten Tags gelistet werden?</string>
-    <string name="search_settings_option_five_title">[Müssen Optionen für Ings und Tags zutreffen?]</string>
+    <string name="search_settings_option_five_title">[Insert Formulierung Here]</string>
     <string name="search_settings_option_one_choice_any">Beliebig</string>
     <string name="search_settings_option_one_choice_all">Alle</string>
     <string name="search_settings_option_two_choice_yes">Ja</string>

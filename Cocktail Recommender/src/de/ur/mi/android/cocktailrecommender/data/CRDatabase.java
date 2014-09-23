@@ -113,16 +113,16 @@ public class CRDatabase {
 	public boolean searchByIngredient(ArrayList<Integer> selectedIngIDs,
 			ArrayList<Integer> selectedTagIDs,
 			boolean mustContainAllSelectedIngs,
-			boolean canContainNonSelectedIngs) {
+			boolean canContainNonSelectedIngs,
+			boolean mustContainAllSelectedTags,
+			boolean canContainNonSelectedTags,
+			boolean bothIngsAndTagsMustBeFound) {
 		searchEngine.setSearchParameters(selectedIngIDs, selectedTagIDs,
-				mustContainAllSelectedIngs, canContainNonSelectedIngs);
-		ArrayList<RecipeSearchResult> results = searchEngine
-				.searchByIngredients();
-		if (results.size() > 0) {
-			setSearchResults(results);
-			return true;
-		}
-		return false;
+				mustContainAllSelectedIngs, canContainNonSelectedIngs,
+				mustContainAllSelectedTags, canContainNonSelectedTags,
+				bothIngsAndTagsMustBeFound);
+		clearSearchResults();
+		return searchEngine.searchByIngredients();
 	}
 
 	public ArrayList<RecipeSearchResult> getSearchResults() {
@@ -144,6 +144,7 @@ public class CRDatabase {
 				searchResults.add(result);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return searchResults;
 	}
 
@@ -162,7 +163,7 @@ public class CRDatabase {
 				recipeList.add(recipeToAdd);
 			} while (cursor.moveToNext());
 		}
-
+		cursor.close();
 		return recipeList;
 	}
 
@@ -181,6 +182,7 @@ public class CRDatabase {
 				ingredientList.add(ingTypeToAdd);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return ingredientList;
 	}
 
@@ -198,6 +200,7 @@ public class CRDatabase {
 				tagList.add(tagToAdd);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return tagList;
 	}
 
@@ -226,6 +229,7 @@ public class CRDatabase {
 				shoppingLists.add(list);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return shoppingLists;
 	}
 
@@ -285,20 +289,19 @@ public class CRDatabase {
 		}
 	}
 
-	private void setSearchResults(ArrayList<RecipeSearchResult> results) {
-		if ((results.size() == 0) || (results == null)) {
-			return;
-		}
+	private void setSearchResult(Recipe recipe, int matchRate) {
+
+		String sqlInsert = "INSERT INTO " + DATABASE_TABLE_SEARCHRESULTS + " ("
+				+ SEARCHRESULTS_KEY_RECIPEID + ","
+				+ SEARCHRESULTS_KEY_MATCH_RATE + ") VALUES ("
+				+ recipe.getRecipeID() + "," + matchRate + ");";
+		db.execSQL(sqlInsert);
+
+	}
+
+	private void clearSearchResults() {
 		db.execSQL("delete from " + DATABASE_TABLE_SEARCHRESULTS);
 		db.execSQL("vacuum");
-		for (RecipeSearchResult searchResult : results) {
-			String sqlInsert = "INSERT INTO " + DATABASE_TABLE_SEARCHRESULTS
-					+ " (" + SEARCHRESULTS_KEY_RECIPEID + ","
-					+ SEARCHRESULTS_KEY_MATCH_RATE + ") VALUES ("
-					+ searchResult.getRecipe().getRecipeID() + ","
-					+ searchResult.getMatchRate() + ");";
-			db.execSQL(sqlInsert);
-		}
 	}
 
 	private Recipe getRecipeFromID(int recipeID) {
@@ -308,7 +311,9 @@ public class CRDatabase {
 				COCKTAILS_KEY_PREPARATION }, COCKTAILS_KEY_ID + "=" + recipeID,
 				null, null, null, null);
 		cursor.moveToFirst();
-		return getRecipeFromCursor(cursor);
+		Recipe recipe = getRecipeFromCursor(cursor);
+		cursor.close();
+		return recipe;
 	}
 
 	private String getIngNameFromID(int ingID) {
@@ -317,6 +322,7 @@ public class CRDatabase {
 						+ ingID, null, null, null, null);
 		cursor.moveToFirst();
 		String name = cursor.getString(INGREDIENTS_COLUMN_IDX_NAME - 1);
+		cursor.close();
 		return name;
 	}
 
@@ -326,6 +332,7 @@ public class CRDatabase {
 				null, null, null, null);
 		cursor.moveToFirst();
 		String name = cursor.getString(TAGS_COLUMN_IDX_NAME - 1);
+		cursor.close();
 		return name;
 	}
 
@@ -367,6 +374,7 @@ public class CRDatabase {
 				favos.add(faveToAdd);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return favos;
 	}
 
@@ -508,22 +516,31 @@ public class CRDatabase {
 	private class SearchEngine {
 		private boolean mustContainAllSelectedIngs = false;
 		private boolean canContainNonSelectedIngs = false;
+		private boolean mustContainAllSelectedTags = false;
+		private boolean canContainNonSelectedTags = false;
+		private boolean bothIngsAndTagsMustBeFound = false;
 		private ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
 		private ArrayList<Integer> selectedTagIDs = new ArrayList<Integer>();
 
 		public void setSearchParameters(ArrayList<Integer> selectedIngIDs,
 				ArrayList<Integer> selectedTagIDs,
 				boolean mustContainAllSelectedIngs,
-				boolean canContainNonSelectedIngs) {
+				boolean canContainNonSelectedIngs,
+				boolean mustContainAllSelectedTags,
+				boolean canContainNonSelectedTags,
+				boolean bothIngsAndTagsMustBeFound) {
+
 			this.selectedIngIDs.addAll(selectedIngIDs);
 			this.selectedTagIDs.addAll(selectedTagIDs);
 			this.mustContainAllSelectedIngs = mustContainAllSelectedIngs;
 			this.canContainNonSelectedIngs = canContainNonSelectedIngs;
+			this.mustContainAllSelectedTags = mustContainAllSelectedTags;
+			this.canContainNonSelectedTags = canContainNonSelectedTags;
+			this.bothIngsAndTagsMustBeFound = bothIngsAndTagsMustBeFound;
 		}
 
-		public ArrayList<RecipeSearchResult> searchByIngredients() {
-			ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
-
+		public boolean searchByIngredients() {
+			boolean resultWasFound = false;
 			String whereClause = getWhereClause();
 			String selectionArgs[] = getSelectionArgs();
 
@@ -537,19 +554,42 @@ public class CRDatabase {
 					Recipe recipe = getRecipeFromID(cursor
 							.getInt(COCKTAILS_COLUMN_IDX_ID));
 
-					int matchRate = determineMatchRate(recipe.getIngredients());
-					RecipeSearchResult result = new RecipeSearchResult(recipe,
-							matchRate);
-					searchResults.add(result);
+					if ((containsNonSelectedIngs(recipe.getIngredients()) && !canContainNonSelectedIngs)
+							|| (containsNonSelectedTags(recipe.getTags()) && !canContainNonSelectedTags)) {
+						continue;
+					}
 
+					int matchRate = determineMatchRate(recipe.getIngredients(),
+							recipe.getTags());
+					setSearchResult(recipe, matchRate);
+					resultWasFound = true;
 				} while (cursor.moveToNext());
 			}
+			cursor.close();
 			this.selectedIngIDs.clear();
 			this.selectedTagIDs.clear();
-			return searchResults;
+			return resultWasFound;
 		}
 
-		private int determineMatchRate(RecipeIngredient[] recipeIngs) {
+		private boolean containsNonSelectedIngs(RecipeIngredient[] ingredients) {
+			for (RecipeIngredient rIng : ingredients) {
+				if (!selectedIngIDs.contains(rIng.getID())) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private boolean containsNonSelectedTags(Tag[] tags) {
+			for (Tag tag : tags) {
+				if (!selectedTagIDs.contains(tag.getTagID())) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private int determineMatchRate(RecipeIngredient[] recipeIngs, Tag[] tags) {
 			int rate = 0;
 			if (!selectedIngIDs.isEmpty()) {
 				for (int ingIdx = 0; ingIdx < recipeIngs.length; ingIdx++) {
@@ -558,9 +598,18 @@ public class CRDatabase {
 						rate++;
 					}
 				}
-				rate *= 100;
-				rate /= selectedIngIDs.size();
 			}
+			if (!selectedTagIDs.isEmpty()) {
+				for (int tagIdx = 0; tagIdx < tags.length; tagIdx++) {
+					if (selectedTagIDs.contains((Integer) tags[tagIdx]
+							.getTagID())) {
+						rate++;
+					}
+				}
+			}
+			rate *= 100;
+			rate /= (selectedIngIDs.size() + selectedTagIDs.size());
+
 			return rate;
 		}
 
@@ -573,13 +622,15 @@ public class CRDatabase {
 					whereClause = whereClause + COCKTAILS_KEY_INGREDIENTS
 							+ " LIKE ?";
 					if (ingIdx + 1 != selectedIngIDs.size()) {
-						whereClause = whereClause + getConjunction();
+						whereClause = whereClause
+								+ getConjunction(mustContainAllSelectedIngs);
 					}
 				}
 				whereClause = whereClause + ")";
 			}
 			if ((!selectedIngIDs.isEmpty()) && (!selectedTagIDs.isEmpty())) {
-				whereClause = whereClause + " AND ";
+				whereClause = whereClause
+						+ getConjunction(bothIngsAndTagsMustBeFound);
 			}
 
 			if (!selectedTagIDs.isEmpty()) {
@@ -587,7 +638,8 @@ public class CRDatabase {
 				for (int ingIdx = 0; ingIdx < selectedTagIDs.size(); ingIdx++) {
 					whereClause = whereClause + COCKTAILS_KEY_TAGS + " LIKE ?";
 					if (ingIdx + 1 != selectedTagIDs.size()) {
-						whereClause = whereClause + getConjunction();
+						whereClause = whereClause
+								+ getConjunction(mustContainAllSelectedTags);
 					}
 				}
 				whereClause = whereClause + ")";
@@ -608,8 +660,8 @@ public class CRDatabase {
 			return args;
 		}
 
-		private String getConjunction() {
-			if (mustContainAllSelectedIngs) {
+		private String getConjunction(boolean boole) {
+			if (boole) {
 				return " AND ";
 			} else {
 				return " OR ";
