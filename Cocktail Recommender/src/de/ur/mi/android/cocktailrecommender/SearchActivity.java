@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
-import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,9 +38,8 @@ public class SearchActivity extends ActionBarActivity {
 	private boolean canContainNonSelectedIngs = true;
 	private boolean mustContainAllSelectedTags = false;
 	private boolean canContainNonSelectedTags = true;
-	private boolean bothIngsAndTagsMustBeFound = true;
 	private boolean isSearchInProgress;
-	
+
 	private Dialog searchSettings;
 	private Dialog searchProgress;
 
@@ -103,8 +101,6 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void initDialogs() {
 		initSearchSettingsDialog();
-		initNoIngTagDialog();
-		initNoSearchResultsDialog();
 		initSearchProgressDialog();
 	}
 
@@ -152,25 +148,6 @@ public class SearchActivity extends ActionBarActivity {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
-
-		Switch switchButtonFive = (Switch) searchSettings
-				.findViewById(R.id.search_settings_option_five_switch);
-		switchButtonFive.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				bothIngsAndTagsMustBeFound = !bothIngsAndTagsMustBeFound;
-				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			}
-		});
-
-	}
-
-	private void initNoIngTagDialog() {
-
-	}
-
-	private void initNoSearchResultsDialog() {
-
 	}
 
 	private void initSearchProgressDialog() {
@@ -265,26 +242,57 @@ public class SearchActivity extends ActionBarActivity {
 		ArrayList<Integer> selectedIngIDs = getSelectedIngredientIDs();
 		ArrayList<Integer> selectedTagIDs = getSelectedTagIDs();
 		if ((selectedIngIDs.isEmpty()) && (selectedTagIDs.isEmpty())) {
-			// Throw no Items selected Error with option for whole book
+			createFailedSearchMsg(R.string.search_error_no_selection_title,
+					R.string.search_error_no_selection_msg);
+			setSearchNotInProgress();
 			return;
 		}
 		if (CRDatabase.getInstance(this).searchByIngredient(selectedIngIDs,
 				selectedTagIDs, mustContainAllSelectedIngs,
 				canContainNonSelectedIngs, mustContainAllSelectedTags,
-				canContainNonSelectedTags, bothIngsAndTagsMustBeFound)) {
-			openRecipeBook();
+				canContainNonSelectedTags)) {
+			openRecipeBook(StartRecipeBookValues.SEARCH_RESULTS);
 		} else {
-			// No results message
+			createFailedSearchMsg(R.string.search_error_no_results_title,
+					R.string.search_error_no_results_msg);
 		}
+		setSearchNotInProgress();
+	}
+
+	private void setSearchNotInProgress() {
 		searchProgress.dismiss();
 		isSearchInProgress = false;
 	}
 
-	private void openRecipeBook() {
+	private void openRecipeBook(int listIdx) {
 		Intent intent = new Intent(SearchActivity.this,
 				RecipeBookActivity.class);
-		intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY, StartRecipeBookValues.SEARCH_RESULTS);
+		intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY, listIdx);
 		startActivity(intent);
+	}
+
+	private void createFailedSearchMsg(int title, int msg) {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setTitle(title);
+		alertDialogBuilder.setMessage(msg);
+		alertDialogBuilder.setCancelable(false);
+		alertDialogBuilder.setNegativeButton(R.string.search_error_option_back,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		alertDialogBuilder.setPositiveButton(
+				R.string.search_error_option_recipebook,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						openRecipeBook(StartRecipeBookValues.ALL_RECIPES);
+						dialog.dismiss();
+					}
+				});
+		alertDialogBuilder.create().show();
 	}
 
 	private void categoryButtonPressed(int buttonId) {

@@ -81,8 +81,8 @@ public class CRDatabase {
 	private static SQLiteDatabase db;
 	private JSONDataParser jsonDataParser;
 	private SearchEngine searchEngine;
-	private ArrayList<RecipeSearchResult> history;
-	private ArrayList<RecipeSearchResult> favorites;
+	private ArrayList<RecipeListEntry> history;
+	private ArrayList<RecipeListEntry> favorites;
 
 	public CRDatabase(Context context) {
 		helper = new CRDatabaseHelper(context);
@@ -115,18 +115,23 @@ public class CRDatabase {
 			boolean mustContainAllSelectedIngs,
 			boolean canContainNonSelectedIngs,
 			boolean mustContainAllSelectedTags,
-			boolean canContainNonSelectedTags,
-			boolean bothIngsAndTagsMustBeFound) {
+			boolean canContainNonSelectedTags) {
+
+		if (searchEngine.compareSearchParameters(selectedIngIDs,
+				selectedTagIDs, mustContainAllSelectedIngs,
+				canContainNonSelectedIngs, mustContainAllSelectedTags,
+				canContainNonSelectedTags)) {
+			return true;
+		}
 		searchEngine.setSearchParameters(selectedIngIDs, selectedTagIDs,
 				mustContainAllSelectedIngs, canContainNonSelectedIngs,
-				mustContainAllSelectedTags, canContainNonSelectedTags,
-				bothIngsAndTagsMustBeFound);
+				mustContainAllSelectedTags, canContainNonSelectedTags);
 		clearSearchResults();
 		return searchEngine.searchByIngredients();
 	}
 
-	public ArrayList<RecipeSearchResult> getSearchResults() {
-		ArrayList<RecipeSearchResult> searchResults = new ArrayList<RecipeSearchResult>();
+	public ArrayList<RecipeListEntry> getSearchResults() {
+		ArrayList<RecipeListEntry> searchResults = new ArrayList<RecipeListEntry>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_SEARCHRESULTS, new String[] {
 				SEARCHRESULTS_KEY_RECIPEID, SEARCHRESULTS_KEY_MATCH_RATE },
@@ -139,7 +144,7 @@ public class CRDatabase {
 				int matchRate = cursor
 						.getInt(SEARCHRESULTS_COLUMN_IDX_MATCHRATE - 1);
 
-				RecipeSearchResult result = new RecipeSearchResult(recipe,
+				RecipeListEntry result = new RecipeListEntry(recipe,
 						matchRate);
 				searchResults.add(result);
 			} while (cursor.moveToNext());
@@ -148,8 +153,8 @@ public class CRDatabase {
 		return searchResults;
 	}
 
-	public ArrayList<RecipeSearchResult> getFullRecipeList() {
-		ArrayList<RecipeSearchResult> recipeList = new ArrayList<RecipeSearchResult>();
+	public ArrayList<RecipeListEntry> getFullRecipeList() {
+		ArrayList<RecipeListEntry> recipeList = new ArrayList<RecipeListEntry>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 				COCKTAILS_KEY_ID, COCKTAILS_KEY_NAME,
@@ -160,7 +165,7 @@ public class CRDatabase {
 		if (cursor.moveToFirst()) {
 			do {
 				Recipe recipeToAdd = getRecipeFromCursor(cursor);
-				recipeList.add(new RecipeSearchResult(recipeToAdd));
+				recipeList.add(new RecipeListEntry(recipeToAdd));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
@@ -271,20 +276,20 @@ public class CRDatabase {
 		
 	}
 
-	public ArrayList<RecipeSearchResult> getFavorites() {
+	public ArrayList<RecipeListEntry> getFavorites() {
 		return favorites;
 	}
 
-	public void addToFavorites(RecipeSearchResult recipeSR) {
+	public void addToFavorites(RecipeListEntry recipeSR) {
 		if (!listAlreadyContainsRecipeSR(recipeSR, favorites)) {
 			favorites.add(recipeSR);
 			saveFavoritesToDB();
 		}
 	}
 
-	public void removeFromFavorites(RecipeSearchResult recipeSR) {
-		ArrayList<RecipeSearchResult> toRemove = new ArrayList<RecipeSearchResult>();
-		for (RecipeSearchResult rsr : favorites) {
+	public void removeFromFavorites(RecipeListEntry recipeSR) {
+		ArrayList<RecipeListEntry> toRemove = new ArrayList<RecipeListEntry>();
+		for (RecipeListEntry rsr : favorites) {
 			if (rsr.getRecipe().getRecipeID() == recipeSR.getRecipe()
 					.getRecipeID()) {
 				toRemove.add(rsr);
@@ -293,11 +298,11 @@ public class CRDatabase {
 		favorites.removeAll(toRemove);
 	}
 
-	public ArrayList<RecipeSearchResult> getHistory() {
+	public ArrayList<RecipeListEntry> getHistory() {
 		return history;
 	}
 
-	public void addToHistory(RecipeSearchResult recipeSR) {
+	public void addToHistory(RecipeListEntry recipeSR) {
 		if (!listAlreadyContainsRecipeSR(recipeSR, history)) {
 			history.add(0, recipeSR);
 			while (history.size() > HISTORY_MAX_SIZE) {
@@ -377,8 +382,8 @@ public class CRDatabase {
 		return recipe;
 	}
 
-	private ArrayList<RecipeSearchResult> getFavoritesFromDB() {
-		ArrayList<RecipeSearchResult> favos = new ArrayList<RecipeSearchResult>();
+	private ArrayList<RecipeListEntry> getFavoritesFromDB() {
+		ArrayList<RecipeListEntry> favos = new ArrayList<RecipeListEntry>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_FAVORITES, new String[] {
 				FAVORITES_KEY_ID, FAVORITES_KEY_RECIPEID }, null, null, null,
@@ -387,7 +392,7 @@ public class CRDatabase {
 			do {
 				Recipe recipe = getRecipeFromID(cursor
 						.getInt(FAVORITES_COLUMN_IDX_RECIPEID));
-				RecipeSearchResult faveToAdd = new RecipeSearchResult(recipe);
+				RecipeListEntry faveToAdd = new RecipeListEntry(recipe);
 				favos.add(faveToAdd);
 			} while (cursor.moveToNext());
 		}
@@ -398,7 +403,7 @@ public class CRDatabase {
 	private void saveFavoritesToDB() {
 		db.execSQL("delete from " + DATABASE_TABLE_FAVORITES);
 		db.execSQL("vacuum");
-		for (RecipeSearchResult favoriteRecipe : favorites) {
+		for (RecipeListEntry favoriteRecipe : favorites) {
 			String sqlInsert = "INSERT INTO " + DATABASE_TABLE_FAVORITES + " ("
 					+ FAVORITES_KEY_RECIPEID + ") VALUES ("
 					+ favoriteRecipe.getRecipe().getRecipeID() + ");";
@@ -406,8 +411,8 @@ public class CRDatabase {
 		}
 	}
 
-	private ArrayList<RecipeSearchResult> getHistoryFromDB() {
-		ArrayList<RecipeSearchResult> hist = new ArrayList<RecipeSearchResult>();
+	private ArrayList<RecipeListEntry> getHistoryFromDB() {
+		ArrayList<RecipeListEntry> hist = new ArrayList<RecipeListEntry>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_HISTORY, new String[] {
 				HISTORY_KEY_ID, HISTORY_KEY_RECIPEID }, null, null, null, null,
@@ -416,7 +421,7 @@ public class CRDatabase {
 			do {
 				Recipe recipe = getRecipeFromID(cursor
 						.getInt(HISTORY_COLUMN_IDX_RECIPEID));
-				RecipeSearchResult faveToAdd = new RecipeSearchResult(recipe);
+				RecipeListEntry faveToAdd = new RecipeListEntry(recipe);
 				hist.add(faveToAdd);
 			} while (cursor.moveToNext());
 		}
@@ -426,7 +431,7 @@ public class CRDatabase {
 	private void saveHistoryToDB() {
 		db.execSQL("delete from " + DATABASE_TABLE_HISTORY);
 		db.execSQL("vacuum");
-		for (RecipeSearchResult historyRecipe : history) {
+		for (RecipeListEntry historyRecipe : history) {
 			String sqlInsert = "INSERT INTO " + DATABASE_TABLE_HISTORY + " ("
 					+ HISTORY_KEY_RECIPEID + ") VALUES ("
 					+ historyRecipe.getRecipe().getRecipeID() + ");";
@@ -434,9 +439,9 @@ public class CRDatabase {
 		}
 	}
 
-	private boolean listAlreadyContainsRecipeSR(RecipeSearchResult recipeSR,
-			ArrayList<RecipeSearchResult> list) {
-		for (RecipeSearchResult rsr : list) {
+	private boolean listAlreadyContainsRecipeSR(RecipeListEntry recipeSR,
+			ArrayList<RecipeListEntry> list) {
+		for (RecipeListEntry rsr : list) {
 			if (rsr.getRecipe().getRecipeID() == recipeSR.getRecipe()
 					.getRecipeID()) {
 				return true;
@@ -535,7 +540,6 @@ public class CRDatabase {
 		private boolean canContainNonSelectedIngs = false;
 		private boolean mustContainAllSelectedTags = false;
 		private boolean canContainNonSelectedTags = false;
-		private boolean bothIngsAndTagsMustBeFound = false;
 		private ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
 		private ArrayList<Integer> selectedTagIDs = new ArrayList<Integer>();
 
@@ -544,16 +548,45 @@ public class CRDatabase {
 				boolean mustContainAllSelectedIngs,
 				boolean canContainNonSelectedIngs,
 				boolean mustContainAllSelectedTags,
-				boolean canContainNonSelectedTags,
-				boolean bothIngsAndTagsMustBeFound) {
-
+				boolean canContainNonSelectedTags) {
+			this.selectedIngIDs.clear();
+			this.selectedTagIDs.clear();
 			this.selectedIngIDs.addAll(selectedIngIDs);
 			this.selectedTagIDs.addAll(selectedTagIDs);
 			this.mustContainAllSelectedIngs = mustContainAllSelectedIngs;
 			this.canContainNonSelectedIngs = canContainNonSelectedIngs;
 			this.mustContainAllSelectedTags = mustContainAllSelectedTags;
 			this.canContainNonSelectedTags = canContainNonSelectedTags;
-			this.bothIngsAndTagsMustBeFound = bothIngsAndTagsMustBeFound;
+		}
+
+		public boolean compareSearchParameters(
+				ArrayList<Integer> selectedIngIDs,
+				ArrayList<Integer> selectedTagIDs,
+				boolean mustContainAllSelectedIngs,
+				boolean canContainNonSelectedIngs,
+				boolean mustContainAllSelectedTags,
+				boolean canContainNonSelectedTags) {
+			if ((this.mustContainAllSelectedIngs != mustContainAllSelectedIngs)
+					|| (this.canContainNonSelectedIngs != canContainNonSelectedIngs)
+					|| (this.mustContainAllSelectedTags != mustContainAllSelectedTags)
+					|| (this.canContainNonSelectedTags != canContainNonSelectedTags)) {
+				return false;
+			}
+			if ((this.selectedIngIDs.size() != selectedIngIDs.size())
+					|| (this.selectedTagIDs.size() != selectedTagIDs.size())) {
+				return false;
+			}
+			for (int idx = 0; idx < this.selectedIngIDs.size(); idx++) {
+				if (!selectedIngIDs.contains(this.selectedIngIDs.get(idx))) {
+					return false;
+				}
+			}
+			for (int idx = 0; idx < this.selectedTagIDs.size(); idx++) {
+				if (!selectedTagIDs.contains(this.selectedTagIDs.get(idx))) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		public boolean searchByIngredients() {
@@ -583,8 +616,6 @@ public class CRDatabase {
 				} while (cursor.moveToNext());
 			}
 			cursor.close();
-			this.selectedIngIDs.clear();
-			this.selectedTagIDs.clear();
 			return resultWasFound;
 		}
 
@@ -646,8 +677,7 @@ public class CRDatabase {
 				whereClause = whereClause + ")";
 			}
 			if ((!selectedIngIDs.isEmpty()) && (!selectedTagIDs.isEmpty())) {
-				whereClause = whereClause
-						+ getConjunction(bothIngsAndTagsMustBeFound);
+				whereClause = whereClause + " AND ";
 			}
 
 			if (!selectedTagIDs.isEmpty()) {

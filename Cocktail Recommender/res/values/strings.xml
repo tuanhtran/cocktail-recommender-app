@@ -10,7 +10,7 @@
     <string name="action_settings">Settings</string>
     <string name="generic_positive">OK</string>
     <string name="generic_cancel">Abbrechen</string>
-    
+
     <!-- Related to MenuActivity -->
     <string name="main_menu_title_text">Cocktail Recommender</string>
     <string name="main_menu_search_button_text">Rezeptsuche</string>
@@ -18,13 +18,12 @@
     <string name="main_menu_shopping_list_button_text">Einkaufsliste</string>
     <string name="main_menu_fav_list_button_text">Favoriten</string>
     <string name="main_menu_history_button_text">Suchhistory</string>
-    
+
     <!-- Related to RecipeBookActivity -->
     <string name="search_result_tab_name">Suchergebnisse</string>
     <string name="history_tab_name">History</string>
     <string name="favs_tab_name">Favoriten</string>
     <string name="all_recipes_tab_name">Alle Rezepte</string>
-    
 
     <!-- Related to SearchActivity -->
     <string name="category_button_alc">Alk</string>
@@ -42,7 +41,6 @@
     <string name="search_settings_option_two_title">Sollen auch Ergebnisse mit nicht ausgewählten Zutaten gelistet werden?</string>
     <string name="search_settings_option_three_title">Wie viele der ausgewählten Tags sollen zutreffen?</string>
     <string name="search_settings_option_four_title">Sollen auch Ergebnisse mit nicht ausgewählten Tags gelistet werden?</string>
-    <string name="search_settings_option_five_title">[Insert Formulierung Here]</string>
     <string name="search_settings_option_one_choice_any">Beliebig</string>
     <string name="search_settings_option_one_choice_all">Alle</string>
     <string name="search_settings_option_two_choice_yes">Ja</string>
@@ -51,10 +49,13 @@
     <string name="search_settings_option_three_choice_all">Alle</string>
     <string name="search_settings_option_four_choice_yes">Ja</string>
     <string name="search_settings_option_four_choice_no">Nein</string>
-    <string name="search_settings_option_five_choice_yes">Ja</string>
-    <string name="search_settings_option_five_choice_no">Nein</string>
     <string name="search_progress_text">Suche im Gang</string>
-
+    <string name="search_error_no_selection_title">Achtung</string>
+    <string name="search_error_no_selection_msg">Es wurden weder Zutaten noch Tags ausgewählt. Die Suche wurde nicht gestartet.</string>
+    <string name="search_error_no_results_title">Suche Erfolglos</string>
+    <string name="search_error_no_results_msg">Es konnten keine Rezepte gefunden werden.</string>
+    <string name="search_error_option_back">Zurück zur Suche</string>
+    <string name="search_error_option_recipebook">Zum vollständigen Rezeptbuch</string>
 
     <!-- Related to ShoppingList dialogs -->
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>

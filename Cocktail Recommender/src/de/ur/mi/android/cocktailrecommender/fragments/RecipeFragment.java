@@ -17,7 +17,7 @@ import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
-import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
+import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
 
 public class RecipeFragment extends Fragment {
@@ -80,7 +80,7 @@ public class RecipeFragment extends Fragment {
 				.findViewById(R.id.recipe_page_add_to_favs_button);
 		recipeToFavoritesToggle.setOnClickListener(new View.OnClickListener() {
 			
-			RecipeSearchResult recipeToFavorite = new RecipeSearchResult(recipe);
+			RecipeListEntry recipeToFavorite = new RecipeListEntry(recipe);
 			boolean isFavorite = checkIfFavorite(recipeToFavorite);
 
 			@Override
@@ -97,10 +97,10 @@ public class RecipeFragment extends Fragment {
 				}
 			}
 
-			private boolean checkIfFavorite(RecipeSearchResult recipeToFavorite) {
+			private boolean checkIfFavorite(RecipeListEntry recipeToFavorite) {
 				boolean isFavorite = false;
-				ArrayList<RecipeSearchResult> favorites = CRDatabase.getInstance(getActivity()).getFavorites();
-				for (RecipeSearchResult favRecipe: favorites){
+				ArrayList<RecipeListEntry> favorites = CRDatabase.getInstance(getActivity()).getFavorites();
+				for (RecipeListEntry favRecipe: favorites){
 					if(favRecipe.compareTo(recipeToFavorite)==0){
 						isFavorite = true;
 						break;

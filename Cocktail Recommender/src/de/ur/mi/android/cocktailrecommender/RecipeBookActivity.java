@@ -6,7 +6,6 @@ import java.util.Arrays;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
@@ -17,38 +16,35 @@ import android.widget.TextView;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
-import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
+import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
 import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFlingListener;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnShoppingListAddListener;
-import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment;
-import de.ur.mi.android.cocktailrecommender.fragments.ResultListFragment.OnRecipeSelectedListener;
+import de.ur.mi.android.cocktailrecommender.fragments.RecipeListFragment;
+import de.ur.mi.android.cocktailrecommender.fragments.RecipeListFragment.OnRecipeSelectedListener;
 
 public class RecipeBookActivity extends ActionBarActivity implements
 		OnRecipeSelectedListener, OnShoppingListAddListener, OnFlingListener {
 
-	public static final String RESULT_LIST_KEY = "ResultList";
-	public static final String RESULT_LIST_BUNDLE_KEY = "ResultListBundle";
-
 	private RecipeFragment recipeFragment;
-	private ResultListFragment resultListFragment;
-	private ArrayList<RecipeSearchResult> resultList;
-	private ArrayList<RecipeSearchResult> allRecipes;
-	private ArrayList<RecipeSearchResult> favList;
-	private ArrayList<RecipeSearchResult> historyList;
+	private RecipeListFragment recipeListFragment;
+	private ArrayList<RecipeListEntry> recipeList;
+	private ArrayList<RecipeListEntry> allRecipes;
+	private ArrayList<RecipeListEntry> favList;
+	private ArrayList<RecipeListEntry> historyList;
 	private ActionBar actionBar;
 	private RecipeIngredient[] selectedIngredients;
 	private AlertDialog.Builder alertDialogBuilder;
 	private int recipePageIdx = 0;
 	private boolean onRecipePage = false;
 
-	// Fragment type not final, using ResultListFragment to test. Are custom
+	// Fragment type not final, using RecipeListFragment to test. Are custom
 	// types necessary?
-	private ResultListFragment historyListFragment;
-	private ResultListFragment favsListFragment;
-	private ResultListFragment allRecipesFragment;
+	private RecipeListFragment historyListFragment;
+	private RecipeListFragment favsListFragment;
+	private RecipeListFragment allRecipesFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +59,20 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	private void initData() {
-		resultList = CRDatabase.getInstance(this).getSearchResults();
+		recipeList = CRDatabase.getInstance(this).getSearchResults();
 		allRecipes = CRDatabase.getInstance(this).getFullRecipeList();
 		favList = CRDatabase.getInstance(this).getFavorites();
 		historyList = CRDatabase.getInstance(this).getHistory();
 	}
 
 	private void initUIFragments() {
-		resultListFragment = new ResultListFragment(resultList);
-		resultListFragment.setOnRecipeSelectedListener(this);
-		historyListFragment = new ResultListFragment(historyList, StartRecipeBookValues.NO_MATCH_RATE);
+		recipeListFragment = new RecipeListFragment(recipeList);
+		recipeListFragment.setOnRecipeSelectedListener(this);
+		historyListFragment = new RecipeListFragment(historyList, StartRecipeBookValues.NO_MATCH_RATE);
 		historyListFragment.setOnRecipeSelectedListener(this);
-		favsListFragment = new ResultListFragment(favList, StartRecipeBookValues.NO_MATCH_RATE);
+		favsListFragment = new RecipeListFragment(favList, StartRecipeBookValues.NO_MATCH_RATE);
 		favsListFragment.setOnRecipeSelectedListener(this);
-		allRecipesFragment = new ResultListFragment(allRecipes, StartRecipeBookValues.NO_MATCH_RATE);
+		allRecipesFragment = new RecipeListFragment(allRecipes, StartRecipeBookValues.NO_MATCH_RATE);
 		allRecipesFragment.setOnRecipeSelectedListener(this);
 		recipeFragment = new RecipeFragment();
 		recipeFragment.setOnFlingListener(this);
@@ -96,7 +92,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		ActionBar.Tab allRecipesTab = actionBar.newTab().setText(
 				R.string.all_recipes_tab_name);
 		searchResultTab.setTabListener(new RecipeBookTabListener(
-				resultListFragment));
+				recipeListFragment));
 		historyTab
 				.setTabListener(new RecipeBookTabListener(historyListFragment));
 		favsTab.setTabListener(new RecipeBookTabListener(favsListFragment));
@@ -106,6 +102,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		actionBar.addTab(searchResultTab);
 		actionBar.addTab(favsTab);
 		actionBar.addTab(historyTab);
+		
 		switch (getIntent().getExtras().getInt(
 				StartRecipeBookValues.FRAGMENT_TO_DISPLAY)) {
 		case StartRecipeBookValues.ALL_RECIPES:
@@ -322,8 +319,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	private int findPage(Recipe recipe) {
-		for (int idx = 0; idx < resultList.size(); idx++) {
-			if (resultList.get(idx).getRecipe().equals(recipe)) {
+		for (int idx = 0; idx < recipeList.size(); idx++) {
+			if (recipeList.get(idx).getRecipe().equals(recipe)) {
 				return idx;
 			}
 		}
@@ -348,9 +345,9 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	@Override
 	public void onRightToLeftFling() {
 		if (!isInLandscapeMode()) {
-			recipePageIdx = ((recipePageIdx - 1) + resultList.size())
-					% resultList.size();
-			recipeFragment.setRecipe(resultList.get(recipePageIdx).getRecipe());
+			recipePageIdx = ((recipePageIdx - 1) + recipeList.size())
+					% recipeList.size();
+			recipeFragment.setRecipe(recipeList.get(recipePageIdx).getRecipe());
 			recipeFragment.updateData();
 		}
 	}
@@ -358,8 +355,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	@Override
 	public void onLeftToRightFling() {
 		if (!isInLandscapeMode()) {
-			recipePageIdx = (recipePageIdx + 1) % resultList.size();
-			recipeFragment.setRecipe(resultList.get(recipePageIdx).getRecipe());
+			recipePageIdx = (recipePageIdx + 1) % recipeList.size();
+			recipeFragment.setRecipe(recipeList.get(recipePageIdx).getRecipe());
 			recipeFragment.updateData();
 		}
 	}
@@ -373,12 +370,12 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	
 	private class RecipeBookTabListener implements ActionBar.TabListener {
 
-		private ResultListFragment fragment;
+		private RecipeListFragment fragment;
 		
-		//FragmentTransaction from implemented methods don't work with ResultListFragment
+		//FragmentTransaction from implemented methods don't work with RecipeListFragment
 		private FragmentTransaction customTransaction;
 
-		public RecipeBookTabListener(ResultListFragment fragment) {
+		public RecipeBookTabListener(RecipeListFragment fragment) {
 			this.fragment = fragment;
 			
 
@@ -395,7 +392,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		public void onTabSelected(Tab tab,
 				android.support.v4.app.FragmentTransaction transaction) {
 			if (fragment == null) {
-				fragment = new ResultListFragment();
+				fragment = new RecipeListFragment();
 			}
 			customTransaction = getFragmentManager()
 					.beginTransaction();
