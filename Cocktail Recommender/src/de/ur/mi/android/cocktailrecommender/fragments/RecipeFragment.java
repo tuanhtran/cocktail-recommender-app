@@ -2,7 +2,6 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -15,8 +14,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
+import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
 
 public class RecipeFragment extends Fragment {
@@ -26,6 +27,7 @@ public class RecipeFragment extends Fragment {
 	private ListView recipeIngredients;
 	private TextView recipePreparation;
 	private Button ingredientsToShoppingList;
+	private Button recipeToFavoritesToggle;
 	private RecipePageIngredientListAdapter adapter;
 	private ArrayList<RecipeIngredient> ingredients;
 	private OnFlingListener listener;
@@ -52,6 +54,7 @@ public class RecipeFragment extends Fragment {
 		ingredients = new ArrayList<RecipeIngredient>();
 	}
 
+	// ToDo: Replace recipeToFavorite button with final toggle
 	private void initUI() {
 		recipeName = (TextView) fragmentView
 				.findViewById(R.id.recipe_page_name);
@@ -64,13 +67,48 @@ public class RecipeFragment extends Fragment {
 		ingredientsToShoppingList
 				.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
-						RecipeIngredient[] selectedIngs = adapter.getSelectedIngredients();
-						if (selectedIngs.length>0){
-							shoppingListener.onAddToShoppingList(adapter.getSelectedIngredients());
+						RecipeIngredient[] selectedIngs = adapter
+								.getSelectedIngredients();
+						if (selectedIngs.length > 0) {
+							shoppingListener.onAddToShoppingList(adapter
+									.getSelectedIngredients());
 							v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 						}
 					}
 				});
+		recipeToFavoritesToggle = (Button) fragmentView
+				.findViewById(R.id.recipe_page_add_to_favs_button);
+		recipeToFavoritesToggle.setOnClickListener(new View.OnClickListener() {
+			
+			RecipeSearchResult recipeToFavorite = new RecipeSearchResult(recipe);
+			boolean isFavorite = checkIfFavorite(recipeToFavorite);
+
+			@Override
+			public void onClick(View v) {
+				if (isFavorite) {
+					CRDatabase.getInstance(getActivity()).removeFromFavorites(recipeToFavorite);
+					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+					recipeToFavoritesToggle.setText(R.string.start_search);
+				} else {
+					CRDatabase.getInstance(getActivity()).addToFavorites(
+							recipeToFavorite);
+					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+					recipeToFavoritesToggle.setText("Added");
+				}
+			}
+
+			private boolean checkIfFavorite(RecipeSearchResult recipeToFavorite) {
+				boolean isFavorite = false;
+				ArrayList<RecipeSearchResult> favorites = CRDatabase.getInstance(getActivity()).getFavorites();
+				for (RecipeSearchResult favRecipe: favorites){
+					if(favRecipe.compareTo(recipeToFavorite)==0){
+						isFavorite = true;
+						break;
+					}					                                            
+				}
+				return isFavorite;
+			}
+		});
 		initAdapter();
 		updateData();
 	}
@@ -154,11 +192,11 @@ public class RecipeFragment extends Fragment {
 	public void setOnFlingListener(OnFlingListener listener) {
 		this.listener = listener;
 	}
-	
+
 	public interface OnShoppingListAddListener {
 		public void onAddToShoppingList(RecipeIngredient[] ingredients);
 	}
-	
+
 	public void setOnShoppingListAddListener(OnShoppingListAddListener listener) {
 		shoppingListener = listener;
 	}

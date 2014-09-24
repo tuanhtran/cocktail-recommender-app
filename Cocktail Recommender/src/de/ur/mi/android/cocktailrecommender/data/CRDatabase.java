@@ -148,8 +148,8 @@ public class CRDatabase {
 		return searchResults;
 	}
 
-	public ArrayList<Recipe> getFullRecipeList() {
-		ArrayList<Recipe> recipeList = new ArrayList<Recipe>();
+	public ArrayList<RecipeSearchResult> getFullRecipeList() {
+		ArrayList<RecipeSearchResult> recipeList = new ArrayList<RecipeSearchResult>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 				COCKTAILS_KEY_ID, COCKTAILS_KEY_NAME,
@@ -160,7 +160,7 @@ public class CRDatabase {
 		if (cursor.moveToFirst()) {
 			do {
 				Recipe recipeToAdd = getRecipeFromCursor(cursor);
-				recipeList.add(recipeToAdd);
+				recipeList.add(new RecipeSearchResult(recipeToAdd));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
@@ -241,20 +241,34 @@ public class CRDatabase {
 					.getIngredientJSONString(shoppingList.getIngredients());
 			values.put(SHOPPINGLISTS_KEY_NAME, shoppingList.getListName());
 			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, ingredientJSONString);
-			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
+			addShoppingListToDB(isNewList, values, shoppingList);
+			
 		} else {
 			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, jsonDataParser
 					.getIngredientJSONString(shoppingList.getIngredients()));
-			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
-					SHOPPINGLISTS_KEY_ID + "=?",
-					new String[] { String.valueOf(shoppingList.getId()) });
+			addShoppingListToDB(isNewList, values, shoppingList);
 		}
 	}
 
+	private void addShoppingListToDB(boolean isNewList, ContentValues values, ShoppingList shoppingList) {
+		if(isNewList)
+			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
+		else
+			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
+					SHOPPINGLISTS_KEY_ID + "=?",
+					new String[] { String.valueOf(shoppingList.getId()) });
+		
+	}
+
 	public void deleteShoppingList(ShoppingList list) {
+		deleteShoppingListFromDB(list);
+
+	}
+
+	private void deleteShoppingListFromDB(ShoppingList list) {
 		db.delete(DATABASE_TABLE_SHOPPINGLISTS, SHOPPINGLISTS_KEY_ID + "=?",
 				new String[] { String.valueOf(list.getId()) });
-
+		
 	}
 
 	public ArrayList<RecipeSearchResult> getFavorites() {
@@ -264,16 +278,19 @@ public class CRDatabase {
 	public void addToFavorites(RecipeSearchResult recipeSR) {
 		if (!listAlreadyContainsRecipeSR(recipeSR, favorites)) {
 			favorites.add(recipeSR);
+			saveFavoritesToDB();
 		}
 	}
 
 	public void removeFromFavorites(RecipeSearchResult recipeSR) {
+		ArrayList<RecipeSearchResult> toRemove = new ArrayList<RecipeSearchResult>();
 		for (RecipeSearchResult rsr : favorites) {
 			if (rsr.getRecipe().getRecipeID() == recipeSR.getRecipe()
 					.getRecipeID()) {
-				favorites.remove(rsr);
+				toRemove.add(rsr);
 			}
 		}
+		favorites.removeAll(toRemove);
 	}
 
 	public ArrayList<RecipeSearchResult> getHistory() {

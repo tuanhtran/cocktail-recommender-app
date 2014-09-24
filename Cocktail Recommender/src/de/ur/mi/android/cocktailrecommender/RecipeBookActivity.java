@@ -8,6 +8,8 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Surface;
 import android.widget.EditText;
@@ -17,6 +19,7 @@ import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
+import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFlingListener;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnShoppingListAddListener;
@@ -32,34 +35,95 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private RecipeFragment recipeFragment;
 	private ResultListFragment resultListFragment;
 	private ArrayList<RecipeSearchResult> resultList;
+	private ArrayList<RecipeSearchResult> allRecipes;
+	private ArrayList<RecipeSearchResult> favList;
+	private ArrayList<RecipeSearchResult> historyList;
+	private ActionBar actionBar;
 	private RecipeIngredient[] selectedIngredients;
 	private AlertDialog.Builder alertDialogBuilder;
 	private int recipePageIdx = 0;
 	private boolean onRecipePage = false;
 
+	// Fragment type not final, using ResultListFragment to test. Are custom
+	// types necessary?
+	private ResultListFragment historyListFragment;
+	private ResultListFragment favsListFragment;
+	private ResultListFragment allRecipesFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_book);
+		
 		initData();
 		initUIFragments();
+		setActionBarTabs();
 		initDialog();
+		
 	}
 
 	private void initData() {
 		resultList = CRDatabase.getInstance(this).getSearchResults();
+		allRecipes = CRDatabase.getInstance(this).getFullRecipeList();
+		favList = CRDatabase.getInstance(this).getFavorites();
+		historyList = CRDatabase.getInstance(this).getHistory();
 	}
 
 	private void initUIFragments() {
 		resultListFragment = new ResultListFragment(resultList);
 		resultListFragment.setOnRecipeSelectedListener(this);
+		historyListFragment = new ResultListFragment(historyList, StartRecipeBookValues.NO_MATCH_RATE);
+		historyListFragment.setOnRecipeSelectedListener(this);
+		favsListFragment = new ResultListFragment(favList, StartRecipeBookValues.NO_MATCH_RATE);
+		favsListFragment.setOnRecipeSelectedListener(this);
+		allRecipesFragment = new ResultListFragment(allRecipes, StartRecipeBookValues.NO_MATCH_RATE);
+		allRecipesFragment.setOnRecipeSelectedListener(this);
 		recipeFragment = new RecipeFragment();
 		recipeFragment.setOnFlingListener(this);
 		recipeFragment.setOnShoppingListAddListener(this);
-		FragmentTransaction transaction = getFragmentManager()
-				.beginTransaction();
-		transaction.add(R.id.recipe_book_container_main, resultListFragment);
-		transaction.commit();
+
+	}
+
+	private void setActionBarTabs() {
+		actionBar = getSupportActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		ActionBar.Tab searchResultTab = actionBar.newTab().setText(
+				R.string.search_result_tab_name);
+		ActionBar.Tab historyTab = actionBar.newTab().setText(
+				R.string.history_tab_name);
+		ActionBar.Tab favsTab = actionBar.newTab().setText(
+				R.string.favs_tab_name);
+		ActionBar.Tab allRecipesTab = actionBar.newTab().setText(
+				R.string.all_recipes_tab_name);
+		searchResultTab.setTabListener(new RecipeBookTabListener(
+				resultListFragment));
+		historyTab
+				.setTabListener(new RecipeBookTabListener(historyListFragment));
+		favsTab.setTabListener(new RecipeBookTabListener(favsListFragment));
+		allRecipesTab.setTabListener(new RecipeBookTabListener(
+				allRecipesFragment));
+		actionBar.addTab(allRecipesTab);
+		actionBar.addTab(searchResultTab);
+		actionBar.addTab(favsTab);
+		actionBar.addTab(historyTab);
+		switch (getIntent().getExtras().getInt(
+				StartRecipeBookValues.FRAGMENT_TO_DISPLAY)) {
+		case StartRecipeBookValues.ALL_RECIPES:
+			actionBar.selectTab(allRecipesTab);
+			break;
+		case StartRecipeBookValues.SEARCH_RESULTS:
+			actionBar.selectTab(searchResultTab);
+			break;
+		case StartRecipeBookValues.FAV_LIST:
+			actionBar.selectTab(favsTab);
+			break;
+		case StartRecipeBookValues.HISTORY_LIST:
+			actionBar.selectTab(historyTab);
+			break;
+		default:
+			actionBar.selectTab(allRecipesTab);
+			break;
+		}
 	}
 
 	// Dialog erscheint wenn im RecipeFragment auf den
@@ -112,6 +176,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 						}
 					}
 				});
+		alertDialogBuilder.setCancelable(false);
 		alertDialogBuilder.create();
 	}
 
@@ -146,7 +211,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 						CRDatabase.getInstance(RecipeBookActivity.this)
 								.addShoppingList(modifiedList, isNewList);
 						initDialog();
-						startShoppingListActivity();
 
 					}
 
@@ -186,6 +250,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 						initDialog();
 					}
 				});
+		alertDialogBuilder.setCancelable(false);
 		alertDialogBuilder.show();
 	}
 
@@ -214,21 +279,21 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						if (!listName.getText().toString().equals("")){
+						if (!listName.getText().toString().equals("")) {
 							int genericId = -1;
 							String name = listName.getText().toString();
-							ShoppingList shoppingList = new ShoppingList(genericId,
-									name, selectedIngredients);
+							ShoppingList shoppingList = new ShoppingList(
+									genericId, name, selectedIngredients);
 							CRDatabase.getInstance(RecipeBookActivity.this)
 									.addShoppingList(shoppingList, isNewList);
 							initDialog();
-							startShoppingListActivity();
-						}else{
+						} else {
 							createNewShoppingList();
 						}
 					}
 
 				});
+		alertDialogBuilder.setCancelable(false);
 		alertDialogBuilder.show();
 	}
 
@@ -304,22 +369,53 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		this.selectedIngredients = selectedIngredients;
 		alertDialogBuilder.show();
 	}
+		
+	
+	private class RecipeBookTabListener implements ActionBar.TabListener {
 
-	private void initTestData() {
-		CRDatabase db = new CRDatabase(this);
-		db.open();
-		resultList = new ArrayList<RecipeSearchResult>();
-		ArrayList<Recipe> recipes = db.getFullRecipeList();
-		for (Recipe r : recipes) {
-			resultList.add(new RecipeSearchResult(r, 0));
+		private ResultListFragment fragment;
+		
+		//FragmentTransaction from implemented methods don't work with ResultListFragment
+		private FragmentTransaction customTransaction;
+
+		public RecipeBookTabListener(ResultListFragment fragment) {
+			this.fragment = fragment;
+			
+
 		}
-		db.close();
-	}
 
-	private void startShoppingListActivity() {
-		Intent intent = new Intent(RecipeBookActivity.this,
-				ShoppingListActivity.class);
-		startActivity(intent);
+		@Override
+		public void onTabReselected(Tab tab,
+				android.support.v4.app.FragmentTransaction transaction) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTabSelected(Tab tab,
+				android.support.v4.app.FragmentTransaction transaction) {
+			if (fragment == null) {
+				fragment = new ResultListFragment();
+			}
+			customTransaction = getFragmentManager()
+					.beginTransaction();
+			customTransaction
+					.replace(R.id.recipe_book_container_main, fragment);
+			customTransaction.addToBackStack(null);
+			customTransaction.commit();
+
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab,
+				android.support.v4.app.FragmentTransaction transaction) {
+			customTransaction = getFragmentManager()
+					.beginTransaction();
+			customTransaction.remove(fragment);
+			customTransaction.commit();
+
+		}
+
 	}
 
 }

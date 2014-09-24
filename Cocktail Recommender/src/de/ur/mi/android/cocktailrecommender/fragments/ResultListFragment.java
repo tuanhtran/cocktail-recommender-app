@@ -2,27 +2,28 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
-import de.ur.mi.android.cocktailrecommender.data.Recipe;
-import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
-import de.ur.mi.android.cocktailrecommender.data.adapter.ResultListAdapter;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView.OnQueryTextListener;
+import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
+import de.ur.mi.android.cocktailrecommender.data.Recipe;
+import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
+import de.ur.mi.android.cocktailrecommender.data.adapter.ResultListAdapter;
 
 public class ResultListFragment extends Fragment implements OnItemClickListener {
 	View fragmentView;
 	ArrayList<RecipeSearchResult> resultList;
 	ResultListAdapter adapter;
 	private OnRecipeSelectedListener listener;
+	private boolean noMatchRate = false;
 
 	public ResultListFragment() {
 		resultList = new ArrayList<RecipeSearchResult>();
@@ -30,6 +31,11 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 
 	public ResultListFragment(ArrayList<RecipeSearchResult> resultList) {
 		this.resultList = resultList;
+	}
+	
+	public ResultListFragment(ArrayList<RecipeSearchResult> resultList, boolean noMatchRate) {
+		this.resultList = resultList;
+		this.noMatchRate = noMatchRate;
 	}
 
 	@Override
@@ -48,7 +54,7 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 		CRDatabase.getInstance(getActivity()).addToHistory(
 				resultList.get(position));
 		listener.onRecipeSelected(resultList.get(position).getRecipe());
-
+		
 	}
 
 	private void initData() {
@@ -80,6 +86,8 @@ public class ResultListFragment extends Fragment implements OnItemClickListener 
 				.findViewById(R.id.search_result_listview);
 		resultListView.setOnItemClickListener(this);
 		adapter = new ResultListAdapter(getActivity(), resultList);
+		if(noMatchRate)
+			adapter.dontdisplayNoMatchRate();
 		resultListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 	}

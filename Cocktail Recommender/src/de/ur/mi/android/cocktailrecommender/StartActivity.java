@@ -23,7 +23,7 @@ public class StartActivity extends ActionBarActivity {
 	}
 
 	private void startNextActivity() {
-		Intent intent = new Intent(StartActivity.this, SearchActivity.class);
+		Intent intent = new Intent(StartActivity.this, MenuActivity.class);
 		startActivity(intent);
 	}
 

@@ -23,7 +23,8 @@ public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 	private Context context;
 	private ArrayList<RecipeSearchResult> resultList;
 	private ArrayList<RecipeSearchResult> notShownResults = new ArrayList<RecipeSearchResult>();
-
+	private boolean noMatchRate = false;
+	
 	public ResultListAdapter(Context context,
 			ArrayList<RecipeSearchResult> results) {
 		super(context, R.layout.listitem_recipe_result_list, results);
@@ -47,12 +48,16 @@ public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 		final RecipeSearchResult searchResult = resultList.get(position);
 
 		if (searchResult != null) {
+			String resultNameText = searchResult.getRecipe().getName();
+			if(!noMatchRate){
+				resultNameText = resultNameText + " - "
+						+ searchResult.getMatchRate() + "%";
+			}
 			TextView searchResultName = (TextView) view
 					.findViewById(R.id.recipe_result_name);
 			TextView searchResultIngPreview = (TextView) view
 					.findViewById(R.id.recipe_result_ing_preview);
-			searchResultName.setText(searchResult.getRecipe().getName() + " - "
-					+ searchResult.getMatchRate() + "%");
+			searchResultName.setText(resultNameText);
 			searchResultIngPreview.setText(getIngPreview(searchResult
 					.getRecipe().getIngredients()));
 		}
@@ -123,5 +128,10 @@ public class ResultListAdapter extends ArrayAdapter<RecipeSearchResult>
 	private void resetFilter() {
 		resultList.addAll(notShownResults);
 		notShownResults.clear();
+	}
+
+	public void dontdisplayNoMatchRate() {
+		noMatchRate = true;
+		
 	}
 }

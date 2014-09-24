@@ -6,6 +6,7 @@ import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 import de.ur.mi.android.cocktailrecommender.data.RecipeSearchResult;
+import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
@@ -282,6 +283,7 @@ public class SearchActivity extends ActionBarActivity {
 	private void openRecipeBook() {
 		Intent intent = new Intent(SearchActivity.this,
 				RecipeBookActivity.class);
+		intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY, StartRecipeBookValues.SEARCH_RESULTS);
 		startActivity(intent);
 	}
 

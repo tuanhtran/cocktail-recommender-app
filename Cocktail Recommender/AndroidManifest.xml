@@ -22,6 +22,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="de.ur.mi.android.cocktailrecommender.MenuActivity"
+            android:label="@string/title_activity_menu"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
             android:name="de.ur.mi.android.cocktailrecommender.SearchActivity"
             android:label="@string/title_activity_search"
             android:windowSoftInputMode="adjustPan" >
