@@ -8,97 +8,90 @@ import android.content.DialogInterface;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
 
-public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
+public class ShoppingListAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
 	private ArrayList<ShoppingList> shoppingLists;
+	
 
 	public ShoppingListAdapter(Context context, ArrayList<ShoppingList> shoppingLists) {
-		super(context, R.layout.listitem_shopping_list, shoppingLists);
+		
 		this.context = context;
 		this.shoppingLists = shoppingLists;
+		
+	}
+
+	
+
+	@Override
+	public int getGroupCount() {
+		return shoppingLists.size();
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public int getChildrenCount(int groupPosition) {
+		return shoppingLists.get(groupPosition).getIngredients().length;
+	}
 
-		View view = convertView;
+	@Override
+	public Object getGroup(int groupPosition) {
+		return shoppingLists.get(groupPosition);
+	}
 
-		if (view == null) {
+	@Override
+	public Object getChild(int groupPosition, int childPosition) {
+		return shoppingLists.get(groupPosition).getIngredients()[childPosition];
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return false;
+	}
+
+	@Override
+	public View getGroupView(final int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
+		
+
+		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.listitem_shopping_list,
+			convertView = inflater.inflate(R.layout.listitem_shopping_list,
 					null);
 
 		}
-
-		final ShoppingList list = shoppingLists.get(position);
-		if (list != null) {
-			TextView ShoppingListTextView = (TextView) view
-					.findViewById(R.id.shopping_list_entry);
-
-			ShoppingListTextView.setText(list.getListName());
-			
-		}
-
-		view.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-				alertDialogBuilder.setTitle(R.string.ingredients_to_buy);
-				alertDialogBuilder.setPositiveButton(R.string.generic_positive, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						
-					}
-				});
-				if (list.getIngredients()!=null){
-					RecipeIngredient[] ingredients = list.getIngredients();
-					CharSequence[] ingredientNames = new CharSequence[ingredients.length];
-					for (int ingIdx = 0; ingIdx < ingredients.length; ingIdx++){
-						ingredientNames[ingIdx] = ingredients[ingIdx].getIngName();
-					}
-					alertDialogBuilder.setItems(ingredientNames, new DialogInterface.OnClickListener() {
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							
-						}
-					});
-				}
-				alertDialogBuilder.create();
-				alertDialogBuilder.show();
-				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-			}
-		});
 		
-		view.setOnLongClickListener(new OnLongClickListener() {
+		TextView shoppingListName = (TextView) convertView.findViewById(R.id.shopping_list_name);
+		shoppingListName.setText(shoppingLists.get(groupPosition).getListName());
+		
+		ImageView shoppingListDelete = (ImageView) convertView.findViewById(R.id.shopping_list_delete_button);
+		shoppingListDelete.setOnClickListener(new View.OnClickListener() {
 			
-			public boolean onLongClick(View v) {
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-				alertDialogBuilder.setTitle(R.string.shopping_list_delete);
-				alertDialogBuilder.setPositiveButton(R.string.generic_positive, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						CRDatabase.getInstance(context).deleteShoppingList(list);
-						shoppingLists.remove(position);
-						dialog.dismiss();
-						notifyDataSetChanged();
-					}
-				});
+			@Override
+			public void onClick(View v) {
 				
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+				alertDialogBuilder.setCancelable(false);
+				alertDialogBuilder.setTitle(context.getResources().getString(R.string.shopping_list_delete)+" "+shoppingLists.get(groupPosition).getListName());
 				alertDialogBuilder.setNegativeButton(R.string.generic_cancel, new DialogInterface.OnClickListener() {
 					
 					@Override
@@ -107,13 +100,46 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 						
 					}
 				});
+				alertDialogBuilder.setPositiveButton(R.string.generic_positive, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {						
+						CRDatabase.getInstance(context).deleteShoppingList(shoppingLists.get(groupPosition));
+						shoppingLists.remove(groupPosition);
+						notifyDataSetChanged();
+						
+					}
+				});
 				alertDialogBuilder.create();
 				alertDialogBuilder.show();
-				
-				return false;
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 			}
 		});
-		return view;
+		
+		return convertView;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
+		
+		if (convertView == null) {
+			LayoutInflater infalInflater = (LayoutInflater) this.context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = infalInflater.inflate(R.layout.listitem_shopping_list_child, null);
+		}
+		
+		RecipeIngredient ingredient = shoppingLists.get(groupPosition).getIngredients()[childPosition];
+		
+		TextView ingredientItem = (TextView) convertView.findViewById(R.id.shopping_list_ing_entry);
+		ingredientItem.setText(ingredient.getIngName());
+		return convertView;
+	}
+
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

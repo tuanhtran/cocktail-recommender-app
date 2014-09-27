@@ -2,6 +2,7 @@ package de.ur.mi.android.cocktailrecommender;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
@@ -31,7 +33,7 @@ public class ShoppingListActivity extends ActionBarActivity {
 	}
 
 	private void setViews() {
-		ListView shoppingListView = (ListView) findViewById(R.id.shopping_list_view);
+		ExpandableListView shoppingListView = (ExpandableListView) findViewById(R.id.shopping_list_view);
 		shoppingListView.setAdapter(adapter);
 	}
 
@@ -55,11 +57,11 @@ public class ShoppingListActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if(id == R.id.action_nav_menu){
+			Intent openMenu = new Intent(this, MenuActivity.class);
+			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(openMenu);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

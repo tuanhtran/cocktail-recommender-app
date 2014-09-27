@@ -2,13 +2,6 @@ package de.ur.mi.android.cocktailrecommender;
 
 import java.util.ArrayList;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
-import de.ur.mi.android.cocktailrecommender.data.IngredientType;
-import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
-import de.ur.mi.android.cocktailrecommender.data.Tag;
-import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
-import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -27,6 +20,12 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Switch;
+import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
+import de.ur.mi.android.cocktailrecommender.data.IngredientType;
+import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
+import de.ur.mi.android.cocktailrecommender.data.Tag;
+import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
+import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
 
 public class SearchActivity extends ActionBarActivity {
 
@@ -82,11 +81,11 @@ public class SearchActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if(id == R.id.action_nav_menu){
+			Intent openMenu = new Intent(this, MenuActivity.class);
+			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(openMenu);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
