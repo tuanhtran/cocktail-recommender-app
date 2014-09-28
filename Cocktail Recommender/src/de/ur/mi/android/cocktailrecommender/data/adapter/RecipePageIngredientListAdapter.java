@@ -3,7 +3,6 @@ package de.ur.mi.android.cocktailrecommender.data.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,9 +62,9 @@ public class RecipePageIngredientListAdapter extends
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
-			return R.color.test_background_red;
+			return R.color.background_selected_dark_blue;
 		} else {
-			return R.color.test_background_white;
+			return R.color.background_black;
 		}
 
 	}

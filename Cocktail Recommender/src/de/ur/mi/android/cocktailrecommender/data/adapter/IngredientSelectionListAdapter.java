@@ -3,18 +3,17 @@ package de.ur.mi.android.cocktailrecommender.data.adapter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 import android.content.Context;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 
 public class IngredientSelectionListAdapter extends
 		ArrayAdapter<IngredientType> implements Filterable {
@@ -75,9 +74,9 @@ public class IngredientSelectionListAdapter extends
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
-			return R.color.test_background_red;
+			return R.color.background_selected_dark_blue;
 		} else {
-			return R.color.test_background_white;
+			return R.color.background_black;
 		}
 	}
 

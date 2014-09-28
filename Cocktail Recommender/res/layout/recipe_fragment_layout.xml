@@ -48,13 +48,13 @@
                 android:layout_weight="0.8" />
 			
             
-            <Button
+            <ImageButton
                 android:id="@+id/recipe_page_create_shopping_list_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.2"
-                android:text="@string/start_search" />
+                android:src="@drawable/ic_action_to_shop_list" />
         </LinearLayout>
 
         <TextView

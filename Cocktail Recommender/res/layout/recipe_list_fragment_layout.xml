@@ -13,7 +13,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/test_background_black" />
+        android:background="@color/background_black" />
 
     <ListView
         android:id="@+id/recipe_listview"

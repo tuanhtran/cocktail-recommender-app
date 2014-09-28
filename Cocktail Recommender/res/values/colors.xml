@@ -6,7 +6,7 @@
 <color name="test_background_light_green">#2EFE64</color>
 
 <color name="test_background_blue">#00BFFF</color>
-<color name="test_background_dark_blue">#013ADF</color>
+
 <color name="test_background_light_blue">#58FAF4</color>
 
 <color name="test_background_red">#FF0000</color>
@@ -16,8 +16,10 @@
 <color name="test_button_gray_green">#A9F5A9</color>
 <color name="test_button_gray_red">#F5A9A9</color>
 
-<color name="test_background_black">#000000</color>
+<color name="background_black">#000000</color>
 <color name="test_background_white">#FFFFFF</color>
 
+<color name="background_not_selected_blue">#33b5e5</color>
+<color name="background_selected_dark_blue">#013ADF</color>
 
 </resources>

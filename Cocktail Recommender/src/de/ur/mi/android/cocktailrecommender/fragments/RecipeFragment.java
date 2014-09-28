@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +27,6 @@ public class RecipeFragment extends Fragment {
 	private TextView recipeName;
 	private ListView recipeIngredients;
 	private TextView recipePreparation;
-	private Button ingredientsToShoppingList;
 	private ImageView recipeToFavoritesToggle;
 	private RecipePageIngredientListAdapter adapter;
 	private ArrayList<RecipeIngredient> ingredients;
@@ -63,7 +62,7 @@ public class RecipeFragment extends Fragment {
 				.findViewById(R.id.recipe_page_ingredient_list);
 		recipePreparation = (TextView) fragmentView
 				.findViewById(R.id.recipe_page_preparation);
-		ingredientsToShoppingList = (Button) fragmentView
+		ImageButton ingredientsToShoppingList = (ImageButton) fragmentView
 				.findViewById(R.id.recipe_page_create_shopping_list_button);
 		ingredientsToShoppingList
 				.setOnClickListener(new View.OnClickListener() {

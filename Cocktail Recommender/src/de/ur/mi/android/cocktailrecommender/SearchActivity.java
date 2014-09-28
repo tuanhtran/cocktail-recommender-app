@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -216,7 +217,7 @@ public class SearchActivity extends ActionBarActivity {
 			}
 		});
 
-		Button startSearchButton = (Button) findViewById(R.id.start_search_button);
+		ImageButton startSearchButton = (ImageButton) findViewById(R.id.start_search_button);
 		startSearchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -227,7 +228,7 @@ public class SearchActivity extends ActionBarActivity {
 			}
 		});
 
-		Button openSearchSettingsButton = (Button) findViewById(R.id.search_settings_button);
+		ImageButton openSearchSettingsButton = (ImageButton) findViewById(R.id.search_settings_button);
 		openSearchSettingsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -296,8 +297,9 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void categoryButtonPressed(int buttonId) {
 		if (getButtonStateIdxAndCycle(buttonId) == CATEGORY_BUTTON_STATE_IDX_NEUTRAL) {
-			setAllButtonsToRed();
-			setButtonToGreen((Button) findViewById(buttonId));
+			//setAllButtonsToNotSelected(); Using neutral state color as not selected instead
+			setAllButtonsToNeutral();
+			setButtonToSelected((Button) findViewById(buttonId));
 			ingListAdapter
 					.setSelectedCategoryButton(getFilterQueryValue(buttonId));
 		} else {
@@ -352,34 +354,34 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void setAllButtonsToNeutral() {
 		categoryButtonAlc.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray));
+				R.color.background_not_selected_blue));
 
 		categoryButtonNonAlc.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray));
+				R.color.background_not_selected_blue));
 		categoryButtonMisc.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray));
+				R.color.background_not_selected_blue));
 		categoryButtonSelected.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray));
+				R.color.background_not_selected_blue));
 		categoryButtonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 		categoryButtonNonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 		categoryButtonMiscStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 		categoryButtonSelectedStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 	}
 
-	private void setAllButtonsToRed() {
+	private void setAllButtonsToNotSelected() {
 		categoryButtonAlc.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray_red));
+				R.color.background_not_selected_blue));
 		categoryButtonNonAlc.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray_red));
+				R.color.background_not_selected_blue));
 		categoryButtonMisc.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray_red));
+				R.color.background_not_selected_blue));
 		categoryButtonSelected.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray_red));
+				R.color.background_not_selected_blue));
 	}
 
-	private void setButtonToGreen(Button button) {
+	private void setButtonToSelected(Button button) {
 		button.setBackgroundColor(getResources().getColor(
-				R.color.test_button_gray_green));
+				R.color.background_selected_dark_blue));
 	}
 
 	private void startFilter() {
