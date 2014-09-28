@@ -16,7 +16,7 @@
     <View
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:background="@color/test_background_black" />
+        android:background="@color/background_black" />
 
     <FrameLayout
         android:id="@+id/recipe_book_container_side"

@@ -59,12 +59,13 @@
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>
     <string name="shopping_list_creation_dialog_option_one">Neue Einkaufsliste erstellen</string>
     <string name="shopping_list_creation_dialog_option_two">Vorhandene Einkaufsliste verwenden</string>
-    <string name="shopping_list_creation_dialog_name_entry">Geben Sie der Einkaufsliste einen Namen!</string>
+    <string name="shopping_list_creation_dialog_name_entry">Geben Sie der Einkaufsliste einen Namen.</string>
     <string name="shopping_list_creation_dialog_entry_hint">Hier Namen eingeben</string>
-    <string name="shopping_list_creation_dialog_selection_list">Wählen Sie eine Einkaufsliste aus!</string>
+    <string name="shopping_list_creation_dialog_selection_list">Wählen Sie eine Einkaufsliste aus.</string>
     <string name="ingredients_to_buy">Folgende Zutaten sind Einzukaufen:</string>
-    <string name="shopping_list_creation_dialog_no_lists">Es existiert noch keine Einkaufsliste!</string>
+    <string name="shopping_list_creation_dialog_no_lists">Es existiert noch keine Einkaufsliste.</string>
     <string name="shopping_list_delete">Folgende Einkaufsliste löschen?:</string>
-    <string name="shopping_list_creation_dialog_name_entry_error">Bitte einen Namen eingeben!</string>
+    <string name="shopping_list_creation_dialog_name_entry_error">Bitte einen Namen eingeben.</string>
+    <string name="shopping_list_creation_no_ing_selected">Bitte mindestens eine Zutat auswählen.</string>
 
 </resources>

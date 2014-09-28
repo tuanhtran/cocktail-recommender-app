@@ -391,6 +391,27 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 		
 	
+	@Override
+	public void onNoIngredientSelected() {
+		alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder
+				.setTitle(R.string.shopping_list_creation_no_ing_selected);
+		alertDialogBuilder.setPositiveButton(R.string.generic_positive,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						initDialog();
+					}
+
+				});
+		alertDialogBuilder.setCancelable(false);
+		alertDialogBuilder.show();
+		
+	}
+
+
 	private class RecipeBookTabListener implements ActionBar.TabListener {
 
 		private RecipeListFragment fragment;
