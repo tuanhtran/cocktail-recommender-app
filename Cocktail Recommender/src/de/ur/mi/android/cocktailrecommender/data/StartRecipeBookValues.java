@@ -1,6 +1,9 @@
 package de.ur.mi.android.cocktailrecommender.data;
 
 public final class StartRecipeBookValues {
+	
+	//Constants to open the RecipeBook on the right tab
+	
 	public final static int ALL_RECIPES = 0;
 	public final static int SEARCH_RESULTS = 1;
 	public final static int FAV_LIST = 2;

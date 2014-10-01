@@ -255,25 +255,9 @@ public class CRDatabase {
 		}
 	}
 
-	private void addShoppingListToDB(boolean isNewList, ContentValues values, ShoppingList shoppingList) {
-		if(isNewList)
-			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
-		else
-			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
-					SHOPPINGLISTS_KEY_ID + "=?",
-					new String[] { String.valueOf(shoppingList.getId()) });
-		
-	}
-
 	public void deleteShoppingList(ShoppingList list) {
 		deleteShoppingListFromDB(list);
 
-	}
-
-	private void deleteShoppingListFromDB(ShoppingList list) {
-		db.delete(DATABASE_TABLE_SHOPPINGLISTS, SHOPPINGLISTS_KEY_ID + "=?",
-				new String[] { String.valueOf(list.getId()) });
-		
 	}
 
 	public ArrayList<RecipeListEntry> getFavorites() {
@@ -439,6 +423,22 @@ public class CRDatabase {
 		}
 	}
 
+	private void addShoppingListToDB(boolean isNewList, ContentValues values, ShoppingList shoppingList) {
+		if(isNewList)
+			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
+		else
+			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
+					SHOPPINGLISTS_KEY_ID + "=?",
+					new String[] { String.valueOf(shoppingList.getId()) });
+		
+	}
+
+	private void deleteShoppingListFromDB(ShoppingList list) {
+		db.delete(DATABASE_TABLE_SHOPPINGLISTS, SHOPPINGLISTS_KEY_ID + "=?",
+				new String[] { String.valueOf(list.getId()) });
+		
+	}
+
 	private boolean listAlreadyContainsRecipeSR(RecipeListEntry recipeSR,
 			ArrayList<RecipeListEntry> list) {
 		for (RecipeListEntry rsr : list) {
@@ -450,6 +450,8 @@ public class CRDatabase {
 		return false;
 	}
 
+	
+	//Using sqliteassethelper library to open existing database
 	public static class CRDatabaseHelper extends SQLiteAssetHelper {
 		private static final int DB_VERSION = 1;
 		private static final String DB_NAME = "crDatabase.db";
@@ -463,7 +465,9 @@ public class CRDatabase {
 		}
 
 	}
-
+	
+	
+	//Gets appropriate data objects from JSON
 	private class JSONDataParser {
 		private static final String ING_ARRAY_KEY = "Ingredients";
 		private static final String ING_ID_KEY = "ID";
@@ -535,6 +539,9 @@ public class CRDatabase {
 		}
 	}
 
+	
+	//User defined search parameters are used to search for recipes in form of a Sqlite query.
+	//Where clause of query is generated from parameters
 	private class SearchEngine {
 		private boolean mustContainAllSelectedIngs = false;
 		private boolean canContainNonSelectedIngs = false;

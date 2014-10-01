@@ -319,18 +319,22 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	@Override
 	public void onRecipeSelected(Recipe recipe) {
+		getFragmentManager().executePendingTransactions();
+		FragmentTransaction transaction = getFragmentManager()
+				.beginTransaction();		
 		recipePageIdx = findPage(recipe);
 		recipeFragment.setRecipe(recipe);
-		FragmentTransaction transaction = getFragmentManager()
-				.beginTransaction();
+		
 		if (isInLandscapeMode()) {
 			if (!(recipeFragment.isAdded())) {
+				
 				findViewById(R.id.recipe_page_temp).setVisibility(
 						TextView.INVISIBLE);
 				transaction
-						.add(R.id.recipe_book_container_side, recipeFragment);
+						.replace(R.id.recipe_book_container_side, recipeFragment);
 			} else {
 				recipeFragment.updateData();
+				
 			}
 		} else {
 			transaction
@@ -372,6 +376,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 					% recipeList.size();
 			recipeFragment.setRecipe(recipeList.get(recipePageIdx).getRecipe());
 			recipeFragment.updateData();
+			
 		}
 	}
 
@@ -381,6 +386,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			recipePageIdx = (recipePageIdx + 1) % recipeList.size();
 			recipeFragment.setRecipe(recipeList.get(recipePageIdx).getRecipe());
 			recipeFragment.updateData();
+			
 		}
 	}
 

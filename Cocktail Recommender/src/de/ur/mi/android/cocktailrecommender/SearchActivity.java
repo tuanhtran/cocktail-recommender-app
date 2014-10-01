@@ -297,8 +297,7 @@ public class SearchActivity extends ActionBarActivity {
 
 	private void categoryButtonPressed(int buttonId) {
 		if (getButtonStateIdxAndCycle(buttonId) == CATEGORY_BUTTON_STATE_IDX_NEUTRAL) {
-			//setAllButtonsToNotSelected(); Using neutral state color as not selected instead
-			setAllButtonsToNeutral();
+			setAllButtonsToNotSelected();
 			setButtonToSelected((Button) findViewById(buttonId));
 			ingListAdapter
 					.setSelectedCategoryButton(getFilterQueryValue(buttonId));

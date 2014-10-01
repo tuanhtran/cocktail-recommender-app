@@ -28,6 +28,7 @@ public class RecipeFragment extends Fragment {
 	private ListView recipeIngredients;
 	private TextView recipePreparation;
 	private ImageView recipeToFavoritesToggle;
+	private ImageButton ingredientsToShoppingList;
 	private RecipePageIngredientListAdapter adapter;
 	private ArrayList<RecipeIngredient> ingredients;
 	private OnFlingListener listener;
@@ -51,6 +52,12 @@ public class RecipeFragment extends Fragment {
 	}
 
 	private void initData() {
+		Recipe dummyRecipe = CRDatabase.getInstance(getActivity()).getHistory().get(0).getRecipe();
+		if (dummyRecipe != null){
+			recipe = dummyRecipe;
+		}else{
+			recipe = CRDatabase.getInstance(getActivity()).getFullRecipeList().get(0).getRecipe();
+		}
 		ingredients = new ArrayList<RecipeIngredient>();
 	}
 
@@ -62,53 +69,13 @@ public class RecipeFragment extends Fragment {
 				.findViewById(R.id.recipe_page_ingredient_list);
 		recipePreparation = (TextView) fragmentView
 				.findViewById(R.id.recipe_page_preparation);
-		ImageButton ingredientsToShoppingList = (ImageButton) fragmentView
+		ingredientsToShoppingList = (ImageButton) fragmentView
 				.findViewById(R.id.recipe_page_create_shopping_list_button);
-		ingredientsToShoppingList
-				.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						RecipeIngredient[] selectedIngs = adapter
-								.getSelectedIngredients();
-						if (selectedIngs.length > 0) {
-							shoppingListener.onAddToShoppingList(adapter
-									.getSelectedIngredients());
-							v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-						}else{
-							shoppingListener.onNoIngredientSelected();
-						}
-					}
-				});
+		
 		
 		recipeToFavoritesToggle = (ImageView) fragmentView
 				.findViewById(R.id.recipe_page_add_to_favs_toggle);
-		if(checkIfFavorite(new RecipeListEntry(recipe))){
-			recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_favorite);
-		} else {
-			recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_not_favorite);
-		}
 		
-		recipeToFavoritesToggle.setOnClickListener(new View.OnClickListener() {
-			
-			RecipeListEntry recipeToFavorite = new RecipeListEntry(recipe);
-			
-
-			@Override
-			public void onClick(View v) {
-				boolean isFavorite = checkIfFavorite(recipeToFavorite);
-				if (isFavorite) {
-					CRDatabase.getInstance(getActivity()).removeFromFavorites(recipeToFavorite);
-					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-					recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_not_favorite);
-				} else {
-					CRDatabase.getInstance(getActivity()).addToFavorites(
-							recipeToFavorite);
-					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-					recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_favorite);
-				}
-			}
-
-			
-		});
 		
 		initAdapter();
 		updateData();
@@ -139,6 +106,58 @@ public class RecipeFragment extends Fragment {
 		adjustListViewHeight(recipeIngredients);
 		recipeName.setText(recipe.getName());
 		recipePreparation.setText(recipe.getPreparation());
+		setFavToggle();
+		setShopListButton();
+		
+	}
+	
+	private void setShopListButton() {
+		ingredientsToShoppingList
+		.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				RecipeIngredient[] selectedIngs = adapter
+						.getSelectedIngredients();
+				if (selectedIngs.length > 0) {
+					shoppingListener.onAddToShoppingList(adapter
+							.getSelectedIngredients());
+					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				}else{
+					shoppingListener.onNoIngredientSelected();
+				}
+			}
+		});
+		
+	}
+
+	private void setFavToggle(){
+		if(checkIfFavorite(new RecipeListEntry(recipe))){
+			recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_favorite);
+		} else {
+			recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_not_favorite);
+		}
+		
+		recipeToFavoritesToggle.setOnClickListener(new View.OnClickListener() {
+			
+			RecipeListEntry recipeToFavorite = new RecipeListEntry(recipe);
+			
+
+			@Override
+			public void onClick(View v) {
+				boolean isFavorite = checkIfFavorite(recipeToFavorite);
+				if (isFavorite) {
+					CRDatabase.getInstance(getActivity()).removeFromFavorites(recipeToFavorite);
+					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+					recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_not_favorite);
+				} else {
+					CRDatabase.getInstance(getActivity()).addToFavorites(
+							recipeToFavorite);
+					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+					recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_favorite);
+				}
+			}
+
+			
+		});
 	}
 
 	private void adjustListViewHeight(ListView listView) {
