@@ -15,7 +15,7 @@
     <string name="main_menu_recipe_book_button_text">Rezeptbuch</string>
     <string name="main_menu_shopping_list_button_text">Einkaufsliste</string>
     <string name="main_menu_fav_list_button_text">Favoriten</string>
-    <string name="main_menu_history_button_text">Suchhistory</string>
+    <string name="main_menu_history_button_text">Rezepthistory</string>
 
     <!-- Related to RecipeBookActivity -->
     <string name="search_result_tab_name">Suchergebnisse</string>
