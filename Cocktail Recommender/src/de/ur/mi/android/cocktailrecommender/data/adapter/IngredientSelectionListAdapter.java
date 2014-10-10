@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 
@@ -63,6 +64,7 @@ public class IngredientSelectionListAdapter extends
 
 		view.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				
 				ingType.toggleSelection();
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ingType.isSelected())));
@@ -74,8 +76,10 @@ public class IngredientSelectionListAdapter extends
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
+			Toast.makeText(context, context.getResources().getString(R.string.toast_ing_select), Toast.LENGTH_SHORT).show();
 			return R.color.background_selected_dark_blue;
 		} else {
+			Toast.makeText(context, context.getResources().getString(R.string.toast_ing_remove), Toast.LENGTH_SHORT).show();
 			return R.color.background_black;
 		}
 	}

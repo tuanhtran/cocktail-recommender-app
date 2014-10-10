@@ -3,9 +3,6 @@ package de.ur.mi.android.cocktailrecommender.data.adapter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
-import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
+import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 
 public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 		implements Filterable {

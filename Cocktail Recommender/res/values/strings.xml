@@ -8,6 +8,7 @@
     <string name="title_activity_shopping_list">Einkaufslisten</string>
     <string name="generic_positive">OK</string>
     <string name="generic_cancel">Abbrechen</string>
+    <string name="generic_search_hint">Hier Suchbegriff eingeben...</string>
 
     <!-- Related to MenuActivity -->
     <string name="main_menu_title_text">Cocktail Recommender</string>
@@ -54,6 +55,10 @@
     <string name="search_error_no_results_msg">Es konnten keine Rezepte gefunden werden.</string>
     <string name="search_error_option_back">Zurück zur Suche</string>
     <string name="search_error_option_recipebook">Zum vollständigen Rezeptbuch</string>
+    <string name="toast_ing_select">Zutat ausgewählt</string>
+    <string name="toast_ing_remove">Zutat entfernt</string>
+    <string name="toast_tag_select">Tag ausgewählt</string>
+    <string name="toast_tag_remove">Tag entfernt</string>
 
     <!-- Related to ShoppingList dialogs -->
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>

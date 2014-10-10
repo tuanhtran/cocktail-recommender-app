@@ -2,21 +2,18 @@ package de.ur.mi.android.cocktailrecommender.data.adapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
-import de.ur.mi.android.cocktailrecommender.R;
-import de.ur.mi.android.cocktailrecommender.data.IngredientType;
-import de.ur.mi.android.cocktailrecommender.data.Tag;
 import android.content.Context;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.Tag;
 
 public class TagSelectionListAdapter extends BaseAdapter {
 	private Context context;
@@ -61,6 +58,7 @@ public class TagSelectionListAdapter extends BaseAdapter {
 
 		view.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				Toast.makeText(context, context.getResources().getString(R.string.toast_tag_select), Toast.LENGTH_SHORT).show();
 				tag.toggleSelection();
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(tag.isSelected())));
@@ -72,8 +70,10 @@ public class TagSelectionListAdapter extends BaseAdapter {
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
+			Toast.makeText(context, context.getResources().getString(R.string.toast_tag_select), Toast.LENGTH_SHORT).show();
 			return R.color.test_background_red;
 		} else {
+			Toast.makeText(context, context.getResources().getString(R.string.toast_tag_remove), Toast.LENGTH_SHORT).show();
 			return R.color.test_background_white;
 		}
 	}

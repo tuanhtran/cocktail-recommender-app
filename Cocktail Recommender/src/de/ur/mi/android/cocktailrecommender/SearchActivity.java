@@ -42,6 +42,7 @@ public class SearchActivity extends ActionBarActivity {
 
 	private Dialog searchSettings;
 	private Dialog searchProgress;
+	private SearchView filterBar;
 
 	private static final int CATEGORY_BUTTON_STATE_IDX_NEUTRAL = 0;
 	private static final int CATEGORY_BUTTON_STATE_NUM = 2;
@@ -157,7 +158,7 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void initSearchView() {
-		SearchView filterBar = (SearchView) findViewById(R.id.ingredient_selection_filter_bar);
+		filterBar = (SearchView) findViewById(R.id.ingredient_selection_filter_bar);
 		filterBar.setOnQueryTextListener(new OnQueryTextListener() {
 			public boolean onQueryTextSubmit(String queryString) {
 				return true;
@@ -169,6 +170,7 @@ public class SearchActivity extends ActionBarActivity {
 				return true;
 			}
 		});
+		filterBar.setIconifiedByDefault(false);
 	}
 
 	private void initListViews() {
@@ -213,6 +215,7 @@ public class SearchActivity extends ActionBarActivity {
 		categoryButtonSelected.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				filterBar.setQuery("", false);
 				categoryButtonPressed(v.getId());
 			}
 		});

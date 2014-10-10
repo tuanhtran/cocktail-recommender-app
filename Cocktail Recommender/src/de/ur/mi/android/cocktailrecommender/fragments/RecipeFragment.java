@@ -2,8 +2,8 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -33,6 +33,7 @@ public class RecipeFragment extends Fragment {
 	private ArrayList<RecipeIngredient> ingredients;
 	private OnFlingListener listener;
 	private OnShoppingListAddListener shoppingListener;
+	private OnFavStatusChangedListener favStatusListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,12 +149,16 @@ public class RecipeFragment extends Fragment {
 					CRDatabase.getInstance(getActivity()).removeFromFavorites(recipeToFavorite);
 					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 					recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_not_favorite);
+					favStatusListener.onFavRemoved(recipeToFavorite);
 				} else {
 					CRDatabase.getInstance(getActivity()).addToFavorites(
 							recipeToFavorite);
 					v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 					recipeToFavoritesToggle.setImageResource(R.drawable.ic_action_star_favorite);
+					favStatusListener.onFavAdded(recipeToFavorite);
 				}
+				
+				
 			}
 
 			
@@ -232,6 +237,18 @@ public class RecipeFragment extends Fragment {
 
 	public void setOnShoppingListAddListener(OnShoppingListAddListener listener) {
 		shoppingListener = listener;
+	}
+	
+	public interface OnFavStatusChangedListener {
+		
+
+		public void onFavRemoved(RecipeListEntry recipeToFavorite);
+
+		public void onFavAdded(RecipeListEntry recipeToFavorite);
+	}
+	
+	public void setOnFavStatusChangedListener(OnFavStatusChangedListener listener) {
+		favStatusListener = listener;
 	}
 
 }

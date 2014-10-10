@@ -2,8 +2,8 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +17,15 @@ import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipeListAdapter;
+import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFavStatusChangedListener;
 
-public class RecipeListFragment extends Fragment implements OnItemClickListener {
+public class RecipeListFragment extends Fragment implements OnItemClickListener, OnFavStatusChangedListener {
 	View fragmentView;
 	ArrayList<RecipeListEntry> recipeList;
 	RecipeListAdapter adapter;
 	private OnRecipeSelectedListener listener;
 	private boolean noMatchRate = false;
+	
 
 	public RecipeListFragment() {
 		recipeList = new ArrayList<RecipeListEntry>();
@@ -37,6 +39,8 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener 
 		this.recipeList = recipeList;
 		this.noMatchRate = noMatchRate;
 	}
+
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +60,9 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener 
 		listener.onRecipeSelected(recipeList.get(position).getRecipe());
 		
 	}
+	
+	
+
 
 	private void initData() {
 
@@ -79,6 +86,7 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener 
 				return true;
 			}
 		});
+		filterBar.setIconifiedByDefault(false);
 	}
 
 	private void initListView() {
@@ -98,6 +106,19 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener 
 
 	public interface OnRecipeSelectedListener {
 		public void onRecipeSelected(Recipe recipe);
+	}
+
+
+	@Override
+	public void onFavRemoved(RecipeListEntry recipeToFavorite) {
+		adapter.notifyDataSetChanged();
+		
+	}
+
+	@Override
+	public void onFavAdded(RecipeListEntry recipeToFavorite) {
+		adapter.notifyDataSetChanged();
+		
 	}
 
 }
