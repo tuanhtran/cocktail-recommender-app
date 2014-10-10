@@ -69,6 +69,10 @@ public class IngredientSelectionListAdapter extends
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ingType.isSelected())));
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+				if(ingType.isSelected())
+					Toast.makeText(context, context.getResources().getString(R.string.toast_ing_select), Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(context, context.getResources().getString(R.string.toast_ing_remove), Toast.LENGTH_SHORT).show();
 			}
 		});
 		return view;
@@ -76,10 +80,10 @@ public class IngredientSelectionListAdapter extends
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
-			Toast.makeText(context, context.getResources().getString(R.string.toast_ing_select), Toast.LENGTH_SHORT).show();
+			
 			return R.color.background_selected_dark_blue;
 		} else {
-			Toast.makeText(context, context.getResources().getString(R.string.toast_ing_remove), Toast.LENGTH_SHORT).show();
+			
 			return R.color.background_black;
 		}
 	}

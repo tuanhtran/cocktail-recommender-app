@@ -58,7 +58,10 @@ public class TagSelectionListAdapter extends BaseAdapter {
 
 		view.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(context, context.getResources().getString(R.string.toast_tag_select), Toast.LENGTH_SHORT).show();
+				if (tag.isSelected())
+					Toast.makeText(context, context.getResources().getString(R.string.toast_tag_select), Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(context, context.getResources().getString(R.string.toast_tag_remove), Toast.LENGTH_SHORT).show();
 				tag.toggleSelection();
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(tag.isSelected())));
@@ -70,10 +73,10 @@ public class TagSelectionListAdapter extends BaseAdapter {
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
-			Toast.makeText(context, context.getResources().getString(R.string.toast_tag_select), Toast.LENGTH_SHORT).show();
+			
 			return R.color.test_background_red;
 		} else {
-			Toast.makeText(context, context.getResources().getString(R.string.toast_tag_remove), Toast.LENGTH_SHORT).show();
+			
 			return R.color.test_background_white;
 		}
 	}
