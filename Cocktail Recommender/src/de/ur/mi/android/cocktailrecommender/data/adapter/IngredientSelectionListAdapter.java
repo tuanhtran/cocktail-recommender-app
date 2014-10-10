@@ -24,6 +24,7 @@ public class IngredientSelectionListAdapter extends
 	private ArrayList<IngredientType> notShownIngList = new ArrayList<IngredientType>();
 	private String searchViewInsert = "";
 	private int selectedCategoryButton = 0;
+	private Toast toast;
 
 	public final static int DONT_FILTER_FOR_CATEGORY = 0;
 	public final static int FILTER_FOR_CATEGORY_ALCOHOLIC = 1;
@@ -69,10 +70,16 @@ public class IngredientSelectionListAdapter extends
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ingType.isSelected())));
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				if(ingType.isSelected())
-					Toast.makeText(context, context.getResources().getString(R.string.toast_ing_select), Toast.LENGTH_SHORT).show();
+				if (toast == null){
+					toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+				}
+				if (ingType.isSelected()){					
+					toast.setText(context.getResources().getString(R.string.toast_ing_select));
+					toast.show();
+				}	
 				else
-					Toast.makeText(context, context.getResources().getString(R.string.toast_ing_remove), Toast.LENGTH_SHORT).show();
+					toast.setText(context.getResources().getString(R.string.toast_ing_remove));
+					toast.show();
 			}
 		});
 		return view;
