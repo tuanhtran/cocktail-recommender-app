@@ -22,13 +22,16 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Switch;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
+import de.ur.mi.android.cocktailrecommender.data.CRDatabase.OnSearchResultListener;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
+import de.ur.mi.android.cocktailrecommender.data.SearchParameter;
 import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
 
-public class SearchActivity extends ActionBarActivity {
+public class SearchActivity extends ActionBarActivity implements
+		OnSearchResultListener {
 
 	private IngredientSelectionListAdapter ingListAdapter;
 	private TagSelectionListAdapter tagListAdapter;
@@ -84,7 +87,7 @@ public class SearchActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if(id == R.id.action_nav_menu){
+		if (id == R.id.action_nav_menu) {
 			Intent openMenu = new Intent(this, MenuActivity.class);
 			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(openMenu);
@@ -241,7 +244,6 @@ public class SearchActivity extends ActionBarActivity {
 	}
 
 	private void searchForDrinks() {
-		isSearchInProgress = true;
 		ArrayList<Integer> selectedIngIDs = getSelectedIngredientIDs();
 		ArrayList<Integer> selectedTagIDs = getSelectedTagIDs();
 		if ((selectedIngIDs.isEmpty()) && (selectedTagIDs.isEmpty())) {
@@ -250,16 +252,11 @@ public class SearchActivity extends ActionBarActivity {
 			setSearchNotInProgress();
 			return;
 		}
-		if (CRDatabase.getInstance(this).searchByIngredient(selectedIngIDs,
-				selectedTagIDs, mustContainAllSelectedIngs,
-				canContainNonSelectedIngs, mustContainAllSelectedTags,
-				canContainNonSelectedTags)) {
-			openRecipeBook(StartRecipeBookValues.SEARCH_RESULTS);
-		} else {
-			createFailedSearchMsg(R.string.search_error_no_results_title,
-					R.string.search_error_no_results_msg);
-		}
-		setSearchNotInProgress();
+		CRDatabase.getInstance(this).searchByIngredient(
+				new SearchParameter(mustContainAllSelectedIngs,
+						canContainNonSelectedIngs, mustContainAllSelectedTags,
+						canContainNonSelectedTags, selectedIngIDs,
+						selectedTagIDs), this);
 	}
 
 	private void setSearchNotInProgress() {
@@ -413,5 +410,24 @@ public class SearchActivity extends ActionBarActivity {
 			}
 		}
 		return selectedTagIDs;
+	}
+
+	@Override
+	public void onSearchInitiated() {
+		isSearchInProgress = true;
+		searchProgress.show();
+	}
+
+	@Override
+	public void onSearchFailed() {
+		setSearchNotInProgress();
+		createFailedSearchMsg(R.string.search_error_no_results_title,
+				R.string.search_error_no_results_msg);
+	}
+
+	@Override
+	public void onSearchCompleted() {
+		setSearchNotInProgress();
+		openRecipeBook(StartRecipeBookValues.SEARCH_RESULTS);
 	}
 }
