@@ -29,31 +29,31 @@ public final class CocktailRecommenderValues {
 	public static int getCorrectTagImageResource(ImageView tagIcon,
 			Tag tag) {
 		switch (tag.getTagID()) {
-		case CocktailRecommenderValues.TAG_APERITIF:
+		case TAG_APERITIF:
 			return R.drawable.ic_tag_aperitif;
 			
-		case CocktailRecommenderValues.TAG_HIGHBALL:
+		case TAG_HIGHBALL:
 			return R.drawable.ic_tag_highball;
 			
-		case CocktailRecommenderValues.TAG_SHOT:
+		case TAG_SHOT:
 			return R.drawable.ic_tag_shooter;
 			
-		case CocktailRecommenderValues.TAG_DIGESTIF:
+		case TAG_DIGESTIF:
 			return R.drawable.ic_tag_digestif;
 			
-		case CocktailRecommenderValues.TAG_KLASSISCH:
+		case TAG_KLASSISCH:
 			return R.drawable.ic_tag_klassisch;
 			
-		case CocktailRecommenderValues.TAG_SOUR:
+		case TAG_SOUR:
 			return R.drawable.ic_tag_sour;
 			
-		case CocktailRecommenderValues.TAG_FIZZES:
+		case TAG_FIZZES:
 			return R.drawable.ic_tag_fizz;
 			
-		case CocktailRecommenderValues.TAG_SHOOTER:
+		case TAG_SHOOTER:
 			return R.drawable.ic_tag_shooter;
 			
-		case CocktailRecommenderValues.TAG_STRONG:
+		case TAG_STRONG:
 			return R.drawable.ic_tag_strong;
 			
 		default:
