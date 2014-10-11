@@ -25,7 +25,7 @@ import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase.OnSearchResultListener;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 import de.ur.mi.android.cocktailrecommender.data.SearchParameter;
-import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
+import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
@@ -267,7 +267,7 @@ public class SearchActivity extends ActionBarActivity implements
 	private void openRecipeBook(int listIdx) {
 		Intent intent = new Intent(SearchActivity.this,
 				RecipeBookActivity.class);
-		intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY, listIdx);
+		intent.putExtra(CocktailRecommenderValues.FRAGMENT_TO_DISPLAY, listIdx);
 		startActivity(intent);
 	}
 
@@ -288,7 +288,7 @@ public class SearchActivity extends ActionBarActivity implements
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						openRecipeBook(StartRecipeBookValues.ALL_RECIPES);
+						openRecipeBook(CocktailRecommenderValues.ALL_RECIPES);
 						dialog.dismiss();
 					}
 				});
@@ -428,6 +428,6 @@ public class SearchActivity extends ActionBarActivity implements
 	@Override
 	public void onSearchCompleted() {
 		setSearchNotInProgress();
-		openRecipeBook(StartRecipeBookValues.SEARCH_RESULTS);
+		openRecipeBook(CocktailRecommenderValues.SEARCH_RESULTS);
 	}
 }

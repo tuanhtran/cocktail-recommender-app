@@ -21,7 +21,7 @@ import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
-import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
+import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFlingListener;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnShoppingListAddListener;
@@ -104,11 +104,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private void initUIFragments() {
 		searchResultListFragment = new RecipeListFragment(searchResultList);
 		searchResultListFragment.setOnRecipeSelectedListener(this);
-		historyListFragment = new RecipeListFragment(historyList, StartRecipeBookValues.NO_MATCH_RATE);
+		historyListFragment = new RecipeListFragment(historyList, CocktailRecommenderValues.NO_MATCH_RATE);
 		historyListFragment.setOnRecipeSelectedListener(this);
-		favsListFragment = new RecipeListFragment(favList, StartRecipeBookValues.NO_MATCH_RATE);
+		favsListFragment = new RecipeListFragment(favList, CocktailRecommenderValues.NO_MATCH_RATE, true);
 		favsListFragment.setOnRecipeSelectedListener(this);
-		allRecipesFragment = new RecipeListFragment(allRecipes, StartRecipeBookValues.NO_MATCH_RATE);
+		allRecipesFragment = new RecipeListFragment(allRecipes, CocktailRecommenderValues.NO_MATCH_RATE);
 		allRecipesFragment.setOnRecipeSelectedListener(this);
 		recipeFragment = new RecipeFragment();
 		recipeFragment.setOnFlingListener(this);
@@ -141,17 +141,17 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		actionBar.addTab(historyTab);
 		
 		switch (getIntent().getExtras().getInt(
-				StartRecipeBookValues.FRAGMENT_TO_DISPLAY)) {
-		case StartRecipeBookValues.ALL_RECIPES:
+				CocktailRecommenderValues.FRAGMENT_TO_DISPLAY)) {
+		case CocktailRecommenderValues.ALL_RECIPES:
 			actionBar.selectTab(allRecipesTab);
 			break;
-		case StartRecipeBookValues.SEARCH_RESULTS:
+		case CocktailRecommenderValues.SEARCH_RESULTS:
 			actionBar.selectTab(searchResultTab);
 			break;
-		case StartRecipeBookValues.FAV_LIST:
+		case CocktailRecommenderValues.FAV_LIST:
 			actionBar.selectTab(favsTab);
 			break;
-		case StartRecipeBookValues.HISTORY_LIST:
+		case CocktailRecommenderValues.HISTORY_LIST:
 			actionBar.selectTab(historyTab);
 			break;
 		default:
@@ -160,10 +160,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		}
 	}
 
-	// Dialog erscheint wenn im RecipeFragment auf den
-	// "Zutaten zu Einkaufsliste hinzufügen Button gedrückt wird" und bietet 2
-	// Optionen an:
-	// Neue Liste erstellen oder zu einer vorhandenen hinzufügen
+	/* Dialog erscheint wenn im RecipeFragment auf den
+	 "Zutaten zu Einkaufsliste hinzufügen Button gedrückt wird" und bietet 2
+	 Optionen an:
+	 Neue Liste erstellen oder zu einer vorhandenen hinzufügen */
 	private void initDialog() {
 		final int OPTION_ONE = 0;
 		final int OPTION_TWO = 1;
@@ -421,13 +421,13 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private ArrayList<RecipeListEntry> getListOfCurrentTab() {
 
 		switch (actionBar.getSelectedNavigationIndex()) {
-		case StartRecipeBookValues.ALL_RECIPES:
+		case CocktailRecommenderValues.ALL_RECIPES:
 			return allRecipes;
-		case StartRecipeBookValues.SEARCH_RESULTS:
+		case CocktailRecommenderValues.SEARCH_RESULTS:
 			return searchResultList;
-		case StartRecipeBookValues.FAV_LIST:
+		case CocktailRecommenderValues.FAV_LIST:
 			return favList;
-		case StartRecipeBookValues.HISTORY_LIST:
+		case CocktailRecommenderValues.HISTORY_LIST:
 			return historyList;
 		default:
 			return allRecipes;

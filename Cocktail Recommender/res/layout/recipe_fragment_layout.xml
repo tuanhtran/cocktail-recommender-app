@@ -33,7 +33,15 @@
                 android:layout_gravity="center"
                 android:layout_weight="0.2" />
 	        
-		</LinearLayout>	        
+		</LinearLayout>
+		
+        <LinearLayout
+            android:id="@+id/recipe_page_tag_display_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1" />
+		      
 
         <LinearLayout
             android:layout_width="match_parent"

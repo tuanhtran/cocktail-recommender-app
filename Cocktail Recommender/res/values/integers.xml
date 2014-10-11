@@ -5,5 +5,7 @@
     <integer name="fling_min_velocity">300</integer>
     <integer name="tag_list_column_num">3</integer>
     <integer name="tag_list_column_num_landscape">3</integer>
+    
+    <integer name="recipe_page_tag_icon_padding_dp">5</integer>
 
 </resources>

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import de.ur.mi.android.cocktailrecommender.data.StartRecipeBookValues;
+import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 
 public class MenuActivity extends ActionBarActivity {
 
@@ -46,7 +46,7 @@ public class MenuActivity extends ActionBarActivity {
 		recipeBookButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				openRecipeBook(StartRecipeBookValues.ALL_RECIPES);
+				openRecipeBook(CocktailRecommenderValues.ALL_RECIPES);
 			}
 		});
 
@@ -65,7 +65,7 @@ public class MenuActivity extends ActionBarActivity {
 		favListButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				openRecipeBook(StartRecipeBookValues.FAV_LIST);
+				openRecipeBook(CocktailRecommenderValues.FAV_LIST);
 			}
 		});
 
@@ -74,7 +74,7 @@ public class MenuActivity extends ActionBarActivity {
 		historyButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				openRecipeBook(StartRecipeBookValues.HISTORY_LIST);
+				openRecipeBook(CocktailRecommenderValues.HISTORY_LIST);
 			}
 		});
 	}
@@ -93,24 +93,24 @@ public class MenuActivity extends ActionBarActivity {
 		Intent intent = new Intent(MenuActivity.this, RecipeBookActivity.class);
 		
 		switch (recipeBookSection) {		
-		case StartRecipeBookValues.ALL_RECIPES:
-			intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY,
-					StartRecipeBookValues.ALL_RECIPES);
+		case CocktailRecommenderValues.ALL_RECIPES:
+			intent.putExtra(CocktailRecommenderValues.FRAGMENT_TO_DISPLAY,
+					CocktailRecommenderValues.ALL_RECIPES);
 			startActivity(intent);
 			break;
-		case StartRecipeBookValues.FAV_LIST:
-			intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY,
-					StartRecipeBookValues.FAV_LIST);
+		case CocktailRecommenderValues.FAV_LIST:
+			intent.putExtra(CocktailRecommenderValues.FRAGMENT_TO_DISPLAY,
+					CocktailRecommenderValues.FAV_LIST);
 			startActivity(intent);
 			break;
-		case StartRecipeBookValues.HISTORY_LIST:
-			intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY,
-					StartRecipeBookValues.HISTORY_LIST);
+		case CocktailRecommenderValues.HISTORY_LIST:
+			intent.putExtra(CocktailRecommenderValues.FRAGMENT_TO_DISPLAY,
+					CocktailRecommenderValues.HISTORY_LIST);
 			startActivity(intent);
 			break;
 		default:
-			intent.putExtra(StartRecipeBookValues.FRAGMENT_TO_DISPLAY,
-					StartRecipeBookValues.ALL_RECIPES);
+			intent.putExtra(CocktailRecommenderValues.FRAGMENT_TO_DISPLAY,
+					CocktailRecommenderValues.ALL_RECIPES);
 			startActivity(intent);
 			break;
 

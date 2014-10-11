@@ -2,6 +2,9 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -19,13 +23,15 @@ import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipeListAdapter;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFavStatusChangedListener;
 
-public class RecipeListFragment extends Fragment implements OnItemClickListener, OnFavStatusChangedListener {
+public class RecipeListFragment extends Fragment implements
+		OnItemClickListener, OnItemLongClickListener,
+		OnFavStatusChangedListener {
 	View fragmentView;
 	ArrayList<RecipeListEntry> recipeList;
 	RecipeListAdapter adapter;
 	private OnRecipeSelectedListener listener;
 	private boolean noMatchRate = false;
-	
+	private boolean enableLongClick = false;
 
 	public RecipeListFragment() {
 		recipeList = new ArrayList<RecipeListEntry>();
@@ -34,13 +40,19 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener,
 	public RecipeListFragment(ArrayList<RecipeListEntry> recipeList) {
 		this.recipeList = recipeList;
 	}
-	
-	public RecipeListFragment(ArrayList<RecipeListEntry> recipeList, boolean noMatchRate) {
+
+	public RecipeListFragment(ArrayList<RecipeListEntry> recipeList,
+			boolean noMatchRate) {
 		this.recipeList = recipeList;
 		this.noMatchRate = noMatchRate;
 	}
 
-	
+	public RecipeListFragment(ArrayList<RecipeListEntry> recipeList,
+			boolean noMatchRate, boolean enableLongClick) {
+		this.recipeList = recipeList;
+		this.noMatchRate = noMatchRate;
+		this.enableLongClick = enableLongClick;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,11 +70,43 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener,
 		CRDatabase.getInstance(getActivity()).addToHistory(
 				recipeList.get(position));
 		listener.onRecipeSelected(recipeList.get(position).getRecipe());
-		
-	}
-	
-	
 
+	}
+
+	// LongClick to delete list items, only used for favorites in this app
+	// context!
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			final int position, long id) {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				getActivity());
+		String dialogTitle = recipeList.get(position).getRecipe().getName() + getResources().getString(R.string.favorite_list_deletion_dialog_title);
+		alertDialogBuilder.setTitle(dialogTitle);
+		alertDialogBuilder.setNegativeButton(R.string.generic_cancel,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+
+					}
+				});
+		alertDialogBuilder.setPositiveButton(R.string.generic_positive,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						CRDatabase.getInstance(getActivity()).removeFromFavorites(
+								recipeList.get(position));
+						adapter.notifyDataSetChanged();
+
+					}
+				});
+		alertDialogBuilder.setCancelable(false);
+		alertDialogBuilder.create();
+		alertDialogBuilder.show();
+		return true;
+	}
 
 	private void initData() {
 
@@ -93,8 +137,10 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener,
 		ListView recipeListView = (ListView) fragmentView
 				.findViewById(R.id.recipe_listview);
 		recipeListView.setOnItemClickListener(this);
+		if (enableLongClick)
+			recipeListView.setOnItemLongClickListener(this);
 		adapter = new RecipeListAdapter(getActivity(), recipeList);
-		if(noMatchRate)
+		if (noMatchRate)
 			adapter.dontdisplayNoMatchRate();
 		recipeListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
@@ -108,17 +154,16 @@ public class RecipeListFragment extends Fragment implements OnItemClickListener,
 		public void onRecipeSelected(Recipe recipe);
 	}
 
-
 	@Override
 	public void onFavRemoved(RecipeListEntry recipeToFavorite) {
 		adapter.notifyDataSetChanged();
-		
+
 	}
 
 	@Override
 	public void onFavAdded(RecipeListEntry recipeToFavorite) {
 		adapter.notifyDataSetChanged();
-		
+
 	}
 
 }

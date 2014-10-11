@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 
 public class TagSelectionListAdapter extends BaseAdapter {
@@ -50,7 +51,8 @@ public class TagSelectionListAdapter extends BaseAdapter {
 					.findViewById(R.id.selection_tag_icon);
 
 			tagName.setText(tag.getTagName());
-			tagIcon.setBackgroundResource(R.drawable.tag_icon_placeholder);
+			
+			tagIcon.setImageResource(CocktailRecommenderValues.getCorrectTagImageResource(tagIcon, tag));
 		}
 
 		view.setBackgroundColor(view.getResources().getColor(
@@ -77,14 +79,52 @@ public class TagSelectionListAdapter extends BaseAdapter {
 		});
 		return view;
 	}
+	
+	
+	//Icons from icons8.com, remember to link to website
+	private void setCorrectTagIcon(ImageView tagIcon, Tag tag) {
+		
+		switch (tag.getTagID()){
+			case CocktailRecommenderValues.TAG_APERITIF:
+				tagIcon.setImageResource(R.drawable.ic_tag_aperitif);
+				break;
+			case CocktailRecommenderValues.TAG_HIGHBALL:
+				tagIcon.setImageResource(R.drawable.ic_tag_highball);
+				break;
+			case CocktailRecommenderValues.TAG_SHOT:
+				tagIcon.setImageResource(R.drawable.ic_tag_shooter);
+				break;
+			case CocktailRecommenderValues.TAG_DIGESTIF:
+				tagIcon.setImageResource(R.drawable.ic_tag_digestif);
+				break;
+			case CocktailRecommenderValues.TAG_KLASSISCH:
+				tagIcon.setImageResource(R.drawable.ic_tag_klassisch);
+				break;
+			case CocktailRecommenderValues.TAG_SOUR:
+				tagIcon.setImageResource(R.drawable.ic_tag_sour);
+				break;
+			case CocktailRecommenderValues.TAG_FIZZES:
+				tagIcon.setImageResource(R.drawable.ic_tag_fizz);
+				break;
+			case CocktailRecommenderValues.TAG_SHOOTER:
+				tagIcon.setImageResource(R.drawable.ic_tag_shooter);
+				break;
+			case CocktailRecommenderValues.TAG_STRONG:
+				tagIcon.setImageResource(R.drawable.ic_tag_strong);
+				break;
+			default:
+				tagIcon.setImageResource(R.drawable.tag_icon_placeholder);
+				break;
+		}
+	}
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
 			
-			return R.color.test_background_red;
+			return R.color.background_selected_dark_blue;
 		} else {
 			
-			return R.color.test_background_white;
+			return R.color.background_black;
 		}
 	}
 

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:contentDescription="@string/tag_icon_content_description" />
 
     <TextView
@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"
+        android:layout_weight="0.2"
         android:textSize="16sp" />
 
 </LinearLayout>
