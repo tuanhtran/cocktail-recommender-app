@@ -47,6 +47,12 @@ public class SearchActivity extends ActionBarActivity implements
 	private Dialog searchProgress;
 	private SearchView filterBar;
 
+	private static final String BUNDLE_KEY_INPROGRESS = "SearchInProgress";
+	private static final String BUNDLE_KEY_SELECTED_INGS = "SelectedIngs";
+	private static final String BUNDLE_KEY_SELECTED_TAGS = "SelectedTags";
+	private static final String BUNDLE_KEY_SELECTED_CATEGORY_IDX = "SelectedCategory";
+	private static final String BUNDLE_KEY_FILTER_STRING = "FilterString";
+
 	private static final int CATEGORY_BUTTON_STATE_IDX_NEUTRAL = 0;
 	private static final int CATEGORY_BUTTON_STATE_NUM = 2;
 
@@ -66,6 +72,9 @@ public class SearchActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_search);
 		initData();
 		initUI();
+		if (savedInstanceState != null) {
+			adjustDataAndViews(savedInstanceState);
+		}
 	}
 
 	private void initData() {
@@ -168,7 +177,7 @@ public class SearchActivity extends ActionBarActivity implements
 			}
 
 			public boolean onQueryTextChange(String queryString) {
-				ingListAdapter.setSearchViewInsert(queryString);
+				ingListAdapter.setSearchViewQueryText(queryString);
 				startFilter();
 				return true;
 			}
@@ -218,7 +227,6 @@ public class SearchActivity extends ActionBarActivity implements
 		categoryButtonSelected.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				filterBar.setQuery("", false);
 				categoryButtonPressed(v.getId());
 			}
 		});
@@ -227,9 +235,10 @@ public class SearchActivity extends ActionBarActivity implements
 		startSearchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				searchProgress.show();
 				if (!isSearchInProgress) {
 					searchForDrinks();
+				} else {
+					searchProgress.show();
 				}
 			}
 		});
@@ -353,14 +362,14 @@ public class SearchActivity extends ActionBarActivity implements
 
 	private void setAllButtonsToNeutral() {
 		categoryButtonAlc.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_neutral));
 
 		categoryButtonNonAlc.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_neutral));
 		categoryButtonMisc.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_neutral));
 		categoryButtonSelected.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_neutral));
 		categoryButtonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 		categoryButtonNonAlcStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 		categoryButtonMiscStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
@@ -369,18 +378,18 @@ public class SearchActivity extends ActionBarActivity implements
 
 	private void setAllButtonsToNotSelected() {
 		categoryButtonAlc.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_not_selected));
 		categoryButtonNonAlc.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_not_selected));
 		categoryButtonMisc.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_not_selected));
 		categoryButtonSelected.setBackgroundColor(getResources().getColor(
-				R.color.background_not_selected_blue));
+				R.color.category_button_background_not_selected));
 	}
 
 	private void setButtonToSelected(Button button) {
 		button.setBackgroundColor(getResources().getColor(
-				R.color.background_selected_dark_blue));
+				R.color.category_button_background_selected));
 	}
 
 	private void startFilter() {
@@ -388,11 +397,6 @@ public class SearchActivity extends ActionBarActivity implements
 	}
 
 	private ArrayList<Integer> getSelectedIngredientIDs() {
-		setAllButtonsToNeutral();
-		ingListAdapter
-				.setSelectedCategoryButton(IngredientSelectionListAdapter.DONT_FILTER_FOR_CATEGORY);
-		startFilter();
-
 		ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
 		for (int idx = 0; idx < ings.size(); idx++) {
 			if (ings.get(idx).isSelected()) {
@@ -412,6 +416,64 @@ public class SearchActivity extends ActionBarActivity implements
 		return selectedTagIDs;
 	}
 
+	private void adjustDataAndViews(Bundle savedInstanceState) {
+
+		isSearchInProgress = savedInstanceState
+				.getBoolean(BUNDLE_KEY_INPROGRESS);
+		ArrayList<Integer> selectedIngs = savedInstanceState
+				.getIntegerArrayList(BUNDLE_KEY_SELECTED_INGS);
+		ArrayList<Integer> selectedTags = savedInstanceState
+				.getIntegerArrayList(BUNDLE_KEY_SELECTED_TAGS);
+		String queryText = savedInstanceState
+				.getString(BUNDLE_KEY_FILTER_STRING);
+		int selectedCategoryButtonIdx = savedInstanceState
+				.getInt(BUNDLE_KEY_SELECTED_CATEGORY_IDX);
+
+		if (isSearchInProgress) {
+			CRDatabase.getInstance(this).reactToSearchActivityRebuild(this);
+			searchProgress.show();
+		}
+		if (selectedIngs.size() > 0) {
+			for (IngredientType ingType : ings) {
+				if (selectedIngs.contains((Integer) ingType.getID())) {
+					ingType.toggleSelection();
+				}
+			}
+			ingListAdapter.notifyDataSetChanged();
+		}
+		if (selectedTags.size() > 0) {
+			for (Tag tag : tags) {
+				if (selectedTags.contains((Integer) tag.getTagID())) {
+					tag.toggleSelection();
+				}
+			}
+			tagListAdapter.notifyDataSetChanged();
+		}
+		if (selectedCategoryButtonIdx != 0) {
+			setAllButtonsToNotSelected();
+			switch (selectedCategoryButtonIdx) {
+			case IngredientSelectionListAdapter.FILTER_FOR_CATEGORY_ALCOHOLIC:
+				setButtonToSelected(categoryButtonAlc);
+				categoryButtonAlcStateIdx++;
+				break;
+			case IngredientSelectionListAdapter.FILTER_FOR_CATEGORY_NON_ALCOHOLIC:
+				setButtonToSelected(categoryButtonNonAlc);
+				categoryButtonNonAlcStateIdx++;
+				break;
+			case IngredientSelectionListAdapter.FILTER_FOR_CATEGORY_MISC:
+				setButtonToSelected(categoryButtonMisc);
+				categoryButtonMiscStateIdx++;
+				break;
+			case IngredientSelectionListAdapter.FILTER_FOR_CATEGORY_SELECTED:
+				setButtonToSelected(categoryButtonSelected);
+				categoryButtonSelectedStateIdx++;
+				break;
+			}
+			ingListAdapter.setSelectedCategoryButton(selectedCategoryButtonIdx);
+		}
+		filterBar.setQuery(queryText, false);
+	}
+
 	@Override
 	public void onSearchInitiated() {
 		isSearchInProgress = true;
@@ -429,5 +491,20 @@ public class SearchActivity extends ActionBarActivity implements
 	public void onSearchCompleted() {
 		setSearchNotInProgress();
 		openRecipeBook(CocktailRecommenderValues.SEARCH_RESULTS);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState
+				.putBoolean(BUNDLE_KEY_INPROGRESS, isSearchInProgress);
+		savedInstanceState.putIntegerArrayList(BUNDLE_KEY_SELECTED_INGS,
+				getSelectedIngredientIDs());
+		savedInstanceState.putIntegerArrayList(BUNDLE_KEY_SELECTED_TAGS,
+				getSelectedTagIDs());
+		savedInstanceState.putString(BUNDLE_KEY_FILTER_STRING,
+				ingListAdapter.getSearchViewQueryText());
+		savedInstanceState.putInt(BUNDLE_KEY_SELECTED_CATEGORY_IDX,
+				ingListAdapter.getSelectedCategoryButton());
 	}
 }

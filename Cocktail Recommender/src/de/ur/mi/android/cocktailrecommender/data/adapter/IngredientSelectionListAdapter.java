@@ -22,8 +22,8 @@ public class IngredientSelectionListAdapter extends
 	private Context context;
 	private ArrayList<IngredientType> ingredientList;
 	private ArrayList<IngredientType> notShownIngList = new ArrayList<IngredientType>();
-	private String searchViewInsert = "";
-	private int selectedCategoryButton = 0;
+	private String searchViewQueryText = "";
+	private int selectedCategoryButtonIdx = 0;
 	private Toast toast;
 
 	public final static int DONT_FILTER_FOR_CATEGORY = 0;
@@ -51,7 +51,7 @@ public class IngredientSelectionListAdapter extends
 			view = inflater.inflate(R.layout.listitem_ing_selection, null);
 
 		}
-		
+
 		final IngredientType ingType = ingredientList.get(position);
 
 		if (ingType != null) {
@@ -65,21 +65,22 @@ public class IngredientSelectionListAdapter extends
 
 		view.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
+
 				ingType.toggleSelection();
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ingType.isSelected())));
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				if (toast == null){
+				if (toast == null) {
 					toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
 				}
-				if (ingType.isSelected()){					
-					toast.setText(context.getResources().getString(R.string.toast_ing_select));
+				if (ingType.isSelected()) {
+					toast.setText(context.getResources().getString(
+							R.string.toast_ing_select));
 					toast.show();
-				}	
-				else
-					toast.setText(context.getResources().getString(R.string.toast_ing_remove));
-					toast.show();
+				} else
+					toast.setText(context.getResources().getString(
+							R.string.toast_ing_remove));
+				toast.show();
 			}
 		});
 		return view;
@@ -87,10 +88,10 @@ public class IngredientSelectionListAdapter extends
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {
-			
+
 			return R.color.background_selected_dark_blue;
 		} else {
-			
+
 			return R.color.background_black;
 		}
 	}
@@ -120,40 +121,47 @@ public class IngredientSelectionListAdapter extends
 				FilterResults results = new FilterResults();
 				ArrayList<IngredientType> filteredIngredientList = new ArrayList<IngredientType>();
 
-				if (selectedCategoryButton == DONT_FILTER_FOR_CATEGORY) {
-					filteredIngredientList.addAll(ingredientList);
-				} else if ((selectedCategoryButton == FILTER_FOR_CATEGORY_ALCOHOLIC)
-						|| (selectedCategoryButton == FILTER_FOR_CATEGORY_NON_ALCOHOLIC)
-						|| (selectedCategoryButton == FILTER_FOR_CATEGORY_MISC)) {
+				if (!(selectedCategoryButtonIdx == FILTER_FOR_CATEGORY_SELECTED)) {
 
-					char prefix = ("" + selectedCategoryButton + "").charAt(0);
-					for (int idx = 0; idx < ingredientList.size(); idx++) {
-						if (prefix == ingredientList.get(idx)
-								.getCategoryPrefixChar()) {
-							filteredIngredientList.add(ingredientList.get(idx));
-						} else {
-							notShownIngList.add(ingredientList.get(idx));
+					if (selectedCategoryButtonIdx == DONT_FILTER_FOR_CATEGORY) {
+						filteredIngredientList.addAll(ingredientList);
+					} else if ((selectedCategoryButtonIdx == FILTER_FOR_CATEGORY_ALCOHOLIC)
+							|| (selectedCategoryButtonIdx == FILTER_FOR_CATEGORY_NON_ALCOHOLIC)
+							|| (selectedCategoryButtonIdx == FILTER_FOR_CATEGORY_MISC)) {
+
+						char prefix = ("" + selectedCategoryButtonIdx + "")
+								.charAt(0);
+						for (int idx = 0; idx < ingredientList.size(); idx++) {
+							if (prefix == ingredientList.get(idx)
+									.getCategoryPrefixChar()) {
+								filteredIngredientList.add(ingredientList
+										.get(idx));
+							} else {
+								notShownIngList.add(ingredientList.get(idx));
+							}
+						}
+
+					}
+					if (!(searchViewQueryText.length() == 0)
+							|| (searchViewQueryText == null)) {
+						searchViewQueryText = searchViewQueryText.toLowerCase();
+						for (int idx = 0; idx < filteredIngredientList.size(); idx++) {
+							if (!(filteredIngredientList.get(idx).getIngName()
+									.toLowerCase()
+									.contains(searchViewQueryText))) {
+								notShownIngList.add(filteredIngredientList
+										.get(idx));
+								filteredIngredientList.remove(idx);
+								idx--;
+							}
 						}
 					}
-				} else if (selectedCategoryButton == FILTER_FOR_CATEGORY_SELECTED) {
+				} else {
 					for (int idx = 0; idx < ingredientList.size(); idx++) {
 						if (ingredientList.get(idx).isSelected()) {
 							filteredIngredientList.add(ingredientList.get(idx));
 						} else {
 							notShownIngList.add(ingredientList.get(idx));
-						}
-					}
-				}
-
-				if (!(searchViewInsert.equals("") || searchViewInsert == null)) {
-					searchViewInsert = searchViewInsert.toLowerCase();
-					for (int idx = 0; idx < filteredIngredientList.size(); idx++) {
-						if (!(filteredIngredientList.get(idx).getIngName()
-								.toLowerCase().contains(searchViewInsert))) {
-							notShownIngList
-									.add(filteredIngredientList.get(idx));
-							filteredIngredientList.remove(idx);
-							idx--;
 						}
 					}
 				}
@@ -166,12 +174,20 @@ public class IngredientSelectionListAdapter extends
 		return filter;
 	}
 
-	public void setSearchViewInsert(String s) {
-		searchViewInsert = s;
+	public void setSearchViewQueryText(String queryText) {
+		searchViewQueryText = queryText;
 	}
 
-	public void setSelectedCategoryButton(int i) {
-		selectedCategoryButton = i;
+	public String getSearchViewQueryText() {
+		return searchViewQueryText;
+	}
+
+	public void setSelectedCategoryButton(int buttonIdx) {
+		selectedCategoryButtonIdx = buttonIdx;
+	}
+
+	public int getSelectedCategoryButton() {
+		return selectedCategoryButtonIdx;
 	}
 
 	private void resetFilter() {

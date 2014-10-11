@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -502,10 +503,10 @@ public class CRDatabase {
 			clearSearchResults();
 			return searchEngine.searchByIngredients();
 		}
-		
+
 		@Override
 		protected void onPostExecute(Integer numOfResults) {
-			if ((int)numOfResults == 0) {
+			if ((int) numOfResults == 0) {
 				listener.onSearchFailed();
 			} else {
 				listener.onSearchCompleted();
