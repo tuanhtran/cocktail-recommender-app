@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
+    android:weightSum="1"
     android:padding="12dp" >
 
     <TextView
@@ -11,7 +12,15 @@
         android:ellipsize="marquee"
         android:gravity="center"
         android:padding="5dp"
+        android:layout_weight="0.2"
         android:singleLine="true"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
+    <ImageView 
+        android:id="@+id/shopping_list_ing_entry_delete_button"
+        android:contentDescription="@string/shopping_list_delete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8"
+        android:src="@drawable/ic_action_delete_2"/>
 
 </LinearLayout>

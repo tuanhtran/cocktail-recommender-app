@@ -58,13 +58,15 @@ public class RecipeFragment extends Fragment {
 	}
 
 	private void initData() {
-		Recipe dummyRecipe = CRDatabase.getInstance(getActivity()).getHistory()
-				.get(0).getRecipe();
-		if (dummyRecipe != null) {
-			recipe = dummyRecipe;
-		} else {
-			recipe = CRDatabase.getInstance(getActivity()).getFullRecipeList()
-					.get(0).getRecipe();
+		if (recipe == null) {
+			Recipe dummyRecipe = CRDatabase.getInstance(getActivity())
+					.getHistory().get(0).getRecipe();
+			if (dummyRecipe != null) {
+				recipe = dummyRecipe;
+			} else {
+				recipe = CRDatabase.getInstance(getActivity())
+						.getFullRecipeList().get(0).getRecipe();
+			}
 		}
 		ingredients = new ArrayList<RecipeIngredient>();
 	}
@@ -93,9 +95,12 @@ public class RecipeFragment extends Fragment {
 
 	private void addTagIconToLayout(LinearLayout tagDisplayParent, Tag tag) {
 		ImageView tagIcon = new ImageView(getActivity());
-		tagIcon.setImageResource(CocktailRecommenderValues.getCorrectTagImageResource(tagIcon, tag));
+		tagIcon.setImageResource(CocktailRecommenderValues
+				.getCorrectTagImageResource(tagIcon, tag));
 		float scaleFactor = getResources().getDisplayMetrics().density;
-		int pixelValue = (int) (getResources().getInteger(R.integer.recipe_page_tag_icon_padding_dp)*scaleFactor + 0.5f);
+		int pixelValue = (int) (getResources().getInteger(
+				R.integer.recipe_page_tag_icon_padding_dp)
+				* scaleFactor + 0.5f);
 		tagIcon.setPadding(pixelValue, 0, pixelValue, 0);
 		tagDisplayParent.addView(tagIcon);
 

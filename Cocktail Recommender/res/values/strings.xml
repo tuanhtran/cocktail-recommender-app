@@ -60,6 +60,9 @@
     <string name="toast_tag_select">Tag ausgewählt</string>
     <string name="toast_tag_remove">Tag entfernt</string>
 
+    <!-- Related to ShoppingListActivity -->
+    <string name="shopping_list_ing_entry_delete_button_description">Zutat löschen</string>
+    
     <!-- Related to ShoppingList dialogs -->
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>
     <string name="shopping_list_creation_dialog_option_one">Neue Einkaufsliste erstellen</string>
@@ -72,6 +75,8 @@
     <string name="shopping_list_delete">Folgende Einkaufsliste löschen?:</string>
     <string name="shopping_list_creation_dialog_name_entry_error">Bitte einen Namen eingeben.</string>
     <string name="shopping_list_creation_no_ing_selected">Bitte mindestens eine Zutat auswählen.</string>
+    <string name="shopping_list_ing_entry_deletion_title">entfernen?</string>
+    <string name="shopping_list_ing_entry_last_item_deletion_message">Die Einkaufsliste wird nach Entfernung der ausgewählten Zutat gelöscht!</string>
     
     <!-- Related to Favorites list dialogs -->
     <string name="favorite_list_deletion_dialog_title"> aus Favoriten entfernen?</string>
