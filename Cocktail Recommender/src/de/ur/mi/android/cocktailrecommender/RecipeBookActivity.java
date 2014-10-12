@@ -48,35 +48,33 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	// Fragment type not final, using RecipeListFragment to test. Are custom
 	// types necessary?
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recipe_book);
-		
+
 		initData();
 		initUIFragments();
 		setActionBarTabs();
 		initDialog();
-		
-		if(savedInstanceState != null) {
-	        int index = savedInstanceState.getInt("index");
-	        getActionBar().setSelectedNavigationItem(index);
-	    }
-		
+
+		if (savedInstanceState != null) {
+			int index = savedInstanceState.getInt("index");
+			getActionBar().setSelectedNavigationItem(index);
+		}
+
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-	    super.onSaveInstanceState(outState);
-	    int currentTabIdx = getActionBar().getSelectedNavigationIndex();
-	    outState.putInt("index", currentTabIdx);
+		super.onSaveInstanceState(outState);
+		int currentTabIdx = getActionBar().getSelectedNavigationIndex();
+		outState.putInt("index", currentTabIdx);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.start, menu);
 		return true;
@@ -85,7 +83,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if(id == R.id.action_nav_menu){
+		if (id == R.id.action_nav_menu) {
 			Intent openMenu = new Intent(this, MenuActivity.class);
 			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(openMenu);
@@ -104,11 +102,14 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private void initUIFragments() {
 		searchResultListFragment = new RecipeListFragment(searchResultList);
 		searchResultListFragment.setOnRecipeSelectedListener(this);
-		historyListFragment = new RecipeListFragment(historyList, CocktailRecommenderValues.NO_MATCH_RATE);
+		historyListFragment = new RecipeListFragment(historyList,
+				CocktailRecommenderValues.NO_MATCH_RATE);
 		historyListFragment.setOnRecipeSelectedListener(this);
-		favsListFragment = new RecipeListFragment(favList, CocktailRecommenderValues.NO_MATCH_RATE, true);
+		favsListFragment = new RecipeListFragment(favList,
+				CocktailRecommenderValues.NO_MATCH_RATE, true);
 		favsListFragment.setOnRecipeSelectedListener(this);
-		allRecipesFragment = new RecipeListFragment(allRecipes, CocktailRecommenderValues.NO_MATCH_RATE);
+		allRecipesFragment = new RecipeListFragment(allRecipes,
+				CocktailRecommenderValues.NO_MATCH_RATE);
 		allRecipesFragment.setOnRecipeSelectedListener(this);
 		recipeFragment = new RecipeFragment();
 		recipeFragment.setOnFlingListener(this);
@@ -139,7 +140,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		actionBar.addTab(searchResultTab);
 		actionBar.addTab(favsTab);
 		actionBar.addTab(historyTab);
-		
+
 		switch (getIntent().getExtras().getInt(
 				CocktailRecommenderValues.FRAGMENT_TO_DISPLAY)) {
 		case CocktailRecommenderValues.ALL_RECIPES:
@@ -160,10 +161,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		}
 	}
 
-	/* Dialog erscheint wenn im RecipeFragment auf den
-	 "Zutaten zu Einkaufsliste hinzufügen Button gedrückt wird" und bietet 2
-	 Optionen an:
-	 Neue Liste erstellen oder zu einer vorhandenen hinzufügen */
+	/*
+	 * Dialog erscheint wenn im RecipeFragment auf den
+	 * "Zutaten zu Einkaufsliste hinzufügen Button gedrückt wird" und bietet 2
+	 * Optionen an: Neue Liste erstellen oder zu einer vorhandenen hinzufügen
+	 */
 	private void initDialog() {
 		final int OPTION_ONE = 0;
 		final int OPTION_TWO = 1;
@@ -248,7 +250,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 					}
 
-					// Soll doppelte Einträge in einer EInkaufsliste verhindern;
+					// Soll doppelte Einträge in einer EInkaufsliste
+					// verhindern;
 					private ShoppingList modifyList(ShoppingList shoppingList) {
 						boolean isNotDuplicate = false;
 						RecipeIngredient[] existingIngList = shoppingList
@@ -335,21 +338,20 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	public void onRecipeSelected(Recipe recipe) {
 		getFragmentManager().executePendingTransactions();
 		FragmentTransaction transaction = getSupportFragmentManager()
-				.beginTransaction();		
+				.beginTransaction();
 		recipePageIdx = findPage(recipe);
 		recipeFragment.setRecipe(recipe);
-		
-		
+
 		if (isInLandscapeMode()) {
 			if (!(recipeFragment.isAdded())) {
-				
+
 				findViewById(R.id.recipe_page_temp).setVisibility(
 						TextView.INVISIBLE);
-				transaction
-						.replace(R.id.recipe_book_container_side, recipeFragment);
+				transaction.replace(R.id.recipe_book_container_side,
+						recipeFragment);
 			} else {
 				recipeFragment.updateData();
-				
+
 			}
 		} else {
 			transaction
@@ -386,7 +388,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	@Override
 	public void onRightToLeftFling() {
-		
+
 		if (!isInLandscapeMode()) {
 			ArrayList<RecipeListEntry> currentRecipeList = getListOfCurrentTab();
 			recipePageIdx = ((recipePageIdx - 1) + searchResultList.size())
@@ -396,13 +398,13 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			CRDatabase.getInstance(this).addToHistory(currentRecipe);
 			recipeFragment.setRecipe(currentRecipe.getRecipe());
 			recipeFragment.updateData();
-			
+
 		}
 	}
 
 	@Override
 	public void onLeftToRightFling() {
-		
+
 		if (!isInLandscapeMode()) {
 			ArrayList<RecipeListEntry> currentRecipeList = getListOfCurrentTab();
 			recipePageIdx = (recipePageIdx + 1) % currentRecipeList.size();
@@ -440,8 +442,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		this.selectedIngredients = selectedIngredients;
 		alertDialogBuilder.show();
 	}
-		
-	
+
 	@Override
 	public void onNoIngredientSelected() {
 		alertDialogBuilder = new AlertDialog.Builder(this);
@@ -459,19 +460,15 @@ public class RecipeBookActivity extends ActionBarActivity implements
 				});
 		alertDialogBuilder.setCancelable(false);
 		alertDialogBuilder.show();
-		
-	}
 
+	}
 
 	private class RecipeBookTabListener implements ActionBar.TabListener {
 
 		private RecipeListFragment fragment;
-		
-		
 
 		public RecipeBookTabListener(RecipeListFragment fragment) {
 			this.fragment = fragment;
-			
 
 		}
 
@@ -488,19 +485,18 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			if (fragment == null) {
 				fragment = new RecipeListFragment();
 			}
-			
-			transaction
-					.replace(R.id.recipe_book_container_main, fragment);
-			//transaction.commit();
+
+			transaction.replace(R.id.recipe_book_container_main, fragment);
+			// transaction.commit();
 
 		}
 
 		@Override
 		public void onTabUnselected(Tab tab,
 				android.support.v4.app.FragmentTransaction transaction) {
-			
+
 			transaction.remove(fragment);
-			//transaction.commit();
+			// transaction.commit();
 
 		}
 

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.os.Handler;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -85,7 +84,6 @@ public class CRDatabase {
 	private SearchEngine searchEngine;
 	private ArrayList<RecipeListEntry> history;
 	private ArrayList<RecipeListEntry> favorites;
-	private AsyncTask<SearchParameter, Integer, Integer> backgroundTask;
 	private OnSearchResultListener listener;
 
 	public CRDatabase(Context context) {
@@ -100,20 +98,13 @@ public class CRDatabase {
 		favorites = getFavoritesFromDB();
 	}
 
-	public void close() {
-		saveHistoryToDB();
-		saveFavoritesToDB();
-		db.close();
-		helper.close();
-	}
-
 	/*
-	 * Returns the instance of CRDatabase. If that instance has not been created
-	 * yet, it is created first.
+	 * Returns the instance of CRDatabase. If that instance has not been
+	 * initialized yet, it is created first using the application's context.
 	 */
 	public static CRDatabase getInstance(Context context) {
 		if (instance == null) {
-			instance = new CRDatabase(context);
+			instance = new CRDatabase(context.getApplicationContext());
 		}
 		return instance;
 	}
@@ -121,7 +112,7 @@ public class CRDatabase {
 	public void searchByIngredient(SearchParameter params,
 			OnSearchResultListener listener) {
 		this.listener = listener;
-		backgroundTask = new BackgroundTask().execute(params);
+		new BackgroundTask().execute(params);
 		listener.onSearchInitiated();
 	}
 
@@ -130,8 +121,8 @@ public class CRDatabase {
 	}
 
 	/*
-	 * Creates and returns an ArrayList that contains the RecipeListEntrys
-	 * created from the recipeIDs from the database table Searchresults
+	 * Creates and returns an ArrayList that contains the RecipeListEntry
+	 * objects created from the recipeIDs in the database table Searchresults.
 	 */
 	public ArrayList<RecipeListEntry> getSearchResults() {
 		ArrayList<RecipeListEntry> searchResults = new ArrayList<RecipeListEntry>();
@@ -139,6 +130,7 @@ public class CRDatabase {
 		Cursor cursor = db.query(DATABASE_TABLE_SEARCHRESULTS, new String[] {
 				SEARCHRESULTS_KEY_RECIPEID, SEARCHRESULTS_KEY_MATCH_RATE },
 				null, null, null, null, null);
+
 		if (cursor.moveToFirst()) {
 			do {
 				int recipeID = cursor
@@ -156,7 +148,8 @@ public class CRDatabase {
 	}
 
 	/*
-	 * Creates and returns an ArrayList that contains all ...
+	 * Creates and returns an ArrayList that contains all the RecipeListEntry
+	 * objects created from the data in the database table Cocktails.
 	 */
 	public ArrayList<RecipeListEntry> getFullRecipeList() {
 		ArrayList<RecipeListEntry> recipeList = new ArrayList<RecipeListEntry>();
@@ -178,7 +171,8 @@ public class CRDatabase {
 	}
 
 	/*
-	 * Creates and returns an ArrayList that contains all...
+	 * Creates and returns an ArrayList that contains all the IngredientType
+	 * objects created from the data in the database table Ingredients.
 	 */
 	public ArrayList<IngredientType> getFullIngList() {
 		ArrayList<IngredientType> ingredientList = new ArrayList<IngredientType>();
@@ -200,7 +194,8 @@ public class CRDatabase {
 	}
 
 	/*
-	 * Creates and returns an ArrayList that contains all...
+	 * Creates and returns an ArrayList that contains all the Tag objects
+	 * created from the data in the database table Tags.
 	 */
 	public ArrayList<Tag> getFullTagList() {
 		ArrayList<Tag> tagList = new ArrayList<Tag>();
@@ -221,7 +216,8 @@ public class CRDatabase {
 	}
 
 	/*
-	 * Creates and returns an ArrayList that contains all...
+	 * Creates and returns an ArrayList that contains all the ShoppingList
+	 * objects created from the data in the database table ShoppingLists.
 	 */
 	public ArrayList<ShoppingList> getAllShoppingLists() {
 		ArrayList<ShoppingList> shoppingLists = new ArrayList<ShoppingList>();
@@ -231,6 +227,7 @@ public class CRDatabase {
 						SHOPPINGLISTS_KEY_ID, SHOPPINGLISTS_KEY_NAME,
 						SHOPPINGLISTS_KEY_INGREDIENTIDS }, null, null, null,
 						null, null);
+
 		if (cursor.moveToFirst()) {
 			do {
 				int id = cursor.getInt(SHOPPINGLISTS_COLUMN_IDX_ID);
@@ -241,7 +238,6 @@ public class CRDatabase {
 							.getIngredientsFromJson(cursor
 									.getString(SHOPPINGLISTS_COLUMN_IDX_INGRREDIENTIDS));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				ShoppingList list = new ShoppingList(id, name, ingredients);
@@ -253,31 +249,34 @@ public class CRDatabase {
 	}
 
 	/*
-	 * Creates and returns an ArrayList that contains all...
+	 * Adds a new shopping list to the database or updates the ingredient data
+	 * of an already existing shopping list.
 	 */
 	public void addShoppingList(ShoppingList shoppingList, boolean isNewList) {
 		ContentValues values = new ContentValues();
-
 		if (isNewList) {
 			String ingredientJSONString = jsonDataParser
 					.getIngredientJSONString(shoppingList.getIngredients());
 			values.put(SHOPPINGLISTS_KEY_NAME, shoppingList.getListName());
 			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, ingredientJSONString);
-			addShoppingListToDB(isNewList, values, shoppingList);
-
+			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
 		} else {
 			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, jsonDataParser
 					.getIngredientJSONString(shoppingList.getIngredients()));
-			addShoppingListToDB(isNewList, values, shoppingList);
+			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
+					SHOPPINGLISTS_KEY_ID + "=?",
+					new String[] { String.valueOf(shoppingList.getId()) });
 		}
+		db.execSQL("vacuum");
 	}
 
 	/*
 	 * Creates and returns an ArrayList that contains all...
 	 */
 	public void deleteShoppingList(ShoppingList list) {
-		deleteShoppingListFromDB(list);
-
+		db.delete(DATABASE_TABLE_SHOPPINGLISTS, SHOPPINGLISTS_KEY_ID + "=?",
+				new String[] { String.valueOf(list.getId()) });
+		db.execSQL("vacuum");
 	}
 
 	/*
@@ -293,7 +292,7 @@ public class CRDatabase {
 	 * RecipeListEntry
 	 */
 	public void addToFavorites(RecipeListEntry recipeSR) {
-		if (!listAlreadyContainsRecipeSR(recipeSR, favorites)) {
+		if (!listAlreadyContainsRecipeListEntry(recipeSR, favorites)) {
 			favorites.add(recipeSR);
 			saveFavoritesToDB();
 		}
@@ -314,62 +313,90 @@ public class CRDatabase {
 		return history;
 	}
 
-	public void addToHistory(RecipeListEntry recipeSR) {
-		if (!listAlreadyContainsRecipeSR(recipeSR, history)) {
-			history.add(0, recipeSR);
+	public void addToHistory(RecipeListEntry recipeLE) {
+		if (!listAlreadyContainsRecipeListEntry(recipeLE, history)) {
+			history.add(0, recipeLE);
 			while (history.size() > HISTORY_MAX_SIZE) {
 				history.remove(history.size() - 1);
 			}
+			saveHistoryToDB();
 		}
 	}
 
+	/*
+	 * Creates a new entry in the database table SearchResults, containing the
+	 * recipe ID and the match rate of a newly found search result. No opening
+	 * or closing of the database necessary, because this method is called from
+	 * within a method that opens and closes it.
+	 */
 	private void setSearchResult(Recipe recipe, int matchRate) {
-
 		String sqlInsert = "INSERT INTO " + DATABASE_TABLE_SEARCHRESULTS + " ("
 				+ SEARCHRESULTS_KEY_RECIPEID + ","
 				+ SEARCHRESULTS_KEY_MATCH_RATE + ") VALUES ("
 				+ recipe.getRecipeID() + "," + matchRate + ");";
 		db.execSQL(sqlInsert);
-
+		db.execSQL("vacuum");
 	}
 
+	/*
+	 * Clears the database table SearchResults.
+	 */
 	private void clearSearchResults() {
 		db.execSQL("delete from " + DATABASE_TABLE_SEARCHRESULTS);
 		db.execSQL("vacuum");
 	}
 
+	/*
+	 * Creates and returns a Recipe object from the data from an entry of the
+	 * database table Cocktails which matches the given recipe ID.
+	 */
 	private Recipe getRecipeFromID(int recipeID) {
 		Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 				COCKTAILS_KEY_ID, COCKTAILS_KEY_NAME,
 				COCKTAILS_KEY_INGREDIENTS, COCKTAILS_KEY_TAGS,
 				COCKTAILS_KEY_PREPARATION }, COCKTAILS_KEY_ID + "=" + recipeID,
 				null, null, null, null);
+
 		cursor.moveToFirst();
 		Recipe recipe = getRecipeFromCursor(cursor);
 		cursor.close();
 		return recipe;
 	}
 
+	/*
+	 * Returns the value of the column Name of an entry from the database table
+	 * Ingredients which matches the given ingredient ID.
+	 */
 	private String getIngNameFromID(int ingID) {
 		Cursor cursor = db.query(DATABASE_TABLE_INGREDIENTS,
 				new String[] { INGREDIENTS_KEY_NAME }, INGREDIENTS_KEY_ID + "="
 						+ ingID, null, null, null, null);
+
 		cursor.moveToFirst();
 		String name = cursor.getString(INGREDIENTS_COLUMN_IDX_NAME - 1);
 		cursor.close();
 		return name;
 	}
 
+	/*
+	 * Returns the value of the column Name of an entry from the database table
+	 * Tags which matches the given tag ID.
+	 */
 	private String getTagNameFromID(int tagID) {
 		Cursor cursor = db.query(DATABASE_TABLE_TAGS,
 				new String[] { TAGS_KEY_NAME }, TAGS_KEY_ID + "=" + tagID,
 				null, null, null, null);
+
 		cursor.moveToFirst();
 		String name = cursor.getString(TAGS_COLUMN_IDX_NAME - 1);
 		cursor.close();
 		return name;
 	}
 
+	/*
+	 * Creates and returns a Recipe object based on the data from the given
+	 * cursor.
+	 */
 	private Recipe getRecipeFromCursor(Cursor cursor) {
 		int recipeID = cursor.getInt(COCKTAILS_COLUMN_IDX_ID);
 		String name = cursor.getString(COCKTAILS_COLUMN_IDX_NAME);
@@ -394,12 +421,17 @@ public class CRDatabase {
 		return recipe;
 	}
 
+	/*
+	 * Creates and returns an ArrayList that contains all the RecipeListEntry
+	 * objects created from the data in the database table Favorites.
+	 */
 	private ArrayList<RecipeListEntry> getFavoritesFromDB() {
 		ArrayList<RecipeListEntry> favos = new ArrayList<RecipeListEntry>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_FAVORITES, new String[] {
 				FAVORITES_KEY_ID, FAVORITES_KEY_RECIPEID }, null, null, null,
 				null, null);
+
 		if (cursor.moveToFirst()) {
 			do {
 				Recipe recipe = getRecipeFromID(cursor
@@ -412,6 +444,10 @@ public class CRDatabase {
 		return favos;
 	}
 
+	/*
+	 * Clears the database table Favorites and adds the recipe IDs of all the
+	 * RecipeListEntry objects from the Arraylist favorites.
+	 */
 	private void saveFavoritesToDB() {
 		db.execSQL("delete from " + DATABASE_TABLE_FAVORITES);
 		db.execSQL("vacuum");
@@ -423,12 +459,17 @@ public class CRDatabase {
 		}
 	}
 
+	/*
+	 * Creates and returns an ArrayList that contains all the RecipeListEntry
+	 * objects created from the data in the database table History.
+	 */
 	private ArrayList<RecipeListEntry> getHistoryFromDB() {
 		ArrayList<RecipeListEntry> hist = new ArrayList<RecipeListEntry>();
 
 		Cursor cursor = db.query(DATABASE_TABLE_HISTORY, new String[] {
 				HISTORY_KEY_ID, HISTORY_KEY_RECIPEID }, null, null, null, null,
 				null);
+
 		if (cursor.moveToFirst()) {
 			do {
 				Recipe recipe = getRecipeFromID(cursor
@@ -440,6 +481,10 @@ public class CRDatabase {
 		return hist;
 	}
 
+	/*
+	 * Clears the database table History and adds the recipe IDs of all the
+	 * RecipeListEntry objects from the Arraylist history.
+	 */
 	private void saveHistoryToDB() {
 		db.execSQL("delete from " + DATABASE_TABLE_HISTORY);
 		db.execSQL("vacuum");
@@ -451,27 +496,15 @@ public class CRDatabase {
 		}
 	}
 
-	private void addShoppingListToDB(boolean isNewList, ContentValues values,
-			ShoppingList shoppingList) {
-		if (isNewList)
-			db.insert(DATABASE_TABLE_SHOPPINGLISTS, null, values);
-		else
-			db.update(DATABASE_TABLE_SHOPPINGLISTS, values,
-					SHOPPINGLISTS_KEY_ID + "=?",
-					new String[] { String.valueOf(shoppingList.getId()) });
-
-	}
-
-	private void deleteShoppingListFromDB(ShoppingList list) {
-		db.delete(DATABASE_TABLE_SHOPPINGLISTS, SHOPPINGLISTS_KEY_ID + "=?",
-				new String[] { String.valueOf(list.getId()) });
-
-	}
-
-	private boolean listAlreadyContainsRecipeSR(RecipeListEntry recipeSR,
-			ArrayList<RecipeListEntry> list) {
+	/*
+	 * Checks if an arraylist already contains an RecipeListEntry object with
+	 * the same recipe ID as the given RLE object. Return true if does and false
+	 * if it does not.
+	 */
+	private boolean listAlreadyContainsRecipeListEntry(
+			RecipeListEntry recipeLE, ArrayList<RecipeListEntry> list) {
 		for (RecipeListEntry rsr : list) {
-			if (rsr.getRecipe().getRecipeID() == recipeSR.getRecipe()
+			if (rsr.getRecipe().getRecipeID() == recipeLE.getRecipe()
 					.getRecipeID()) {
 				return true;
 			}
@@ -479,7 +512,6 @@ public class CRDatabase {
 		return false;
 	}
 
-	// Using sqliteassethelper library to open existing database
 	public static class CRDatabaseHelper extends SQLiteAssetHelper {
 		private static final int DB_VERSION = 1;
 		private static final String DB_NAME = "crDatabase.db";
@@ -497,6 +529,10 @@ public class CRDatabase {
 	private class BackgroundTask extends
 			AsyncTask<SearchParameter, Integer, Integer> {
 
+		/*
+		 * Starts a search using the SearchEngine and the given SearchParameters
+		 * and returns the number of search results.
+		 */
 		@Override
 		protected Integer doInBackground(SearchParameter... params) {
 			searchEngine.setSearchParameter(params[0]);
@@ -504,6 +540,10 @@ public class CRDatabase {
 			return searchEngine.searchByIngredients();
 		}
 
+		/*
+		 * Informs the listener about the success of the search using the
+		 * callback methods defined in the OnSearchResultListener interface-
+		 */
 		@Override
 		protected void onPostExecute(Integer numOfResults) {
 			if ((int) numOfResults == 0) {
@@ -514,9 +554,6 @@ public class CRDatabase {
 		}
 	}
 
-	// User defined search parameters are used to search for recipes in form of
-	// a Sqlite query.
-	// Where clause of query is generated from parameters
 	private class SearchEngine {
 		private SearchParameter params;
 
@@ -524,6 +561,10 @@ public class CRDatabase {
 			this.params = params;
 		}
 
+		/*
+		 * User defined search parameters are used to search for recipes in form
+		 * of a Sqlite query. Where clause of query is generated from parameters
+		 */
 		public int searchByIngredients() {
 			int numOfResults = 0;
 			String whereClause = getWhereClause();
