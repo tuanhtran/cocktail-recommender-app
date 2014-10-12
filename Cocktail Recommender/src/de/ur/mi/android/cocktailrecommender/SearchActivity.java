@@ -102,6 +102,14 @@ public class SearchActivity extends ActionBarActivity implements
 			startActivity(openMenu);
 			return true;
 		}
+		if(id == R.id.action_about){
+			AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
+			aboutAlert.setTitle(R.string.about_dialog_title);
+			aboutAlert.setMessage(R.string.about_dialog_message);
+			aboutAlert.create();
+			aboutAlert.show();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

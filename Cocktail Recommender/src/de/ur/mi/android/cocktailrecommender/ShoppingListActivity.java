@@ -10,6 +10,7 @@ import android.widget.ExpandableListView;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
 import de.ur.mi.android.cocktailrecommender.data.adapter.ShoppingListAdapter;
+import android.app.AlertDialog;
 /*
  * Displays a list of user created shopping lists.
  */
@@ -60,6 +61,14 @@ public class ShoppingListActivity extends ActionBarActivity {
 			Intent openMenu = new Intent(this, MenuActivity.class);
 			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(openMenu);
+			return true;
+		}
+		if(id == R.id.action_about){
+			AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
+			aboutAlert.setTitle(R.string.about_dialog_title);
+			aboutAlert.setMessage(R.string.about_dialog_message);
+			aboutAlert.create();
+			aboutAlert.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

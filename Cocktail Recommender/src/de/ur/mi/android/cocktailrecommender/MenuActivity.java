@@ -1,5 +1,6 @@
 package de.ur.mi.android.cocktailrecommender;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -137,6 +138,14 @@ public class MenuActivity extends ActionBarActivity {
 			Intent openMenu = new Intent(this, MenuActivity.class);
 			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(openMenu);
+			return true;
+		}
+		if(id == R.id.action_about){
+			AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
+			aboutAlert.setTitle(R.string.about_dialog_title);
+			aboutAlert.setMessage(R.string.about_dialog_message);
+			aboutAlert.create();
+			aboutAlert.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
