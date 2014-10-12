@@ -80,43 +80,6 @@ public class TagSelectionListAdapter extends BaseAdapter {
 		return view;
 	}
 	
-	
-	//Icons from icons8.com, remember to link to website
-	private void setCorrectTagIcon(ImageView tagIcon, Tag tag) {
-		
-		switch (tag.getTagID()){
-			case CocktailRecommenderValues.TAG_APERITIF:
-				tagIcon.setImageResource(R.drawable.ic_tag_aperitif);
-				break;
-			case CocktailRecommenderValues.TAG_HIGHBALL:
-				tagIcon.setImageResource(R.drawable.ic_tag_highball);
-				break;
-			case CocktailRecommenderValues.TAG_SHOT:
-				tagIcon.setImageResource(R.drawable.ic_tag_shooter);
-				break;
-			case CocktailRecommenderValues.TAG_DIGESTIF:
-				tagIcon.setImageResource(R.drawable.ic_tag_digestif);
-				break;
-			case CocktailRecommenderValues.TAG_KLASSISCH:
-				tagIcon.setImageResource(R.drawable.ic_tag_klassisch);
-				break;
-			case CocktailRecommenderValues.TAG_SOUR:
-				tagIcon.setImageResource(R.drawable.ic_tag_sour);
-				break;
-			case CocktailRecommenderValues.TAG_FIZZES:
-				tagIcon.setImageResource(R.drawable.ic_tag_fizz);
-				break;
-			case CocktailRecommenderValues.TAG_SHOOTER:
-				tagIcon.setImageResource(R.drawable.ic_tag_shooter);
-				break;
-			case CocktailRecommenderValues.TAG_STRONG:
-				tagIcon.setImageResource(R.drawable.ic_tag_strong);
-				break;
-			default:
-				tagIcon.setImageResource(R.drawable.tag_icon_placeholder);
-				break;
-		}
-	}
 
 	private int getBGColor(boolean isSelected) {
 		if (isSelected) {

@@ -79,6 +79,6 @@
     <string name="shopping_list_ing_entry_last_item_deletion_message">Die Einkaufsliste wird nach Entfernung der ausgewählten Zutat gelöscht!</string>
     
     <!-- Related to Favorites list dialogs -->
-    <string name="favorite_list_deletion_dialog_title"> aus Favoriten entfernen?</string>
+    <string name="favorite_list_deletion_dialog_title">aus Favoriten entfernen?</string>
 
 </resources>

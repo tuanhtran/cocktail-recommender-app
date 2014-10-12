@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 
+/*
+ * Allows navigation to the other app functions.
+ */
+
 public class MenuActivity extends ActionBarActivity {
 
 	private TextView menuTitle;
@@ -89,6 +93,7 @@ public class MenuActivity extends ActionBarActivity {
 		startActivity(intent);
 	}
 
+	//Opens RecipeBookActivity on the correct action bar tab
 	private void openRecipeBook(int recipeBookSection) {
 		Intent intent = new Intent(MenuActivity.this, RecipeBookActivity.class);
 		
