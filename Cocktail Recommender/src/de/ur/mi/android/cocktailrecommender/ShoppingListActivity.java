@@ -2,20 +2,18 @@ package de.ur.mi.android.cocktailrecommender;
 
 import java.util.ArrayList;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
 import de.ur.mi.android.cocktailrecommender.data.adapter.ShoppingListAdapter;
+/*
+ * Displays a list of user created shopping lists.
+ */
+import android.content.Intent;
 
 public class ShoppingListActivity extends ActionBarActivity {
 

@@ -1,7 +1,11 @@
 package de.ur.mi.android.cocktailrecommender.data;
 
-import de.ur.mi.android.cocktailrecommender.R;
 import android.widget.ImageView;
+import de.ur.mi.android.cocktailrecommender.R;
+
+/*
+ * Various values that are being used in this app
+ */
 
 public final class CocktailRecommenderValues {
 
@@ -25,7 +29,9 @@ public final class CocktailRecommenderValues {
 	public final static int TAG_FIZZES = 7;
 	public final static int TAG_SHOOTER = 8;
 	public final static int TAG_STRONG = 9;
+	public final static int TAG_NO_ALCOHOL = 10;
 
+	// Returns the correct image resource for tags
 	public static int getCorrectTagImageResource(ImageView tagIcon,
 			Tag tag) {
 		switch (tag.getTagID()) {
@@ -55,6 +61,9 @@ public final class CocktailRecommenderValues {
 			
 		case TAG_STRONG:
 			return R.drawable.ic_tag_strong;
+			
+		case TAG_NO_ALCOHOL:
+			return R.drawable.ic_tag_no_alcohol;
 			
 		default:
 			return R.drawable.tag_icon_placeholder;

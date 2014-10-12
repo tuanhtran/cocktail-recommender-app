@@ -3,7 +3,6 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +21,13 @@ import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipeListAdapter;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment.OnFavStatusChangedListener;
+
+/*
+ *Fragment displays lists of recipes.
+ *RecipeBookActivity uses this fragment for every tab.
+ *The ability to delete list items with a longClick is set by the corresponding constructor,
+ *is only used for the favorites list in the recipe book.
+ */
 
 public class RecipeListFragment extends Fragment implements
 		OnItemClickListener, OnItemLongClickListener,
@@ -73,14 +79,19 @@ public class RecipeListFragment extends Fragment implements
 
 	}
 
-	// LongClick to delete list items, only used for favorites in this app
-	// context!
+	/*
+	 * LongClick to delete list items, only used for favorites in this app
+	 * context!
+	 */
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			final int position, long id) {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
 				getActivity());
-		String dialogTitle = recipeList.get(position).getRecipe().getName() + getResources().getString(R.string.favorite_list_deletion_dialog_title);
+		String dialogTitle = recipeList.get(position).getRecipe().getName()
+				+ " "
+				+ getResources().getString(
+						R.string.favorite_list_deletion_dialog_title);
 		alertDialogBuilder.setTitle(dialogTitle);
 		alertDialogBuilder.setNegativeButton(R.string.generic_cancel,
 				new DialogInterface.OnClickListener() {
@@ -96,8 +107,8 @@ public class RecipeListFragment extends Fragment implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						CRDatabase.getInstance(getActivity()).removeFromFavorites(
-								recipeList.get(position));
+						CRDatabase.getInstance(getActivity())
+								.removeFromFavorites(recipeList.get(position));
 						adapter.notifyDataSetChanged();
 
 					}
@@ -131,6 +142,7 @@ public class RecipeListFragment extends Fragment implements
 			}
 		});
 		filterBar.setIconifiedByDefault(false);
+		filterBar.setFocusable(false);
 	}
 
 	private void initListView() {

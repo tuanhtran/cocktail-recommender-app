@@ -1,5 +1,9 @@
 package de.ur.mi.android.cocktailrecommender.data;
 
+/*
+ * Class bundles necessary information for ingredients and allows comparison
+ */
+
 public class IngredientType implements Comparable<IngredientType> {
 	private int ingID;
 	private String ingName;
