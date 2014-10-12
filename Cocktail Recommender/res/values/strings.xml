@@ -9,6 +9,10 @@
     <string name="generic_positive">OK</string>
     <string name="generic_cancel">Abbrechen</string>
     <string name="generic_search_hint">Hier Suchbegriff eingeben...</string>
+    
+    <!-- About dialog strings -->
+    <string name="about_dialog_title">About</string>
+    <string name="about_dialog_message">Icons mit freundlicher Genehmigung von icons8.com</string>
 
     <!-- Related to MenuActivity -->
     <string name="main_menu_title_text">Cocktail Recommender</string>
@@ -33,6 +37,8 @@
     <string name="start_search">GO!</string>
     <string name="recipe_page_test">Wählen Sie ein Rezept aus!</string>
     <string name="tag_icon_content_description">Tag Icon</string>
+    <string name="start_search_button_description">Suche starten Button</string>
+    <string name="search_settings_button_description">Sucheinstellungen Button</string>
 
     <!-- Related to dialogs in SearchActivity -->
     <string name="search_settings_title">Sucheinstellungen</string>
@@ -77,10 +83,12 @@
     <string name="shopping_list_creation_no_ing_selected">Bitte mindestens eine Zutat auswählen.</string>
     <string name="shopping_list_ing_entry_deletion_title">entfernen?</string>
     <string name="shopping_list_ing_entry_last_item_deletion_message">Die Einkaufsliste wird nach Entfernung der ausgewählten Zutat gelöscht!</string>
+    <string name="add_to_shopping_list_button_description">Button zur Einkaufslistenerstellung</string>
     
     <!-- Related to Favorites -->
     <string name="favorite_list_deletion_dialog_title">aus Favoriten entfernen?</string>
     <string name="toast_favorite">Zu Favoriten hinzugefügt</string>
     <string name="toast_unfavorite">Von Favoriten entfernt</string>
+    <string name="add_to_favorite_button_description">Button zum Favorisieren</string>
 
 </resources>

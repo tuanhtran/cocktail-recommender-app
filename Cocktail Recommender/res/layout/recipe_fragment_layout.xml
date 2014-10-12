@@ -9,6 +9,7 @@
         android:orientation="vertical" >
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -25,9 +26,10 @@
 	            android:layout_weight="0.8"
 	            android:textSize="25sp" />
 	        
-	        <ImageView
+	        <ImageButton
+	            style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/recipe_page_add_to_favs_toggle"
-                android:contentDescription="@string/shopping_list_creation_dialog_title"
+                android:contentDescription="@string/add_to_favorite_button_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -44,6 +46,7 @@
 		      
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -57,7 +60,9 @@
 			
             
             <ImageButton
+                style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/recipe_page_create_shopping_list_button"
+                android:contentDescription="@string/add_to_shopping_list_button_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

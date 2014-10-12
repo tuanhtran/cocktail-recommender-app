@@ -33,7 +33,7 @@ public class RecipeFragment extends Fragment {
 	private TextView recipeName;
 	private ListView recipeIngredients;
 	private TextView recipePreparation;
-	private ImageView recipeToFavoritesToggle;
+	private ImageButton recipeToFavoritesToggle;
 	private ImageButton ingredientsToShoppingList;
 	private LinearLayout tagDisplayParent;
 	private RecipePageIngredientListAdapter adapter;
@@ -88,7 +88,7 @@ public class RecipeFragment extends Fragment {
 				.findViewById(R.id.recipe_page_preparation);
 		ingredientsToShoppingList = (ImageButton) fragmentView
 				.findViewById(R.id.recipe_page_create_shopping_list_button);
-		recipeToFavoritesToggle = (ImageView) fragmentView
+		recipeToFavoritesToggle = (ImageButton) fragmentView
 				.findViewById(R.id.recipe_page_add_to_favs_toggle);
 
 		tagDisplayParent = (LinearLayout) fragmentView
@@ -188,7 +188,7 @@ public class RecipeFragment extends Fragment {
 							.setImageResource(R.drawable.ic_action_star_not_favorite);
 					if (isInLandscapeMode() && favStatusListener != null)
 						favStatusListener.onFavRemoved(recipeToFavorite);
-					toast.setText(R.string.toast_unfavorite);
+					toast.setText(R.string.toast_favorite);
 					toast.show();
 				} else {
 					CRDatabase.getInstance(getActivity()).addToFavorites(

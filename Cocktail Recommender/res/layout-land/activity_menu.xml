@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/main_menu_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="30dp"
+            android:textSize="30sp" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/main_menu_search_button"
+            android:drawableLeft="@drawable/ic_action_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/main_menu_recipe_book_button"
+                android:drawableLeft="@drawable/ic_recipe_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5" />
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/main_menu_shopping_list_button"
+                android:drawableLeft="@drawable/ic_action_to_shop_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+				android:layout_weight="0.5" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/main_menu_fav_button"
+                android:drawableLeft="@drawable/ic_action_star_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:layout_weight="0.5" />
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/main_menu_history_button"
+                android:drawableLeft="@drawable/ic_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
