@@ -1107,10 +1107,11 @@ containing a value of this type.
         public static final int ic_tag_fizz=0x7f020061;
         public static final int ic_tag_highball=0x7f020062;
         public static final int ic_tag_klassisch=0x7f020063;
-        public static final int ic_tag_shooter=0x7f020064;
-        public static final int ic_tag_sour=0x7f020065;
-        public static final int ic_tag_strong=0x7f020066;
-        public static final int tag_icon_placeholder=0x7f020067;
+        public static final int ic_tag_no_alcohol=0x7f020064;
+        public static final int ic_tag_shooter=0x7f020065;
+        public static final int ic_tag_sour=0x7f020066;
+        public static final int ic_tag_strong=0x7f020067;
+        public static final int tag_icon_placeholder=0x7f020068;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1124,7 +1125,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_nav_menu=0x7f050075;
+        public static final int action_nav_menu=0x7f050073;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1194,8 +1195,6 @@ containing a value of this type.
         public static final int search_go_btn=0x7f05003a;
         public static final int search_mag_icon=0x7f050035;
         public static final int search_plate=0x7f050036;
-        public static final int search_result_filter_bar=0x7f050073;
-        public static final int search_result_listview=0x7f050074;
         public static final int search_settings_button=0x7f050050;
         public static final int search_settings_option_four_switch=0x7f05005c;
         public static final int search_settings_option_four_text=0x7f05005b;
@@ -1303,8 +1302,7 @@ containing a value of this type.
         public static final int listitem_tag_selection=0x7f030024;
         public static final int recipe_fragment_layout=0x7f030025;
         public static final int recipe_list_fragment_layout=0x7f030026;
-        public static final int result_list_fragment_layout=0x7f030027;
-        public static final int support_simple_spinner_dropdown_item=0x7f030028;
+        public static final int support_simple_spinner_dropdown_item=0x7f030027;
     }
     public static final class menu {
         public static final int start=0x7f0c0000;

@@ -53,14 +53,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private AlertDialog.Builder alertDialogBuilder;
 	private int recipePageIdx = 0;
 
-<<<<<<< HEAD
 	// Fragment type not final, using RecipeListFragment to test. Are custom
 	// types necessary?
-=======
 	// Can be deleted if default onBackPress() works and doesn't need to be
 	// overridden
 	private boolean onRecipePage = false;
->>>>>>> origin/master
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +76,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	}
 
-<<<<<<< HEAD
-=======
 	// Put current tab into bundle to select correct tab after orientation
 	// change
->>>>>>> origin/master
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -277,12 +271,9 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 					}
 
-<<<<<<< HEAD
 					// Soll doppelte Einträge in einer EInkaufsliste
 					// verhindern;
-=======
 					// Prevents duplicate entries in the shopping list
->>>>>>> origin/master
 					private ShoppingList modifyList(ShoppingList shoppingList) {
 						boolean isNotDuplicate = false;
 						RecipeIngredient[] existingIngList = shoppingList
@@ -532,22 +523,16 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			}
 
 			transaction.replace(R.id.recipe_book_container_main, fragment);
-<<<<<<< HEAD
 			// transaction.commit();
-=======
->>>>>>> origin/master
 
 		}
 
 		@Override
 		public void onTabUnselected(Tab tab,
 				android.support.v4.app.FragmentTransaction transaction) {
-<<<<<<< HEAD
 
 			transaction.remove(fragment);
 			// transaction.commit();
-=======
->>>>>>> origin/master
 
 			transaction.remove(fragment);
 		}
