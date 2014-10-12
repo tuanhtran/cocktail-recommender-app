@@ -424,8 +424,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 		if (!isInLandscapeMode()) {
 			ArrayList<RecipeListEntry> currentRecipeList = getListOfCurrentTab();
-			recipePageIdx = ((recipePageIdx - 1) + currentRecipeList.size())
-					% currentRecipeList.size();
+			recipePageIdx = ((recipePageIdx - 1) + searchResultList.size())
+					% searchResultList.size();
 			RecipeListEntry currentRecipe = currentRecipeList
 					.get(recipePageIdx);
 			CRDatabase.getInstance(this).addToHistory(currentRecipe);

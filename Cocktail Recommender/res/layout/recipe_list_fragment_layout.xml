@@ -9,9 +9,7 @@
         android:id="@+id/recipe_list_filter_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="@string/generic_search_hint"
-        android:iconifiedByDefault="false"
-        android:focusable="false" />
+        android:queryHint="@string/generic_search_hint" />
 
     <View
         android:layout_width="match_parent"

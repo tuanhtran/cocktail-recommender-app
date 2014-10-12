@@ -141,7 +141,8 @@ public class RecipeListFragment extends Fragment implements
 				return true;
 			}
 		});
-		
+		filterBar.setIconifiedByDefault(false);
+		filterBar.setFocusable(false);
 	}
 
 	private void initListView() {
