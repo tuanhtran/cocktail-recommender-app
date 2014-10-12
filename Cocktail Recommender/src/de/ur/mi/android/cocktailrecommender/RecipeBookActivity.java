@@ -390,8 +390,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	private int findPage(Recipe recipe) {
-		for (int idx = 0; idx < searchResultList.size(); idx++) {
-			if (searchResultList.get(idx).getRecipe().equals(recipe)) {
+		for (int idx = 0; idx < getListOfCurrentTab().size(); idx++) {
+			if (getListOfCurrentTab().get(idx).getRecipe().equals(recipe)) {
 				return idx;
 			}
 		}

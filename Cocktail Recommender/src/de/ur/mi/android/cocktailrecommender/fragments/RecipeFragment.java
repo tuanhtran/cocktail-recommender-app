@@ -56,11 +56,11 @@ public class RecipeFragment extends Fragment {
 		});
 		return fragmentView;
 	}
-	
+
 	/*
-	 *  Guarantees that recipe is never null (important for orientation change):
-	 *  Gets the last looked at recipe and sets the instance field if available;
-	 *  else the first recipe of the complete recipe list is chosen.
+	 * Guarantees that recipe is never null (important for orientation change):
+	 * Gets the last looked at recipe and sets the instance field if available;
+	 * else the first recipe of the complete recipe list is chosen.
 	 */
 	private void initData() {
 		if (recipe == null) {
@@ -75,7 +75,6 @@ public class RecipeFragment extends Fragment {
 		}
 		ingredients = new ArrayList<RecipeIngredient>();
 	}
-
 
 	private void initUI() {
 		recipeName = (TextView) fragmentView
