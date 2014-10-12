@@ -140,7 +140,7 @@ public class RecipeFragment extends Fragment {
 								.getSelectedIngredients();
 						if (selectedIngs.length > 0) {
 							shoppingListener.onAddToShoppingList(adapter
-									.getSelectedIngredients());
+									.getSelectedIngredients(), recipe.getRecipeID());
 							v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 						} else {
 							shoppingListener.onNoIngredientSelected();
@@ -261,7 +261,7 @@ public class RecipeFragment extends Fragment {
 	}
 
 	public interface OnShoppingListAddListener {
-		public void onAddToShoppingList(RecipeIngredient[] ingredients);
+		public void onAddToShoppingList(RecipeIngredient[] ingredients, int recipeId);
 
 		public void onNoIngredientSelected();
 	}

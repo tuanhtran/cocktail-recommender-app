@@ -42,6 +42,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private ArrayList<RecipeListEntry> historyList;
 	private ActionBar actionBar;
 	private RecipeIngredient[] selectedIngredients;
+	private int selectedRecipeId;
 	private AlertDialog.Builder alertDialogBuilder;
 	private int recipePageIdx = 0;
 	private boolean onRecipePage = false;
@@ -214,8 +215,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		alertDialogBuilder.create();
 	}
 
-	// Dialog der erscheint um Zutaten zu einer vorhandenen hinzuzufügen. Alle
-	// vorhandenen Listen werden angezeigt.
+	//Dialog adds ingredients to an existing shopping list
 	protected void addToExistingShoppingList() {
 		final boolean isNewList = false;
 
@@ -248,8 +248,35 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 					}
 
-					// Soll doppelte Einträge in einer EInkaufsliste verhindern;
+					// prevents duplicate entries in shopping list
 					private ShoppingList modifyList(ShoppingList shoppingList) {
+						shoppingList = removeDuplicateIngEntries(shoppingList);
+						shoppingList = removeDuplicateRecipeEntries(shoppingList);
+						return shoppingList;
+						
+					}
+
+					private ShoppingList removeDuplicateRecipeEntries(
+							ShoppingList shoppingList) {
+						int[] existingRecipeList = shoppingList
+								.getRecipes();
+						int[] newRecipeIds = new int[existingRecipeList.length+1];
+						for (int idx = 0; idx < existingRecipeList.length; idx++) {
+
+							if (existingRecipeList[idx] == selectedRecipeId){
+								return shoppingList;
+							}
+							newRecipeIds[idx] = existingRecipeList[idx];
+						}
+												
+						newRecipeIds[existingRecipeList.length] = selectedRecipeId;
+						shoppingList.setRecipes(newRecipeIds);
+
+						return shoppingList;
+					}
+
+					private ShoppingList removeDuplicateIngEntries(
+							ShoppingList shoppingList) {
 						boolean isNotDuplicate = false;
 						RecipeIngredient[] existingIngList = shoppingList
 								.getIngredients();
@@ -288,9 +315,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		alertDialogBuilder.show();
 	}
 
-	// Dialog der für das Erstellen einer neuen Einkaufsliste erscheint. Nach
-	// Eingabe eines Namens für die Liste wird diese in die Datenbank
-	// eingetragen
+	//Dialog to create new shopping list
 	protected void createNewShoppingList() {
 		final EditText listName = new EditText(this);
 		final boolean isNewList = true;
@@ -317,7 +342,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 							int genericId = -1;
 							String name = listName.getText().toString();
 							ShoppingList shoppingList = new ShoppingList(
-									genericId, name, selectedIngredients);
+									genericId, name, selectedIngredients, new int[]{selectedRecipeId});
 							CRDatabase.getInstance(RecipeBookActivity.this)
 									.addShoppingList(shoppingList, isNewList);
 							initDialog();
@@ -435,9 +460,9 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	}
 
-	@Override
-	public void onAddToShoppingList(RecipeIngredient[] selectedIngredients) {
+	public void onAddToShoppingList(RecipeIngredient[] selectedIngredients, int recipeId) {
 		this.selectedIngredients = selectedIngredients;
+		this.selectedRecipeId = recipeId;
 		alertDialogBuilder.show();
 	}
 		

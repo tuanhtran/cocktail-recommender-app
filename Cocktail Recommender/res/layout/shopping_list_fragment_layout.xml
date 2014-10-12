@@ -5,14 +5,8 @@
     android:orientation="vertical" >
     
     <ExpandableListView
-            android:id="@+id/shopping_list_recipe_view"
+            android:id="@+id/shopping_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    
-    <ExpandableListView
-            android:id="@+id/shopping_list__ing_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    
 
 </LinearLayout>

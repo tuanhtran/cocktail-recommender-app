@@ -33,6 +33,10 @@
     <string name="start_search">GO!</string>
     <string name="recipe_page_test">Wählen Sie ein Rezept aus!</string>
     <string name="tag_icon_content_description">Tag Icon</string>
+    
+    <!-- Related to ShoppingListActivity -->
+    <string name="recipes">Rezepte</string>
+    <string name="ingredients">Zutaten</string>
 
     <!-- Related to dialogs in SearchActivity -->
     <string name="search_settings_title">Sucheinstellungen</string>

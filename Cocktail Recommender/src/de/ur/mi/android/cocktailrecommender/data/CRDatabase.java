@@ -60,9 +60,11 @@ public class CRDatabase {
 	private static final String SHOPPINGLISTS_KEY_ID = "ID"; // Integer
 	private static final String SHOPPINGLISTS_KEY_NAME = "List_Name"; // String
 	private static final String SHOPPINGLISTS_KEY_INGREDIENTIDS = "IngredientIDs"; // (JSON)String
+	private static final String SHOPPINGLISTS_KEY_RECIPEIDS = "RecipeIDs"; // (JSON)String
 	private static final int SHOPPINGLISTS_COLUMN_IDX_ID = 0;
 	private static final int SHOPPINGLISTS_COLUMN_IDX_NAME = 1;
-	private static final int SHOPPINGLISTS_COLUMN_IDX_INGRREDIENTIDS = 2;
+	private static final int SHOPPINGLISTS_COLUMN_IDX_INGREDIENTIDS = 2;
+	private static final int SHOPPINGLISTS_COLUMNS_IDX_RECIPEIDS = 3;
 
 	private static final String DATABASE_TABLE_SEARCHRESULTS = "SearchResults";
 	private static final String SEARCHRESULTS_KEY_ID = "ID"; // Integer
@@ -229,7 +231,7 @@ public class CRDatabase {
 		Cursor cursor = db
 				.query(DATABASE_TABLE_SHOPPINGLISTS, new String[] {
 						SHOPPINGLISTS_KEY_ID, SHOPPINGLISTS_KEY_NAME,
-						SHOPPINGLISTS_KEY_INGREDIENTIDS }, null, null, null,
+						SHOPPINGLISTS_KEY_INGREDIENTIDS, SHOPPINGLISTS_KEY_RECIPEIDS }, null, null, null,
 						null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -239,12 +241,19 @@ public class CRDatabase {
 				try {
 					ingredients = jsonDataParser
 							.getIngredientsFromJson(cursor
-									.getString(SHOPPINGLISTS_COLUMN_IDX_INGRREDIENTIDS));
+									.getString(SHOPPINGLISTS_COLUMN_IDX_INGREDIENTIDS));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				ShoppingList list = new ShoppingList(id, name, ingredients);
+				int[] recipes = null;
+				try {
+					recipes = jsonDataParser
+							.getRecipesFromJson(cursor
+									.getString(SHOPPINGLISTS_COLUMNS_IDX_RECIPEIDS));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				ShoppingList list = new ShoppingList(id, name, ingredients, recipes);
 				shoppingLists.add(list);
 			} while (cursor.moveToNext());
 		}
@@ -257,17 +266,20 @@ public class CRDatabase {
 	 */
 	public void addShoppingList(ShoppingList shoppingList, boolean isNewList) {
 		ContentValues values = new ContentValues();
-
+		String ingredientJSONString = jsonDataParser
+				.getIngredientJSONString(shoppingList.getIngredients());
+		String recipeJSONString = jsonDataParser.getRecipeJSONString(shoppingList.getRecipes());
 		if (isNewList) {
-			String ingredientJSONString = jsonDataParser
-					.getIngredientJSONString(shoppingList.getIngredients());
+			
+			
 			values.put(SHOPPINGLISTS_KEY_NAME, shoppingList.getListName());
 			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, ingredientJSONString);
+			values.put(SHOPPINGLISTS_KEY_RECIPEIDS, recipeJSONString);
 			addShoppingListToDB(isNewList, values, shoppingList);
 
 		} else {
-			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, jsonDataParser
-					.getIngredientJSONString(shoppingList.getIngredients()));
+			values.put(SHOPPINGLISTS_KEY_INGREDIENTIDS, ingredientJSONString);
+			values.put(SHOPPINGLISTS_KEY_RECIPEIDS, recipeJSONString);
 			addShoppingListToDB(isNewList, values, shoppingList);
 		}
 	}
@@ -298,6 +310,7 @@ public class CRDatabase {
 			saveFavoritesToDB();
 		}
 	}
+
 
 	public void removeFromFavorites(RecipeListEntry recipeSR) {
 		ArrayList<RecipeListEntry> toRemove = new ArrayList<RecipeListEntry>();
@@ -338,7 +351,7 @@ public class CRDatabase {
 		db.execSQL("vacuum");
 	}
 
-	private Recipe getRecipeFromID(int recipeID) {
+	public Recipe getRecipeFromID(int recipeID) {
 		Cursor cursor = db.query(DATABASE_TABLE_COCKTAILS, new String[] {
 				COCKTAILS_KEY_ID, COCKTAILS_KEY_NAME,
 				COCKTAILS_KEY_INGREDIENTS, COCKTAILS_KEY_TAGS,
@@ -663,6 +676,8 @@ public class CRDatabase {
 		private static final String ING_ARRAY_KEY = "Ingredients";
 		private static final String ING_ID_KEY = "ID";
 		private static final String ING_QUANTITY_KEY = "Qty";
+		
+		private static final String RECIPE_ARRAY_KEY = "ID";
 
 		private static final String TAG_ARRAY_KEY = "Tags";
 		private static final String TAG_ID_KEY = "ID";
@@ -670,9 +685,8 @@ public class CRDatabase {
 		public RecipeIngredient[] getIngredientsFromJson(String jsonString)
 				throws JSONException {
 
-			if (jsonString.equals("")) {
+			if (jsonString.equals("")) 
 				return null;
-			}
 
 			JSONObject json = new JSONObject(jsonString);
 			JSONArray ingredientArray = json.getJSONArray(ING_ARRAY_KEY);
@@ -694,6 +708,31 @@ public class CRDatabase {
 			}
 
 			return ingredients;
+		}
+
+		public int[] getRecipesFromJson(String jsonString) throws JSONException{
+			if (jsonString.equals(""))
+				return null;
+			
+			JSONObject json = new JSONObject(jsonString);
+			JSONArray recipeArray = json.getJSONArray(RECIPE_ARRAY_KEY);
+			int[] recipes = new int[recipeArray.length()];
+			
+			for (int recipeIdx = 0; recipeIdx < recipeArray.length(); recipeIdx++){
+				recipes[recipeIdx] = recipeArray.getInt(recipeIdx);
+			}
+			
+			return recipes;
+		}
+		
+		public String getRecipeJSONString(int[] recipeIds){
+			String jsonString ="{\"" + RECIPE_ARRAY_KEY + "\":[";
+			for (int recipeId: recipeIds){
+				jsonString = jsonString + recipeId+",";
+			}
+			jsonString = jsonString.substring(0, jsonString.length() - 1)
+					+ "]}";
+			return jsonString;
 		}
 
 		public Tag[] getTagsFromJson(String jsonString) throws JSONException {
