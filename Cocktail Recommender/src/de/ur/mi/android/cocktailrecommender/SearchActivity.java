@@ -182,7 +182,7 @@ public class SearchActivity extends ActionBarActivity implements
 				return true;
 			}
 		});
-		filterBar.setIconifiedByDefault(false);
+		
 	}
 
 	private void initListViews() {
