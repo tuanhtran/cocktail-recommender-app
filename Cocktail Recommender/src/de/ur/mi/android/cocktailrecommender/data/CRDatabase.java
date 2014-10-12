@@ -450,6 +450,7 @@ public class CRDatabase {
 				hist.add(faveToAdd);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		return hist;
 	}
 

@@ -21,8 +21,8 @@ import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeListFragment.OnRecipeSelectedListener;
 
 /*
- * The adapter creates a nested ExpandableListView with the following hierarchy per parent group item (a single shoppinglist entry):
- * shoppinglistentry -> recipes, ingredients
+ * The adapter creates a nested ExpandableListView with the following hierarchy per parent group item (a single shopping list entry):
+ * shopping list entry -> recipes, ingredients
  * recipes -> recipe children
  * ingredients -> ingredient children
  * 
@@ -90,7 +90,12 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 					null);
 
 		}
-
+		
+		if(isExpanded)
+			convertView.setBackgroundColor(context.getResources().getColor(R.color.background_selected_dark_blue));
+		else
+			convertView.setBackgroundColor(context.getResources().getColor(R.color.background_black));
+		
 		TextView shoppingListName = (TextView) convertView
 				.findViewById(R.id.shopping_list_name);
 		shoppingListName
@@ -163,7 +168,7 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 		recipeList.setAdapter(new ShoppingListRecipeAdapter(context,
 				shoppingLists.get(groupPosition).getRecipes()));
 		ExpandableListView ingList = (ExpandableListView) convertView
-				.findViewById(R.id.shopping_list__ing_view);
+				.findViewById(R.id.shopping_list_ing_view);
 		ingList.setAdapter(new ShoppingListIngAdapter(context, shoppingLists
 				.get(groupPosition).getIngredients()));
 
@@ -177,7 +182,7 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/*
-	 * Adapter for the recipe ExpandableListView; click on a child fires a
+	 * Adapter for the recipe ExpandableListView; click on a child sends a
 	 * callback to an onRecipeSelectedListener
 	 */
 	private class ShoppingListRecipeAdapter extends BaseExpandableListAdapter {
@@ -234,11 +239,14 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(
-						R.layout.listitem_shopping_sub_list_child, null);
+						R.layout.listitem_shopping_sub_list_parent, null);
 
 			}
+			
+			
+			
 			TextView recipeParent = (TextView) convertView
-					.findViewById(R.id.shopping_list_child_entry);
+					.findViewById(R.id.shopping_list_parent_entry);
 			recipeParent.setText(R.string.recipes);
 			return convertView;
 		}
@@ -253,12 +261,13 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 				convertView = infalInflater.inflate(
 						R.layout.listitem_shopping_sub_list_child, null);
 			}
+			
 			final Recipe recipe = CRDatabase.getInstance(context)
 					.getRecipeFromID(recipeIds[childPosition]);
 			TextView entry = (TextView) convertView
 					.findViewById(R.id.shopping_list_child_entry);
 			entry.setText(recipe.getName());
-			entry.setOnClickListener(new View.OnClickListener() {
+			convertView.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -334,11 +343,14 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = inflater.inflate(
-						R.layout.listitem_shopping_sub_list_child, null);
+						R.layout.listitem_shopping_sub_list_parent, null);
 
 			}
+			
+			
+			
 			TextView ingParent = (TextView) convertView
-					.findViewById(R.id.shopping_list_child_entry);
+					.findViewById(R.id.shopping_list_parent_entry);
 			ingParent.setText(R.string.ingredients);
 			return convertView;
 		}
@@ -346,15 +358,16 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 		@Override
 		public View getChildView(int groupPosition, int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
+			
 			if (convertView == null) {
 				LayoutInflater infalInflater = (LayoutInflater) this.context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				convertView = infalInflater.inflate(
 						R.layout.listitem_shopping_sub_list_child, null);
 			}
-			RecipeIngredient ingredient = shoppingLists.get(groupPosition)
+			
+			RecipeIngredient ingredient = shoppingLists.get((int) ShoppingListAdapter.this.getGroupId(groupPosition))
 					.getIngredients()[childPosition];
-
 			TextView ingredientItem = (TextView) convertView
 					.findViewById(R.id.shopping_list_child_entry);
 			ingredientItem.setText(ingredient.getIngName());

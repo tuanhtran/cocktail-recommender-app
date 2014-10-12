@@ -20,19 +20,20 @@ public class ShoppingListFragment extends Fragment{
 	private ShoppingListAdapter adapter;
 	private OnRecipeSelectedListener listener;
 	
-	public ShoppingListFragment(OnRecipeSelectedListener listener){
-		shoppingLists = CRDatabase.getInstance(getActivity()).getAllShoppingLists();
-		this.listener = listener;
-	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.shopping_list_fragment_layout,
 				container, false);
-		
+		initData();
 		initShoppingList();
 		return fragmentView;
+	}
+
+	private void initData() {
+		shoppingLists = CRDatabase.getInstance(getActivity()).getAllShoppingLists();
+		
 	}
 
 	private void initShoppingList() {
@@ -42,5 +43,8 @@ public class ShoppingListFragment extends Fragment{
 		
 	}
 
+	public void setOnRecipeSelectedListener(OnRecipeSelectedListener listener){
+		this.listener = listener;
+	}
 
 }

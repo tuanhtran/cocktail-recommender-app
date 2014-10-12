@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeFragment;
 import de.ur.mi.android.cocktailrecommender.fragments.RecipeListFragment.OnRecipeSelectedListener;
@@ -33,10 +32,11 @@ public class ShoppingListActivity extends ActionBarActivity implements
 	}
 
 	private void setShoppingListFragment() {
-		shoppingListFragment = new ShoppingListFragment(this);
+		shoppingListFragment = new ShoppingListFragment();
+		shoppingListFragment.setOnRecipeSelectedListener(this);
 		FragmentTransaction transaction = getSupportFragmentManager()
 				.beginTransaction();
-		transaction.add(R.id.shopping_list_container, shoppingListFragment);
+		transaction.replace(R.id.shopping_list_container, shoppingListFragment);
 		transaction.commit();
 
 	}
