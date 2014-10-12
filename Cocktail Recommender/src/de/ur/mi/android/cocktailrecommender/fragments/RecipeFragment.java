@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter.LengthFilter;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
@@ -39,6 +41,7 @@ public class RecipeFragment extends Fragment {
 	private OnFlingListener listener;
 	private OnShoppingListAddListener shoppingListener;
 	private OnFavStatusChangedListener favStatusListener;
+	private Toast toast;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -175,6 +178,8 @@ public class RecipeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				boolean isFavorite = checkIfFavorite(recipeToFavorite);
+				if (toast == null)
+					toast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
 				if (isFavorite) {
 					CRDatabase.getInstance(getActivity()).removeFromFavorites(
 							recipeToFavorite);
@@ -183,6 +188,8 @@ public class RecipeFragment extends Fragment {
 							.setImageResource(R.drawable.ic_action_star_not_favorite);
 					if (isInLandscapeMode() && favStatusListener != null)
 						favStatusListener.onFavRemoved(recipeToFavorite);
+					toast.setText(R.string.toast_unfavorite);
+					toast.show();
 				} else {
 					CRDatabase.getInstance(getActivity()).addToFavorites(
 							recipeToFavorite);
@@ -191,6 +198,8 @@ public class RecipeFragment extends Fragment {
 							.setImageResource(R.drawable.ic_action_star_favorite);
 					if (isInLandscapeMode() && favStatusListener != null)
 						favStatusListener.onFavAdded(recipeToFavorite);
+					toast.setText(R.string.toast_favorite);
+					toast.show();
 				}
 
 			}

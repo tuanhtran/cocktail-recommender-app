@@ -424,6 +424,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 		if (!isInLandscapeMode()) {
 			ArrayList<RecipeListEntry> currentRecipeList = getListOfCurrentTab();
+			if (currentRecipeList.size() == 0)
+				currentRecipeList = allRecipes;
 			recipePageIdx = ((recipePageIdx - 1) + currentRecipeList.size())
 					% currentRecipeList.size();
 			RecipeListEntry currentRecipe = currentRecipeList
@@ -440,6 +442,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 		if (!isInLandscapeMode()) {
 			ArrayList<RecipeListEntry> currentRecipeList = getListOfCurrentTab();
+			if (currentRecipeList.size() == 0)
+				currentRecipeList = allRecipes;
 			recipePageIdx = (recipePageIdx + 1) % currentRecipeList.size();
 			RecipeListEntry currentRecipe = currentRecipeList
 					.get(recipePageIdx);
