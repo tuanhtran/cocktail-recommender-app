@@ -33,22 +33,6 @@ import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
 
-/*
- * Due to an unexpected problem that occurred when the ingredient list was
- * displayed as a (dynamically created) Linear Layout, a ListView is used
- * instead. Although this is not optimal in terms of performance, there is
- * no noticeable negative impact in this case. To prevent any problems
- * created by a vertically scrolling ListView within a vertically scrolling
- * ScrollView, the height of the ListView is changed to the combined height
- * of its ChildViews (+separators). Since the ListView is now high enough to
- * show all its ChildViews there is no need for actual scrolling. This
- * workaround as well as the method to adjust the ListView's height is based
- * on the suggestion and code of the User "DougW" on stackoveerflow.com.
- * 
- * URL: http://stackoverflow.com/questions/3495890/how-can
- * -i-put-a-listview-into-a-scrollview-without-it-collapsing
- */
-
 public class RecipeFragment extends Fragment {
 	private View fragmentView;
 	private Recipe recipe;
@@ -66,7 +50,8 @@ public class RecipeFragment extends Fragment {
 	private Toast toast;
 
 	/*
-	 * This fragment
+	 * This Fragment is used to display all the information about a recipe
+	 * (name, ingredients, tags etc).
 	 */
 
 	@Override
@@ -257,6 +242,21 @@ public class RecipeFragment extends Fragment {
 		});
 	}
 
+	/*
+	 * Due to an unexpected problem that occurred when the ingredient list was
+	 * displayed as a (dynamically created) Linear Layout, a ListView is used
+	 * instead. Although this is not optimal in terms of performance, there is
+	 * no noticeable negative impact in this case. To prevent any problems
+	 * created by a vertically scrolling ListView within a vertically scrolling
+	 * ScrollView, the height of the ListView is changed to the combined height
+	 * of its ChildViews (+separators). Since the ListView is now high enough to
+	 * show all its ChildViews there is no need for actual scrolling. This
+	 * workaround as well as the method to adjust the ListView's height is based
+	 * on the suggestion and code of the User "DougW" on stackoveerflow.com.
+	 * 
+	 * URL: http://stackoverflow.com/questions/3495890/how-can
+	 * -i-put-a-listview-into-a-scrollview-without-it-collapsing
+	 */
 	private void adjustListViewHeight(ListView listView) {
 		RecipePageIngredientListAdapter adapter = (RecipePageIngredientListAdapter) listView
 				.getAdapter();

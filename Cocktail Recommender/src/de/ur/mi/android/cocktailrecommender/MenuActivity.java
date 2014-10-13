@@ -13,7 +13,7 @@ import android.widget.TextView;
 import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 
 /*
- * Allows navigation to the other app functions.
+ * Allows navigation to the other App functions. Serves as entry point and central hub of the application. 
  */
 
 public class MenuActivity extends ActionBarActivity {
@@ -33,6 +33,10 @@ public class MenuActivity extends ActionBarActivity {
 		initUI();
 	}
 
+	/*
+	 * Initializes the UI (mostly buttons that lead to the different components
+	 * of the application).
+	 */
 	private void initUI() {
 		menuTitle = (TextView) findViewById(R.id.main_menu_title_text);
 		menuTitle.setText(R.string.main_menu_title_text);
@@ -84,21 +88,31 @@ public class MenuActivity extends ActionBarActivity {
 		});
 	}
 
+	/*
+	 * Opens the Search Activity
+	 */
 	private void startSearchActivity() {
 		Intent intent = new Intent(MenuActivity.this, SearchActivity.class);
 		startActivity(intent);
 	}
 
+	/*
+	 * Opens the ShoppingList Activity
+	 */
 	private void startShoppingListActivity() {
-		Intent intent = new Intent(MenuActivity.this, ShoppingListActivity.class);
+		Intent intent = new Intent(MenuActivity.this,
+				ShoppingListActivity.class);
 		startActivity(intent);
 	}
 
-	//Opens RecipeBookActivity on the correct action bar tab
+	/*
+	 * Opens the RecipeBook Activity and passes a value that determines which
+	 * section of the RecipeBook will be shown.
+	 */
 	private void openRecipeBook(int recipeBookSection) {
 		Intent intent = new Intent(MenuActivity.this, RecipeBookActivity.class);
-		
-		switch (recipeBookSection) {		
+
+		switch (recipeBookSection) {
 		case CocktailRecommenderValues.ALL_RECIPES:
 			intent.putExtra(CocktailRecommenderValues.FRAGMENT_TO_DISPLAY,
 					CocktailRecommenderValues.ALL_RECIPES);
@@ -134,13 +148,13 @@ public class MenuActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if(id == R.id.action_nav_menu){
+		if (id == R.id.action_nav_menu) {
 			Intent openMenu = new Intent(this, MenuActivity.class);
 			openMenu.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			startActivity(openMenu);
 			return true;
 		}
-		if(id == R.id.action_about){
+		if (id == R.id.action_about) {
 			AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
 			aboutAlert.setTitle(R.string.about_dialog_title);
 			aboutAlert.setMessage(R.string.about_dialog_message);

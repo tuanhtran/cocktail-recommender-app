@@ -858,27 +858,16 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070014;
+        public static final int abc_search_url_text_holo=0x7f070009;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
-        public static final int background_black=0x7f07000d;
-        public static final int background_not_selected_blue=0x7f07000f;
-        public static final int background_selected_dark_blue=0x7f070010;
-        public static final int category_button_background_neutral=0x7f070011;
-        public static final int category_button_background_not_selected=0x7f070013;
-        public static final int category_button_background_selected=0x7f070012;
-        public static final int test_background_blue=0x7f070006;
-        public static final int test_background_dark_green=0x7f070004;
-        public static final int test_background_dark_red=0x7f070009;
-        public static final int test_background_green=0x7f070003;
-        public static final int test_background_light_blue=0x7f070007;
-        public static final int test_background_light_green=0x7f070005;
-        public static final int test_background_red=0x7f070008;
-        public static final int test_background_white=0x7f07000e;
-        public static final int test_button_gray=0x7f07000a;
-        public static final int test_button_gray_green=0x7f07000b;
-        public static final int test_button_gray_red=0x7f07000c;
+        public static final int background_black=0x7f070003;
+        public static final int background_not_selected_blue=0x7f070004;
+        public static final int background_selected_dark_blue=0x7f070005;
+        public static final int category_button_background_neutral=0x7f070006;
+        public static final int category_button_background_not_selected=0x7f070008;
+        public static final int category_button_background_selected=0x7f070007;
     }
     public static final class dimen {
         /**  Default height of an action bar. 

@@ -110,6 +110,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	/*
+	 * Initializes the data used for the four list that can be viewed in this
+	 * activity by retrieving the appropriate data from the database.
+	 */
 	private void initData() {
 		searchResultList = CRDatabase.getInstance(this).getSearchResults();
 		allRecipes = CRDatabase.getInstance(this).getFullRecipeList();
@@ -117,6 +121,13 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		historyList = CRDatabase.getInstance(this).getHistory();
 	}
 
+	/*
+	 * Initializes the fragments that hold the different recipe lists (whole
+	 * recipe book, search results, favorites and history) as well as the
+	 * fragment that is used to display a selected recipe. The activity is also
+	 * set as listener for the different fragment (type of listener depends on
+	 * fragment)
+	 */
 	private void initUIFragments() {
 		searchResultListFragment = new RecipeListFragment(searchResultList);
 		searchResultListFragment.setOnRecipeSelectedListener(this);
@@ -133,8 +144,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	}
 
-	// Correct tab to display is chosen through the calling intent of this
-	// activity
+	/*
+	 * Correct tab to display is chosen through the calling intent of this
+	 * activity
+	 */
 	private void setActionBarTabs() {
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -237,7 +250,9 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		alertDialogBuilder.create();
 	}
 
-	// Dialog: shows a list of existing shopping lists to add ingredients to.
+	/*
+	 * Dialog: shows a list of existing shopping lists to add ingredients to.
+	 */
 	protected void addToExistingShoppingList() {
 		final boolean isNewList = false;
 
@@ -383,7 +398,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 						recipeFragment);
 			} else {
 				recipeFragment.updateData();
-
 			}
 		} else {
 			transaction
@@ -393,6 +407,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		transaction.commit();
 	}
 
+	/*
+	 * Returns the position index of the passed Recipe within the recipe list
+	 * shown in the currently active tab.
+	 */
 	private int findPage(Recipe recipe) {
 		for (int idx = 0; idx < getListOfCurrentTab().size(); idx++) {
 			if (getListOfCurrentTab().get(idx).getRecipe().equals(recipe)) {
@@ -402,6 +420,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		return -1;
 	}
 
+	/*
+	 * Checks if the the application is currently run in landscape mode. Returns
+	 * true if it is.
+	 */
 	public boolean isInLandscapeMode() {
 		return (getWindowManager().getDefaultDisplay().getRotation() == Surface.ROTATION_90 || getWindowManager()
 				.getDefaultDisplay().getRotation() == Surface.ROTATION_270);
@@ -470,12 +492,21 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	}
 
+	/*
+	 * OnShoppingListAddListener method implementation. Sets the selected
+	 * ingredients and calls the alertDialogBuilder.
+	 */
 	@Override
 	public void onAddToShoppingList(RecipeIngredient[] selectedIngredients) {
 		this.selectedIngredients = selectedIngredients;
 		alertDialogBuilder.show();
 	}
 
+	/*
+	 * OnShoppingListAddListener method implementation: Informs the user that he
+	 * tried to add ingredients to a shoppinglist/create a new shoppinglist
+	 * without selecting any ingredients.
+	 */
 	@Override
 	public void onNoIngredientSelected() {
 		alertDialogBuilder = new AlertDialog.Builder(this);
@@ -489,7 +520,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 						dialog.dismiss();
 						initDialog();
 					}
-
 				});
 		alertDialogBuilder.setCancelable(false);
 		alertDialogBuilder.show();

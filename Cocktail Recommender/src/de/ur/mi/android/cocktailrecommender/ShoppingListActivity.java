@@ -25,22 +25,30 @@ public class ShoppingListActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shopping_list);
-
 		getShoppingLists();
 		setShoppingListAdapter();
 		setViews();
 	}
 
+	/*
+	 * 
+	 */
 	private void setViews() {
 		ExpandableListView shoppingListView = (ExpandableListView) findViewById(R.id.shopping_list_view);
 		shoppingListView.setAdapter(adapter);
 	}
 
+	/*
+	 * Initializes 
+	 */
 	private void getShoppingLists() {
 		shoppingLists = CRDatabase.getInstance(this).getAllShoppingLists();
 
 	}
 
+	/*
+	 * Creates a new shopping list adapter.
+	 */
 	private void setShoppingListAdapter() {
 		adapter = new ShoppingListAdapter(this, shoppingLists);
 
@@ -54,6 +62,9 @@ public class ShoppingListActivity extends ActionBarActivity {
 		return true;
 	}
 
+	/*
+	 * 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();

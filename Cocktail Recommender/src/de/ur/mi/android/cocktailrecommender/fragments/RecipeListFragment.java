@@ -58,7 +58,6 @@ public class RecipeListFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.recipe_list_fragment_layout,
 				container, false);
-		initData();
 		initUI();
 		return fragmentView;
 	}
@@ -114,10 +113,6 @@ public class RecipeListFragment extends Fragment implements
 		alertDialogBuilder.create();
 		alertDialogBuilder.show();
 		return true;
-	}
-
-	private void initData() {
-
 	}
 
 	private void initUI() {

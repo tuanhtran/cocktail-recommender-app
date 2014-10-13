@@ -24,6 +24,10 @@ public class RecipeListEntry implements Comparable<RecipeListEntry> {
 		return matchRate;
 	}
 
+	/*
+	 * Overrides the standard compareTo(...) method so RecipeListEntry objects
+	 * are sorted by their matchRate (descending) first and name second.
+	 */
 	@Override
 	public int compareTo(RecipeListEntry another) {
 		int comparisonValue = ((Integer) matchRate).compareTo((Integer) another

@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<color name="test_background_green">#00FF00</color>
-<color name="test_background_dark_green">#088A08</color>
-<color name="test_background_light_green">#2EFE64</color>
-
-<color name="test_background_blue">#00BFFF</color>
-
-<color name="test_background_light_blue">#58FAF4</color>
-
-<color name="test_background_red">#FF0000</color>
-<color name="test_background_dark_red">#8A0808</color>
-
-<color name="test_button_gray">#F2EFFB</color>
-<color name="test_button_gray_green">#A9F5A9</color>
-<color name="test_button_gray_red">#F5A9A9</color>
-
-<color name="background_black">#000000</color>
-<color name="test_background_white">#FFFFFF</color>
-
-<color name="background_not_selected_blue">#33b5e5</color>
-<color name="background_selected_dark_blue">#013ADF</color>
-<color name="category_button_background_neutral">#33b5e5</color>
-<color name="category_button_background_selected">#013ADF</color>
-<color name="category_button_background_not_selected">#D1DFE5</color>
-
+    <color name="background_black">#000000</color>
+    <color name="background_not_selected_blue">#33b5e5</color>
+    <color name="background_selected_dark_blue">#013ADF</color>
+    <color name="category_button_background_neutral">#33b5e5</color>
+    <color name="category_button_background_selected">#013ADF</color>
+    <color name="category_button_background_not_selected">#D1DFE5</color>
 
 </resources>

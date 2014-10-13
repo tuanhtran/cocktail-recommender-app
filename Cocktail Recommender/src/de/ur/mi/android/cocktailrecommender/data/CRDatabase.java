@@ -577,7 +577,9 @@ public class CRDatabase {
 
 		/*
 		 * User defined search parameters are used to search for recipes in form
-		 * of a Sqlite query. Where clause of query is generated from parameters
+		 * of a Sqlite query. Where clause of query is generated from
+		 * parameters. Results are not returned but saved to the database. The
+		 * number of results is returned instead.
 		 */
 		public int searchByIngredients() {
 			int numOfResults = 0;
@@ -610,6 +612,10 @@ public class CRDatabase {
 			return numOfResults;
 		}
 
+		/*
+		 * Checks if a recipe consists of any non-selected ingredients by
+		 * checking its RecipeIngredient array for non-selected ingredients.
+		 */
 		private boolean containsNonSelectedIngs(RecipeIngredient[] ingredients) {
 			for (RecipeIngredient rIng : ingredients) {
 				if (!params.getSelectedIngIDs().contains(rIng.getID())) {
@@ -619,6 +625,10 @@ public class CRDatabase {
 			return false;
 		}
 
+		/*
+		 * Checks if a recipe consists of any non-selected tags by checking its
+		 * Tag array for non-selected tags.
+		 */
 		private boolean containsNonSelectedTags(Tag[] tags) {
 			for (Tag tag : tags) {
 				if (!params.getSelectedTagIDs().contains(tag.getTagID())) {
@@ -628,6 +638,12 @@ public class CRDatabase {
 			return false;
 		}
 
+		/*
+		 * Determines the match rate of a recipe, by calculating the percentage
+		 * of selected ingredients and tags that are part of the recipe (e.g.
+		 * 33% means that one third of the selected ingredients and tags are
+		 * found in the recipe).
+		 */
 		private int determineMatchRate(RecipeIngredient[] recipeIngs, Tag[] tags) {
 			int rate = 0;
 			if (!params.getSelectedIngIDs().isEmpty()) {
@@ -653,6 +669,12 @@ public class CRDatabase {
 			return rate;
 		}
 
+		/*
+		 * Creates and returns the WHERE clause string used in the database
+		 * query in searchByIngredients(). It consists of one placeholder per
+		 * selected ingredient and tag. The way these placeholders are
+		 * concatenated depends on the search parameters.
+		 */
 		private String getWhereClause() {
 			String whereClause = "";
 
@@ -689,6 +711,11 @@ public class CRDatabase {
 			return whereClause;
 		}
 
+		/*
+		 * Creates and returns the WHERE args String[] used in the database
+		 * query in searchByIngredients(). The string array contains all IDs of
+		 * the selected ingredients and tags (as strings).
+		 */
 		private String[] getSelectionArgs() {
 			String[] args = new String[params.getSelectedIngIDs().size()
 					+ params.getSelectedTagIDs().size()];
@@ -722,6 +749,11 @@ public class CRDatabase {
 		private static final String TAG_ARRAY_KEY = "Tags";
 		private static final String TAG_ID_KEY = "ID";
 
+		/*
+		 * Creates and returns a RecipeIngredient array from a JSON string by
+		 * retrieving the ingredient ids and quantity from the JSON string and
+		 * getting the names (corresponding to the ids) from the database.
+		 */
 		public RecipeIngredient[] getIngredientsFromJson(String jsonString)
 				throws JSONException {
 
@@ -751,6 +783,11 @@ public class CRDatabase {
 			return ingredients;
 		}
 
+		/*
+		 * Creates and returns a Tag array from a JSON string by retrieving the
+		 * Tag ids from the JSON string and getting the names (corresponding to
+		 * the ids) from the database.
+		 */
 		public Tag[] getTagsFromJson(String jsonString) throws JSONException {
 			if (jsonString.equals("")) {
 				return null;
@@ -772,6 +809,10 @@ public class CRDatabase {
 
 		}
 
+		/*
+		 * Creates and returns a JSON string the contains the necessary data of
+		 * an RecipeIngredient array (ingredient id and quantity).
+		 */
 		public String getIngredientJSONString(RecipeIngredient[] ingredients) {
 			String jsonString = "{\"" + ING_ARRAY_KEY + "\":[";
 			for (RecipeIngredient ingredient : ingredients) {

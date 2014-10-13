@@ -104,8 +104,12 @@ public class IngredientSelectionListAdapter extends
 	}
 
 	/*
-	 * Filters the ingredient list to show only ingredients that at least
-	 * partially match the entered query in the SearchView
+	 * This Filter does not use the CharSequence that is passed when the Filter
+	 * is called. Instead the CharSequence/String and the ingredient category
+	 * index that are both used to filter the list are passed on to the
+	 * IngredientSelectionListAdapter beforehand. When the list is filtered, all
+	 * entries that are removed are saved to a backup list, so the filtering is
+	 * completly reversable.
 	 */
 	@Override
 	public Filter getFilter() {
@@ -200,6 +204,11 @@ public class IngredientSelectionListAdapter extends
 		notShownIngList.clear();
 	}
 
+	/*
+	 * Creates and returns and ArrayList<IngredientType> that contains all the
+	 * selected IngredientTypes from both the currently visible list as well as
+	 * from the list containing the IngredientTypes that are currently not shown. 
+	 */
 	public ArrayList<IngredientType> getSelectedIngredientTypes() {
 		ArrayList<IngredientType> toRemove = new ArrayList<IngredientType>();
 		ArrayList<IngredientType> ings = new ArrayList<IngredientType>();
