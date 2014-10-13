@@ -26,10 +26,9 @@ public final class CocktailRecommenderValues {
 	public final static int TAG_HIGHBALL = 4;
 	public final static int TAG_SHOT = 5;
 	public final static int TAG_DIGESTIF = 6;
-	public final static int TAG_FIZZES = 7;
+	public final static int TAG_NO_ALCOHOL = 7;
 	public final static int TAG_SHOOTER = 8;
 	public final static int TAG_STRONG = 9;
-	public final static int TAG_NO_ALCOHOL = 10;
 
 	// Returns the correct image resource for tags
 	public static int getCorrectTagImageResource(ImageView tagIcon,
@@ -51,10 +50,7 @@ public final class CocktailRecommenderValues {
 			return R.drawable.ic_tag_klassisch;
 			
 		case TAG_SOUR:
-			return R.drawable.ic_tag_sour;
-			
-		case TAG_FIZZES:
-			return R.drawable.ic_tag_fizz;
+			return R.drawable.ic_tag_sour;			
 			
 		case TAG_SHOOTER:
 			return R.drawable.ic_tag_shooter;

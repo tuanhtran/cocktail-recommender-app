@@ -2,6 +2,11 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
+/*
+ * RecipeFragment displays the recipe with its name, tags, ingredient list and the preparation text.
+ * Allows adding to Favorites and creating shopping lists.
+ */
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter.LengthFilter;
@@ -188,7 +193,7 @@ public class RecipeFragment extends Fragment {
 							.setImageResource(R.drawable.ic_action_star_not_favorite);
 					if (isInLandscapeMode() && favStatusListener != null)
 						favStatusListener.onFavRemoved(recipeToFavorite);
-					toast.setText(R.string.toast_favorite);
+					toast.setText(R.string.toast_unfavorite);
 					toast.show();
 				} else {
 					CRDatabase.getInstance(getActivity()).addToFavorites(

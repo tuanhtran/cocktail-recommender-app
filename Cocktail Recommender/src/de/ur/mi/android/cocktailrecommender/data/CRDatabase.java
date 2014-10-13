@@ -14,6 +14,14 @@ import android.os.AsyncTask;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
+/*
+ * CRDatabase accesses the database to make necessary getter and setter methods available.
+ * Uses sqliteassethelper lib to bind an externally created database.
+ * Inner classes:
+ * SearchEngine (search functionality, uses AsyncTask)
+ * JSONDataParser (creates and parses JSON strings for database entries that need it).
+ * 
+ */
 public class CRDatabase {
 
 	private static CRDatabase instance = null;

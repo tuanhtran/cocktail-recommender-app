@@ -84,6 +84,8 @@
     <string name="shopping_list_ing_entry_deletion_title">entfernen?</string>
     <string name="shopping_list_ing_entry_last_item_deletion_message">Die Einkaufsliste wird nach Entfernung der ausgewählten Zutat gelöscht!</string>
     <string name="add_to_shopping_list_button_description">Button zur Einkaufslistenerstellung</string>
+    <string name="shopping_list_added_to_existing">Zutaten zu Einkaufsliste hinzugefügt</string>
+    <string name="shopping_list_created">Einkaufsliste erstellt</string>
     
     <!-- Related to Favorites -->
     <string name="favorite_list_deletion_dialog_title">aus Favoriten entfernen?</string>

@@ -16,6 +16,9 @@ import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 
+/*
+ * Adapter for the tags in SearchActivity
+ */
 public class TagSelectionListAdapter extends BaseAdapter {
 	private Context context;
 	private ArrayList<Tag> tags;
@@ -68,14 +71,13 @@ public class TagSelectionListAdapter extends BaseAdapter {
 				if (toast == null){
 					toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
 				}
-				if (tag.isSelected()){					
-					toast.setText(context.getResources().getString(R.string.toast_tag_select));
-					toast.show();
-				}	
+				if (tag.isSelected())				
+					toast.setText(context.getResources().getString(R.string.toast_tag_select));				
 				else
-					toast.setText(context.getResources().getString(R.string.toast_tag_remove));
-					toast.show();
-			}
+					toast.setText(context.getResources().getString(R.string.toast_tag_remove));	
+				toast.show();
+				}
+			
 		});
 		return view;
 	}

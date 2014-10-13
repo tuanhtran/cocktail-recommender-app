@@ -2,6 +2,10 @@ package de.ur.mi.android.cocktailrecommender.data;
 
 import java.util.ArrayList;
 
+/*
+ * SearchParameter bundles all information needed for SearchEngine class in CRDatabase:
+ * Parameters, selected tags and ingredients
+ */
 public class SearchParameter {
 	private boolean mustContainAllSelectedIngs = false;
 	private boolean canContainNonSelectedIngs = false;
