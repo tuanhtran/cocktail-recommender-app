@@ -452,7 +452,7 @@ int string abc_shareactionprovider_share_with 0x7f0a000c
 int string abc_shareactionprovider_share_with_application 0x7f0a000b
 int string about_dialog_message 0x7f0a0016
 int string about_dialog_title 0x7f0a0015
-int string add_to_favorite_button_description 0x7f0a0056
+int string add_to_favorite_button_description 0x7f0a0058
 int string add_to_shopping_list_button_description 0x7f0a0052
 int string all_recipes_tab_name 0x7f0a0020
 int string app_name 0x7f0a000d
@@ -461,7 +461,7 @@ int string category_button_misc 0x7f0a0023
 int string category_button_nonalc 0x7f0a0022
 int string category_button_selected 0x7f0a0024
 int string category_button_tags 0x7f0a0025
-int string favorite_list_deletion_dialog_title 0x7f0a0053
+int string favorite_list_deletion_dialog_title 0x7f0a0055
 int string favs_tab_name 0x7f0a001f
 int string generic_cancel 0x7f0a0013
 int string generic_positive 0x7f0a0012
@@ -498,6 +498,8 @@ int string search_settings_option_two_choice_no 0x7f0a0033
 int string search_settings_option_two_choice_yes 0x7f0a0032
 int string search_settings_option_two_title 0x7f0a002d
 int string search_settings_please_note 0x7f0a0038
+int string shopping_list_added_to_existing 0x7f0a0053
+int string shopping_list_created 0x7f0a0054
 int string shopping_list_creation_dialog_entry_hint 0x7f0a0049
 int string shopping_list_creation_dialog_name_entry 0x7f0a0048
 int string shopping_list_creation_dialog_name_entry_error 0x7f0a004e
@@ -518,12 +520,12 @@ int string title_activity_menu 0x7f0a000e
 int string title_activity_recipe_book 0x7f0a0010
 int string title_activity_search 0x7f0a000f
 int string title_activity_shopping_list 0x7f0a0011
-int string toast_favorite 0x7f0a0054
+int string toast_favorite 0x7f0a0056
 int string toast_ing_remove 0x7f0a0041
 int string toast_ing_select 0x7f0a0040
 int string toast_tag_remove 0x7f0a0043
 int string toast_tag_select 0x7f0a0042
-int string toast_unfavorite 0x7f0a0055
+int string toast_unfavorite 0x7f0a0057
 int style AppBaseTheme 0x7f0b008b
 int style AppTheme 0x7f0b008c
 int style TextAppearance_AppCompat_Base_CompactMenu_Dialog 0x7f0b0063

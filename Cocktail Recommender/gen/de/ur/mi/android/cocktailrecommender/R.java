@@ -1356,7 +1356,7 @@ containing a value of this type.
         /**  About dialog strings 
          */
         public static final int about_dialog_title=0x7f0a0015;
-        public static final int add_to_favorite_button_description=0x7f0a0056;
+        public static final int add_to_favorite_button_description=0x7f0a0058;
         public static final int add_to_shopping_list_button_description=0x7f0a0052;
         public static final int all_recipes_tab_name=0x7f0a0020;
         public static final int app_name=0x7f0a000d;
@@ -1369,7 +1369,7 @@ containing a value of this type.
         public static final int category_button_tags=0x7f0a0025;
         /**  Related to Favorites 
          */
-        public static final int favorite_list_deletion_dialog_title=0x7f0a0053;
+        public static final int favorite_list_deletion_dialog_title=0x7f0a0055;
         public static final int favs_tab_name=0x7f0a001f;
         public static final int generic_cancel=0x7f0a0013;
         public static final int generic_positive=0x7f0a0012;
@@ -1412,6 +1412,8 @@ containing a value of this type.
         public static final int search_settings_option_two_choice_yes=0x7f0a0032;
         public static final int search_settings_option_two_title=0x7f0a002d;
         public static final int search_settings_please_note=0x7f0a0038;
+        public static final int shopping_list_added_to_existing=0x7f0a0053;
+        public static final int shopping_list_created=0x7f0a0054;
         public static final int shopping_list_creation_dialog_entry_hint=0x7f0a0049;
         public static final int shopping_list_creation_dialog_name_entry=0x7f0a0048;
         public static final int shopping_list_creation_dialog_name_entry_error=0x7f0a004e;
@@ -1436,12 +1438,12 @@ containing a value of this type.
         public static final int title_activity_recipe_book=0x7f0a0010;
         public static final int title_activity_search=0x7f0a000f;
         public static final int title_activity_shopping_list=0x7f0a0011;
-        public static final int toast_favorite=0x7f0a0054;
+        public static final int toast_favorite=0x7f0a0056;
         public static final int toast_ing_remove=0x7f0a0041;
         public static final int toast_ing_select=0x7f0a0040;
         public static final int toast_tag_remove=0x7f0a0043;
         public static final int toast_tag_select=0x7f0a0042;
-        public static final int toast_unfavorite=0x7f0a0055;
+        public static final int toast_unfavorite=0x7f0a0057;
     }
     public static final class style {
         /** 
