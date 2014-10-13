@@ -299,22 +299,28 @@ public class CRDatabase {
 	 * saves the new list to the database, unless the list already contains that
 	 * RecipeListEntry
 	 */
-	public void addToFavorites(RecipeListEntry recipeSR) {
-		if (!listAlreadyContainsRecipeListEntry(recipeSR, favorites)) {
-			favorites.add(recipeSR);
+	public void addToFavorites(RecipeListEntry recipeLE) {
+		if (!listAlreadyContainsRecipeListEntry(recipeLE, favorites)) {
+			favorites.add(recipeLE);
 			saveFavoritesToDB();
 		}
 	}
 
-	public void removeFromFavorites(RecipeListEntry recipeSR) {
+	/*
+	 * Checks if favorites contains an entry which recipe's ID matches the ID of
+	 * the passed RLE's recipe. If so, this entry is removed from the list.
+	 * Afterwards the new list is saved to the database
+	 */
+	public void removeFromFavorites(RecipeListEntry recipeLE) {
 		ArrayList<RecipeListEntry> toRemove = new ArrayList<RecipeListEntry>();
-		for (RecipeListEntry rsr : favorites) {
-			if (rsr.getRecipe().getRecipeID() == recipeSR.getRecipe()
+		for (RecipeListEntry rle : favorites) {
+			if (rle.getRecipe().getRecipeID() == recipeLE.getRecipe()
 					.getRecipeID()) {
-				toRemove.add(rsr);
+				toRemove.add(rle);
 			}
 		}
 		favorites.removeAll(toRemove);
+		saveFavoritesToDB();
 	}
 
 	public ArrayList<RecipeListEntry> getHistory() {

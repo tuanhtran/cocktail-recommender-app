@@ -37,7 +37,6 @@ public class RecipeListFragment extends Fragment implements
 	ArrayList<RecipeListEntry> recipeList;
 	RecipeListAdapter adapter;
 	private OnRecipeSelectedListener listener;
-	private boolean noMatchRate = false;
 	private boolean enableLongClick = false;
 
 	public RecipeListFragment() {
@@ -49,15 +48,8 @@ public class RecipeListFragment extends Fragment implements
 	}
 
 	public RecipeListFragment(ArrayList<RecipeListEntry> recipeList,
-			boolean noMatchRate) {
+			boolean enableLongClick) {
 		this.recipeList = recipeList;
-		this.noMatchRate = noMatchRate;
-	}
-
-	public RecipeListFragment(ArrayList<RecipeListEntry> recipeList,
-			boolean noMatchRate, boolean enableLongClick) {
-		this.recipeList = recipeList;
-		this.noMatchRate = noMatchRate;
 		this.enableLongClick = enableLongClick;
 	}
 
@@ -156,8 +148,6 @@ public class RecipeListFragment extends Fragment implements
 		if (enableLongClick)
 			recipeListView.setOnItemLongClickListener(this);
 		adapter = new RecipeListAdapter(getActivity(), recipeList);
-		if (noMatchRate)
-			adapter.dontdisplayNoMatchRate();
 		recipeListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 	}

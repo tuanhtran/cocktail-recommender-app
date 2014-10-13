@@ -484,15 +484,14 @@ public class SearchActivity extends ActionBarActivity implements
 	}
 
 	/*
-	 * Creates and returns a list that contains all IngredientTypes that were
+	 * Creates and returns a list that contains the IDs of all IngredientTypes that were
 	 * selected by the user.
 	 */
 	private ArrayList<Integer> getSelectedIngredientIDs() {
 		ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
-		for (int idx = 0; idx < ings.size(); idx++) {
-			if (ings.get(idx).isSelected()) {
-				selectedIngIDs.add(ings.get(idx).getID());
-			}
+		ArrayList<IngredientType> selectedIngTypeList = ingListAdapter.getSelectedIngredientTypes();
+		for (IngredientType ingType : selectedIngTypeList) {
+			selectedIngIDs.add(ingType.getID());
 		}
 		return selectedIngIDs;
 	}

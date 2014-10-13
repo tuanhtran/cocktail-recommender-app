@@ -200,4 +200,17 @@ public class IngredientSelectionListAdapter extends
 		notShownIngList.clear();
 	}
 
+	public ArrayList<IngredientType> getSelectedIngredientTypes() {
+		ArrayList<IngredientType> toRemove = new ArrayList<IngredientType>();
+		ArrayList<IngredientType> ings = new ArrayList<IngredientType>();
+		ings.addAll(ingredientList);
+		ings.addAll(notShownIngList);
+		for (IngredientType ingType : ings) {
+			if (!ingType.isSelected()) {
+				toRemove.add(ingType);
+			}
+		}
+		ings.removeAll(toRemove);
+		return ings;
+	}
 }

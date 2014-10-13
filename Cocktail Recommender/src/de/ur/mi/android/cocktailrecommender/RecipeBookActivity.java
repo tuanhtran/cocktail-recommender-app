@@ -73,7 +73,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	/*
-	 *  Put current tab into bundle to select correct tab after orientation
+	 * Put current tab into bundle to select correct tab after orientation
 	 * change
 	 */
 	@Override
@@ -99,7 +99,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			startActivity(openMenu);
 			return true;
 		}
-		if(id == R.id.action_about){
+		if (id == R.id.action_about) {
 			AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
 			aboutAlert.setTitle(R.string.about_dialog_title);
 			aboutAlert.setMessage(R.string.about_dialog_message);
@@ -120,14 +120,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private void initUIFragments() {
 		searchResultListFragment = new RecipeListFragment(searchResultList);
 		searchResultListFragment.setOnRecipeSelectedListener(this);
-		historyListFragment = new RecipeListFragment(historyList,
-				CocktailRecommenderValues.NO_MATCH_RATE);
+		historyListFragment = new RecipeListFragment(historyList);
 		historyListFragment.setOnRecipeSelectedListener(this);
-		favsListFragment = new RecipeListFragment(favList,
-				CocktailRecommenderValues.NO_MATCH_RATE, true);
+		favsListFragment = new RecipeListFragment(favList, true);
 		favsListFragment.setOnRecipeSelectedListener(this);
-		allRecipesFragment = new RecipeListFragment(allRecipes,
-				CocktailRecommenderValues.NO_MATCH_RATE);
+		allRecipesFragment = new RecipeListFragment(allRecipes);
 		allRecipesFragment.setOnRecipeSelectedListener(this);
 		recipeFragment = new RecipeFragment();
 		recipeFragment.setOnFlingListener(this);
@@ -258,48 +255,50 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		if (shoppingLists.size() < 1) {
 			alertDialogBuilder
 					.setMessage(R.string.shopping_list_creation_dialog_no_lists);
-		}else{
-		alertDialogBuilder.setItems(shoppingListNames,
-				new DialogInterface.OnClickListener() {
+		} else {
+			alertDialogBuilder.setItems(shoppingListNames,
+					new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						ShoppingList modifiedList = modifyList(shoppingLists
-								.get(which));
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							ShoppingList modifiedList = modifyList(shoppingLists
+									.get(which));
 
-						CRDatabase.getInstance(RecipeBookActivity.this)
-								.addShoppingList(modifiedList, isNewList);
-						toast.setText(getResources().getString(R.string.shopping_list_added_to_existing));
-						toast.show();
-						initDialog();
-					}
+							CRDatabase.getInstance(RecipeBookActivity.this)
+									.addShoppingList(modifiedList, isNewList);
+							toast.setText(getResources().getString(
+									R.string.shopping_list_added_to_existing));
+							toast.show();
+							initDialog();
+						}
 
-					// Prevents duplicate entries in the shopping list
-					private ShoppingList modifyList(ShoppingList shoppingList) {
-						boolean isNotDuplicate = false;
-						RecipeIngredient[] existingIngList = shoppingList
-								.getIngredients();
-						ArrayList<RecipeIngredient> tempIngList = new ArrayList<RecipeIngredient>(
-								Arrays.asList(existingIngList));
-						for (RecipeIngredient selIngredient : selectedIngredients) {
-							isNotDuplicate = true;
-							for (RecipeIngredient exIngredient : existingIngList) {
-								if (exIngredient.compareTo(selIngredient) == 0) {
-									isNotDuplicate = false;
-									break;
+						// Prevents duplicate entries in the shopping list
+						private ShoppingList modifyList(
+								ShoppingList shoppingList) {
+							boolean isNotDuplicate = false;
+							RecipeIngredient[] existingIngList = shoppingList
+									.getIngredients();
+							ArrayList<RecipeIngredient> tempIngList = new ArrayList<RecipeIngredient>(
+									Arrays.asList(existingIngList));
+							for (RecipeIngredient selIngredient : selectedIngredients) {
+								isNotDuplicate = true;
+								for (RecipeIngredient exIngredient : existingIngList) {
+									if (exIngredient.compareTo(selIngredient) == 0) {
+										isNotDuplicate = false;
+										break;
+									}
+								}
+								if (isNotDuplicate) {
+									tempIngList.add(selIngredient);
 								}
 							}
-							if (isNotDuplicate) {
-								tempIngList.add(selIngredient);
-							}
-						}
-						shoppingList.setIngredients(tempIngList
-								.toArray(new RecipeIngredient[tempIngList
-										.size()]));
+							shoppingList.setIngredients(tempIngList
+									.toArray(new RecipeIngredient[tempIngList
+											.size()]));
 
-						return shoppingList;
-					}
-				});
+							return shoppingList;
+						}
+					});
 		}
 		alertDialogBuilder.setNegativeButton(R.string.generic_cancel,
 				new DialogInterface.OnClickListener() {
@@ -315,7 +314,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	/*
-	 *  Dialog: User is prompted for a shopping list name; creates new shopping list
+	 * Dialog: User is prompted for a shopping list name; creates new shopping
+	 * list
 	 */
 	protected void createNewShoppingList() {
 		final EditText listName = new EditText(this);
@@ -346,11 +346,12 @@ public class RecipeBookActivity extends ActionBarActivity implements
 									genericId, name, selectedIngredients);
 							CRDatabase.getInstance(RecipeBookActivity.this)
 									.addShoppingList(shoppingList, isNewList);
-							toast.setText(getResources().getString(R.string.shopping_list_created));
+							toast.setText(getResources().getString(
+									R.string.shopping_list_created));
 							toast.show();
 							initDialog();
 						} else {
-							createNewShoppingList();							
+							createNewShoppingList();
 						}
 					}
 
@@ -405,7 +406,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		return (getWindowManager().getDefaultDisplay().getRotation() == Surface.ROTATION_90 || getWindowManager()
 				.getDefaultDisplay().getRotation() == Surface.ROTATION_270);
 	}
-
 
 	/*
 	 * Fling methods allow the user to swipe left/right to navigate through

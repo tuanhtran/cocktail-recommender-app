@@ -26,7 +26,6 @@ public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 	private Context context;
 	private ArrayList<RecipeListEntry> resultList;
 	private ArrayList<RecipeListEntry> notShownResults = new ArrayList<RecipeListEntry>();
-	private boolean noMatchRate = false;
 	
 	public RecipeListAdapter(Context context,
 			ArrayList<RecipeListEntry> results) {
@@ -52,10 +51,6 @@ public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 
 		if (searchResult != null) {
 			String resultNameText = searchResult.getRecipe().getName();
-			if(!noMatchRate){
-				resultNameText = resultNameText + " - "
-						+ searchResult.getMatchRate() + "%";
-			}
 			TextView searchResultName = (TextView) view
 					.findViewById(R.id.recipe_result_name);
 			TextView searchResultIngPreview = (TextView) view
@@ -135,10 +130,5 @@ public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 	public void resetFilter() {
 		resultList.addAll(notShownResults);
 		notShownResults.clear();
-	}
-
-	public void dontdisplayNoMatchRate() {
-		noMatchRate = true;
-		
 	}
 }
