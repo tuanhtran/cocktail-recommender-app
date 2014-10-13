@@ -33,6 +33,22 @@ import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.RecipePageIngredientListAdapter;
 
+/*
+ * Due to an unexpected problem that occurred when the ingredient list was
+ * displayed as a (dynamically created) Linear Layout, a ListView is used
+ * instead. Although this is not optimal in terms of performance, there is
+ * no noticeable negative impact in this case. To prevent any problems
+ * created by a vertically scrolling ListView within a vertically scrolling
+ * ScrollView, the height of the ListView is changed to the combined height
+ * of its ChildViews (+separators). Since the ListView is now high enough to
+ * show all its ChildViews there is no need for actual scrolling. This
+ * workaround as well as the method to adjust the ListView's height is based
+ * on the suggestion and code of the User "DougW" on stackoveerflow.com.
+ * 
+ * URL: http://stackoverflow.com/questions/3495890/how-can
+ * -i-put-a-listview-into-a-scrollview-without-it-collapsing
+ */
+
 public class RecipeFragment extends Fragment {
 	private View fragmentView;
 	private Recipe recipe;
@@ -48,6 +64,10 @@ public class RecipeFragment extends Fragment {
 	private OnShoppingListAddListener shoppingListener;
 	private OnFavStatusChangedListener favStatusListener;
 	private Toast toast;
+
+	/*
+	 * This fragment
+	 */
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -163,14 +183,14 @@ public class RecipeFragment extends Fragment {
 		tagDisplayParent.removeAllViews();
 		for (Tag tag : recipe.getTags()) {
 			addTagIconToLayout(tagDisplayParent, tag);
-		}		
+		}
 	}
 
 	private void updateIngredientListView() {
 		ingredients.clear();
 		ingredients.addAll(recipe.getIngredientsAsList());
 		adapter.notifyDataSetChanged();
-		adjustListViewHeight(recipeIngredients);		
+		adjustListViewHeight(recipeIngredients);
 	}
 
 	private void setShopListButton() {
@@ -244,7 +264,8 @@ public class RecipeFragment extends Fragment {
 			return;
 		}
 
-		int totalHeight = 0;
+		int totalHeight = listView.getPaddingTop()
+				+ listView.getPaddingBottom();
 		for (int i = 0; i < adapter.getCount(); i++) {
 			View listItem = adapter.getView(i, null, listView);
 			listItem.measure(0, 0);
@@ -276,7 +297,8 @@ public class RecipeFragment extends Fragment {
 
 						if (e1 == null
 								|| e2 == null
-								|| (Math.abs(e1.getY() - e2.getY()) > FLING_MAX_VERTICAL)) {
+								|| (Math.abs(e1.getY() - e2.getY()) > FLING_MAX_VERTICAL)
+								|| listener == null) {
 							return false;
 						}
 						if (e1.getX() - e2.getX() > FLING_MIN_HORIZONTAL

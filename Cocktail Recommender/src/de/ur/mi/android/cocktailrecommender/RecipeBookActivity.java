@@ -401,7 +401,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		return -1;
 	}
 
-	private boolean isInLandscapeMode() {
+	public boolean isInLandscapeMode() {
 		return (getWindowManager().getDefaultDisplay().getRotation() == Surface.ROTATION_90 || getWindowManager()
 				.getDefaultDisplay().getRotation() == Surface.ROTATION_270);
 	}

@@ -132,7 +132,7 @@ public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 		return filter;
 	}
 
-	private void resetFilter() {
+	public void resetFilter() {
 		resultList.addAll(notShownResults);
 		notShownResults.clear();
 	}

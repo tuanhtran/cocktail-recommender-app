@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import de.ur.mi.android.cocktailrecommender.R;
+import de.ur.mi.android.cocktailrecommender.RecipeBookActivity;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
 import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
@@ -75,8 +76,12 @@ public class RecipeListFragment extends Fragment implements
 			long id) {
 		CRDatabase.getInstance(getActivity()).addToHistory(
 				recipeList.get(position));
-		listener.onRecipeSelected(recipeList.get(position).getRecipe());
-
+		Recipe selectedRecipe = recipeList.get(position).getRecipe();
+		if (!((RecipeBookActivity) getActivity()).isInLandscapeMode()) {
+			adapter.resetFilter();
+			adapter.notifyDataSetChanged();
+		}
+		listener.onRecipeSelected(selectedRecipe);
 	}
 
 	/*
@@ -141,7 +146,7 @@ public class RecipeListFragment extends Fragment implements
 				return true;
 			}
 		});
-		
+
 	}
 
 	private void initListView() {
