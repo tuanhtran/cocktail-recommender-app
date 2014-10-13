@@ -162,13 +162,15 @@ public class RecipeListFragment extends Fragment implements
 
 	@Override
 	public void onFavRemoved(RecipeListEntry recipeToFavorite) {
-		adapter.notifyDataSetChanged();
+		if(adapter != null)
+			adapter.notifyDataSetChanged();
 
 	}
 
 	@Override
 	public void onFavAdded(RecipeListEntry recipeToFavorite) {
-		adapter.notifyDataSetChanged();
+		if(adapter != null)
+			adapter.notifyDataSetChanged();
 
 	}
 
