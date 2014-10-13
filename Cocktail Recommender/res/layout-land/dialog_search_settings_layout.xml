@@ -1,0 +1,139 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:paddingLeft="0dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:id="@+id/search_settings_option_one_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/search_settings_option_one_title" />
+
+            <Switch
+                android:id="@+id/search_settings_option_one_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_settings_option_one_text"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="5dp"
+                android:textOff="@string/search_settings_option_one_choice_any"
+                android:textOn="@string/search_settings_option_one_choice_all" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp" >
+
+            <TextView
+                android:id="@+id/search_settings_option_three_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/search_settings_option_three_title" />
+
+            <Switch
+                android:id="@+id/search_settings_option_three_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_settings_option_three_text"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="5dp"
+                android:textOff="@string/search_settings_option_three_choice_any"
+                android:textOn="@string/search_settings_option_three_choice_all" />
+        </RelativeLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:paddingLeft="0dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:id="@+id/search_settings_option_two_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/search_settings_option_two_title" />
+
+            <Switch
+                android:id="@+id/search_settings_option_two_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_settings_option_two_text"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="5dp"
+                android:textOff="@string/search_settings_option_two_choice_yes"
+                android:textOn="@string/search_settings_option_two_choice_no" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp" >
+
+            <TextView
+                android:id="@+id/search_settings_option_four_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/search_settings_option_four_title" />
+
+            <Switch
+                android:id="@+id/search_settings_option_four_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_settings_option_four_text"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="5dp"
+                android:textOff="@string/search_settings_option_four_choice_yes"
+                android:textOn="@string/search_settings_option_four_choice_no" />
+        </RelativeLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/search_settings_please_note_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_settings_option_four_switch"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:text="@string/search_settings_please_note" />
+    </TableRow>
+
+</TableLayout>

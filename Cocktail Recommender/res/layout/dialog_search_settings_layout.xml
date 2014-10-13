@@ -4,20 +4,9 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/search_settings_title_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:text="@string/search_settings_title"
-        android:textSize="16sp" />
-
-    <TextView
         android:id="@+id/search_settings_option_one_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_settings_title_text"
         android:gravity="center"
         android:paddingTop="5dp"
         android:text="@string/search_settings_option_one_title" />
@@ -88,5 +77,15 @@
         android:paddingBottom="5dp"
         android:textOff="@string/search_settings_option_four_choice_yes"
         android:textOn="@string/search_settings_option_four_choice_no" />
+
+    <TextView
+        android:id="@+id/search_settings_please_note_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_settings_option_four_switch"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingTop="15dp"
+        android:text="@string/search_settings_please_note" />
 
 </RelativeLayout>

@@ -9,7 +9,7 @@
     <string name="generic_positive">OK</string>
     <string name="generic_cancel">Abbrechen</string>
     <string name="generic_search_hint">Hier Suchbegriff eingeben...</string>
-    
+
     <!-- About dialog strings -->
     <string name="about_dialog_title">About</string>
     <string name="about_dialog_message">Icons mit freundlicher Genehmigung von icons8.com</string>
@@ -29,10 +29,10 @@
     <string name="all_recipes_tab_name">Alle Rezepte</string>
 
     <!-- Related to SearchActivity -->
-    <string name="category_button_alc">Alk</string>
-    <string name="category_button_nonalc">Non-Alk</string>
-    <string name="category_button_misc">Misc</string>
-    <string name="category_button_selected">Selected</string>
+    <string name="category_button_alc">Alkoholisch</string>
+    <string name="category_button_nonalc">Nicht-alkoholisch</string>
+    <string name="category_button_misc">Verschieden</string>
+    <string name="category_button_selected">Ausgewählt</string>
     <string name="category_button_tags">Tags</string>
     <string name="start_search">GO!</string>
     <string name="recipe_page_test">Wählen Sie ein Rezept aus!</string>
@@ -41,19 +41,20 @@
     <string name="search_settings_button_description">Sucheinstellungen Button</string>
 
     <!-- Related to dialogs in SearchActivity -->
-    <string name="search_settings_title">Sucheinstellungen</string>
+    <string name="search_settings_dialog_title">Sucheinstellungen</string>
     <string name="search_settings_option_one_title">Wie viele der ausgewählten Zutaten sollen enthalten sein?</string>
     <string name="search_settings_option_two_title">Sollen auch Ergebnisse mit nicht ausgewählten Zutaten gelistet werden?</string>
     <string name="search_settings_option_three_title">Wie viele der ausgewählten Tags sollen zutreffen?</string>
     <string name="search_settings_option_four_title">Sollen auch Ergebnisse mit nicht ausgewählten Tags gelistet werden?</string>
-    <string name="search_settings_option_one_choice_any">Beliebig</string>
+    <string name="search_settings_option_one_choice_any">Beliebig*</string>
     <string name="search_settings_option_one_choice_all">Alle</string>
     <string name="search_settings_option_two_choice_yes">Ja</string>
     <string name="search_settings_option_two_choice_no">Nein</string>
-    <string name="search_settings_option_three_choice_any">Beliebig</string>
+    <string name="search_settings_option_three_choice_any">Beliebig*</string>
     <string name="search_settings_option_three_choice_all">Alle</string>
     <string name="search_settings_option_four_choice_yes">Ja</string>
     <string name="search_settings_option_four_choice_no">Nein</string>
+    <string name="search_settings_please_note">* Hinweis: Es muss mindestens eine ausgewählte Zutat enthalten sein bzw ein ausgewähltes Tag zutreffen.</string>
     <string name="search_progress_text">Suche im Gang</string>
     <string name="search_error_no_selection_title">Achtung</string>
     <string name="search_error_no_selection_msg">Es wurden weder Zutaten noch Tags ausgewählt. Die Suche wurde nicht gestartet.</string>
@@ -68,7 +69,7 @@
 
     <!-- Related to ShoppingListActivity -->
     <string name="shopping_list_ing_entry_delete_button_description">Zutat löschen</string>
-    
+
     <!-- Related to ShoppingList dialogs -->
     <string name="shopping_list_creation_dialog_title">Zutaten zu Einkaufsliste hinzufügen</string>
     <string name="shopping_list_creation_dialog_option_one">Neue Einkaufsliste erstellen</string>
@@ -84,7 +85,7 @@
     <string name="shopping_list_ing_entry_deletion_title">entfernen?</string>
     <string name="shopping_list_ing_entry_last_item_deletion_message">Die Einkaufsliste wird nach Entfernung der ausgewählten Zutat gelöscht!</string>
     <string name="add_to_shopping_list_button_description">Button zur Einkaufslistenerstellung</string>
-    
+
     <!-- Related to Favorites -->
     <string name="favorite_list_deletion_dialog_title">aus Favoriten entfernen?</string>
     <string name="toast_favorite">Zu Favoriten hinzugefügt</string>

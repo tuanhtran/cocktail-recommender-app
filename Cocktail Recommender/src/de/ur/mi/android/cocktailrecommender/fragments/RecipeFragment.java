@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -100,7 +101,7 @@ public class RecipeFragment extends Fragment {
 		updateData();
 	}
 
-	private void addTagIconToLayout(LinearLayout tagDisplayParent, Tag tag) {
+	private void addTagIconToLayout(LinearLayout tagDisplayParent, final Tag tag) {
 		ImageView tagIcon = new ImageView(getActivity());
 		tagIcon.setImageResource(CocktailRecommenderValues
 				.getCorrectTagImageResource(tagIcon, tag));
@@ -109,8 +110,19 @@ public class RecipeFragment extends Fragment {
 				R.integer.recipe_page_tag_icon_padding_dp)
 				* scaleFactor + 0.5f);
 		tagIcon.setPadding(pixelValue, 0, pixelValue, 0);
+		tagIcon.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (toast == null) {
+					toast = Toast.makeText(getActivity(), "",
+							Toast.LENGTH_SHORT);
+				}
+				toast.setText(tag.getTagName());
+				toast.show();
+				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+			}
+		});
 		tagDisplayParent.addView(tagIcon);
-
 	}
 
 	private boolean checkIfFavorite(RecipeListEntry recipeToFavorite) {
@@ -133,15 +145,27 @@ public class RecipeFragment extends Fragment {
 	}
 
 	public void updateData() {
-		ingredients.clear();
-		ingredients.addAll(recipe.getIngredientsAsList());
-		adapter.notifyDataSetChanged();
-		adjustListViewHeight(recipeIngredients);
 		recipeName.setText(recipe.getName());
+		updateTagIcons();
+		updateIngredientListView();
 		recipePreparation.setText(recipe.getPreparation());
 		setFavToggle();
 		setShopListButton();
 
+	}
+
+	private void updateTagIcons() {
+		tagDisplayParent.removeAllViews();
+		for (Tag tag : recipe.getTags()) {
+			addTagIconToLayout(tagDisplayParent, tag);
+		}		
+	}
+
+	private void updateIngredientListView() {
+		ingredients.clear();
+		ingredients.addAll(recipe.getIngredientsAsList());
+		adapter.notifyDataSetChanged();
+		adjustListViewHeight(recipeIngredients);		
 	}
 
 	private void setShopListButton() {
@@ -150,10 +174,10 @@ public class RecipeFragment extends Fragment {
 					public void onClick(View v) {
 						RecipeIngredient[] selectedIngs = adapter
 								.getSelectedIngredients();
+						v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 						if (selectedIngs.length > 0) {
 							shoppingListener.onAddToShoppingList(adapter
 									.getSelectedIngredients());
-							v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 						} else {
 							shoppingListener.onNoIngredientSelected();
 						}
@@ -179,7 +203,8 @@ public class RecipeFragment extends Fragment {
 			public void onClick(View v) {
 				boolean isFavorite = checkIfFavorite(recipeToFavorite);
 				if (toast == null)
-					toast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
+					toast = Toast.makeText(getActivity(), "",
+							Toast.LENGTH_SHORT);
 				if (isFavorite) {
 					CRDatabase.getInstance(getActivity()).removeFromFavorites(
 							recipeToFavorite);
@@ -188,7 +213,7 @@ public class RecipeFragment extends Fragment {
 							.setImageResource(R.drawable.ic_action_star_not_favorite);
 					if (isInLandscapeMode() && favStatusListener != null)
 						favStatusListener.onFavRemoved(recipeToFavorite);
-					toast.setText(R.string.toast_favorite);
+					toast.setText(R.string.toast_unfavorite);
 					toast.show();
 				} else {
 					CRDatabase.getInstance(getActivity()).addToFavorites(

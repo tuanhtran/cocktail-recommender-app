@@ -30,6 +30,14 @@ import de.ur.mi.android.cocktailrecommender.data.Tag;
 import de.ur.mi.android.cocktailrecommender.data.adapter.IngredientSelectionListAdapter;
 import de.ur.mi.android.cocktailrecommender.data.adapter.TagSelectionListAdapter;
 
+/*
+ * This Activity displays two lists (among other UI elements), one containing all IngredientTypes (can be filtered
+ * using category buttons and/or a SearchView query), the other containing
+ * all Tags. These lists allow the user to select any number of those IngredientTypes/Tags.
+ * The user can also specify additional search parameters (if desired) and start a search based
+ * on those parameters and the selected items.
+ */
+
 public class SearchActivity extends ActionBarActivity implements
 		OnSearchResultListener {
 
@@ -52,6 +60,8 @@ public class SearchActivity extends ActionBarActivity implements
 	private static final String BUNDLE_KEY_SELECTED_TAGS = "SelectedTags";
 	private static final String BUNDLE_KEY_SELECTED_CATEGORY_IDX = "SelectedCategory";
 	private static final String BUNDLE_KEY_FILTER_STRING = "FilterString";
+	private static final String BUNDLE_KEY_SEARCH_SETTINGS = "SearchSettingsBundle";
+	private static final String BUNDLE_KEY_SEARCH_SETTING_BOOLEANS = "SearchSettingBooleans";
 
 	private static final int CATEGORY_BUTTON_STATE_IDX_NEUTRAL = 0;
 	private static final int CATEGORY_BUTTON_STATE_NUM = 2;
@@ -77,18 +87,18 @@ public class SearchActivity extends ActionBarActivity implements
 		}
 	}
 
+	/*
+	 * Initializes the necessary data by retrieving full ingredient and tag
+	 * lists from the database.
+	 */
 	private void initData() {
 		isSearchInProgress = false;
-		ings.clear();
-		tags.clear();
 		ings.addAll(CRDatabase.getInstance(this).getFullIngList());
 		tags.addAll(CRDatabase.getInstance(this).getFullTagList());
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.start, menu);
 		return true;
 	}
@@ -102,7 +112,7 @@ public class SearchActivity extends ActionBarActivity implements
 			startActivity(openMenu);
 			return true;
 		}
-		if(id == R.id.action_about){
+		if (id == R.id.action_about) {
 			AlertDialog.Builder aboutAlert = new AlertDialog.Builder(this);
 			aboutAlert.setTitle(R.string.about_dialog_title);
 			aboutAlert.setMessage(R.string.about_dialog_message);
@@ -113,6 +123,9 @@ public class SearchActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	/*
+	 * Initializes the User Interface.
+	 */
 	private void initUI() {
 		initDialogs();
 		initSearchView();
@@ -125,10 +138,14 @@ public class SearchActivity extends ActionBarActivity implements
 		initSearchProgressDialog();
 	}
 
+	/*
+	 * Initializes and sets up the Dialog that is used for the search settings.
+	 */
 	private void initSearchSettingsDialog() {
 		searchSettings = new Dialog(this);
-		searchSettings.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		searchSettings.setTitle(R.string.search_settings_dialog_title);
 		searchSettings.setContentView(R.layout.dialog_search_settings_layout);
+		searchSettings.setCancelable(true);
 
 		Switch switchButtonOne = (Switch) searchSettings
 				.findViewById(R.id.search_settings_option_one_switch);
@@ -171,12 +188,20 @@ public class SearchActivity extends ActionBarActivity implements
 		});
 	}
 
+	/*
+	 * Initializes and sets up the Dialog that informs the user about an ongoing
+	 * search.
+	 */
 	private void initSearchProgressDialog() {
 		searchProgress = new Dialog(this);
 		searchProgress.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		searchProgress.setContentView(R.layout.dialog_search_progress_layout);
 	}
 
+	/*
+	 * Sets up the SearchView that allows the user to filter the IngredientType
+	 * list.
+	 */
 	private void initSearchView() {
 		filterBar = (SearchView) findViewById(R.id.ingredient_selection_filter_bar);
 		filterBar.setOnQueryTextListener(new OnQueryTextListener() {
@@ -190,9 +215,14 @@ public class SearchActivity extends ActionBarActivity implements
 				return true;
 			}
 		});
-		
+
 	}
 
+	/*
+	 * Initializes and sets up the ListView for the IngredientType list and the
+	 * GridView for the Tag list. Also creates and sets the appropriate
+	 * adapters.
+	 */
 	private void initListViews() {
 		ListView ingredientListView = (ListView) findViewById(R.id.ingredient_selection_listview);
 		ingListAdapter = new IngredientSelectionListAdapter(this, ings);
@@ -205,6 +235,9 @@ public class SearchActivity extends ActionBarActivity implements
 		tagListAdapter.notifyDataSetChanged();
 	}
 
+	/*
+	 * Initializes the UI buttons.
+	 */
 	private void initButtonViews() {
 		categoryButtonAlc = (Button) findViewById(R.id.category_button_alcoholic);
 		categoryButtonAlc.setOnClickListener(new View.OnClickListener() {
@@ -260,6 +293,12 @@ public class SearchActivity extends ActionBarActivity implements
 		});
 	}
 
+	/*
+	 * Starts the recipe search by gathering all selected IngredientTypes and
+	 * Tags and calling the necessary method in CRDatabase. If the user did not
+	 * select neither IngredientTypes nor Tags, he is informed about the
+	 * situation by an AlertDialog.
+	 */
 	private void searchForDrinks() {
 		ArrayList<Integer> selectedIngIDs = getSelectedIngredientIDs();
 		ArrayList<Integer> selectedTagIDs = getSelectedTagIDs();
@@ -267,13 +306,14 @@ public class SearchActivity extends ActionBarActivity implements
 			createFailedSearchMsg(R.string.search_error_no_selection_title,
 					R.string.search_error_no_selection_msg);
 			setSearchNotInProgress();
-			return;
+		} else {
+			CRDatabase.getInstance(this).searchByIngredient(
+					new SearchParameter(mustContainAllSelectedIngs,
+							canContainNonSelectedIngs,
+							mustContainAllSelectedTags,
+							canContainNonSelectedTags, selectedIngIDs,
+							selectedTagIDs), this);
 		}
-		CRDatabase.getInstance(this).searchByIngredient(
-				new SearchParameter(mustContainAllSelectedIngs,
-						canContainNonSelectedIngs, mustContainAllSelectedTags,
-						canContainNonSelectedTags, selectedIngIDs,
-						selectedTagIDs), this);
 	}
 
 	private void setSearchNotInProgress() {
@@ -281,6 +321,9 @@ public class SearchActivity extends ActionBarActivity implements
 		isSearchInProgress = false;
 	}
 
+	/*
+	 * Opens the RecipeBookActivity.
+	 */
 	private void openRecipeBook(int listIdx) {
 		Intent intent = new Intent(SearchActivity.this,
 				RecipeBookActivity.class);
@@ -288,6 +331,13 @@ public class SearchActivity extends ActionBarActivity implements
 		startActivity(intent);
 	}
 
+	/*
+	 * Creates an AlertDialog that informs the user about a failed search. The
+	 * reasons for this failure can be a search without results or the fact that
+	 * the user did not select any IngredientType or Tag. In both cases the user
+	 * is given the choice between returning to the SearchUI and opening the
+	 * RecipeBookActivity showing all recipes.
+	 */
 	private void createFailedSearchMsg(int title, int msg) {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setTitle(title);
@@ -312,6 +362,11 @@ public class SearchActivity extends ActionBarActivity implements
 		alertDialogBuilder.create().show();
 	}
 
+	/*
+	 * This method is called everytime a category button is pressed. Adjusts the
+	 * button views depending on which button was pressed and informs the
+	 * IngredientSelectionListAdapter about which category to filter for.
+	 */
 	private void categoryButtonPressed(int buttonId) {
 		if (getButtonStateIdxAndCycle(buttonId) == CATEGORY_BUTTON_STATE_IDX_NEUTRAL) {
 			setAllButtonsToNotSelected();
@@ -326,6 +381,9 @@ public class SearchActivity extends ActionBarActivity implements
 		startFilter();
 	}
 
+	/*
+	 * Returns a filter query value based on the passed buttonId.
+	 */
 	private int getFilterQueryValue(int buttonId) {
 		switch (buttonId) {
 		case R.id.category_button_alcoholic:
@@ -341,6 +399,11 @@ public class SearchActivity extends ActionBarActivity implements
 		}
 	}
 
+	/*
+	 * Returns the current button state (as int value) of the button matching
+	 * the passed buttonId and makes that button cycle through its possible
+	 * states (the returned value is pre-cycling).
+	 */
 	private int getButtonStateIdxAndCycle(int buttonId) {
 		int buttonStateIdx = -1;
 		switch (buttonId) {
@@ -368,6 +431,9 @@ public class SearchActivity extends ActionBarActivity implements
 		return buttonStateIdx;
 	}
 
+	/*
+	 * Puts all category buttons into "neutral" state and adjusts their color.
+	 */
 	private void setAllButtonsToNeutral() {
 		categoryButtonAlc.setBackgroundColor(getResources().getColor(
 				R.color.category_button_background_neutral));
@@ -384,6 +450,10 @@ public class SearchActivity extends ActionBarActivity implements
 		categoryButtonSelectedStateIdx = CATEGORY_BUTTON_STATE_IDX_NEUTRAL;
 	}
 
+	/*
+	 * Puts all category buttons into "not selected" state and adjusts their
+	 * color.
+	 */
 	private void setAllButtonsToNotSelected() {
 		categoryButtonAlc.setBackgroundColor(getResources().getColor(
 				R.color.category_button_background_not_selected));
@@ -395,15 +465,28 @@ public class SearchActivity extends ActionBarActivity implements
 				R.color.category_button_background_not_selected));
 	}
 
+	/*
+	 * Puts the passed category button into "selected" state and adjusts the
+	 * color.
+	 */
 	private void setButtonToSelected(Button button) {
 		button.setBackgroundColor(getResources().getColor(
 				R.color.category_button_background_selected));
 	}
 
+	/*
+	 * Filters the ingredient list by calling the appropriate method within the
+	 * IngredientSelectionListAdapter. A dummy string "" is used since the
+	 * necessary data has already been passed on to the adapter.
+	 */
 	private void startFilter() {
 		ingListAdapter.getFilter().filter("");
 	}
 
+	/*
+	 * Creates and returns a list that contains all IngredientTypes that were
+	 * selected by the user.
+	 */
 	private ArrayList<Integer> getSelectedIngredientIDs() {
 		ArrayList<Integer> selectedIngIDs = new ArrayList<Integer>();
 		for (int idx = 0; idx < ings.size(); idx++) {
@@ -414,6 +497,10 @@ public class SearchActivity extends ActionBarActivity implements
 		return selectedIngIDs;
 	}
 
+	/*
+	 * Creates and returns a list that contains all Tags that were selected by
+	 * the user.
+	 */
 	private ArrayList<Integer> getSelectedTagIDs() {
 		ArrayList<Integer> selectedTagIDs = new ArrayList<Integer>();
 		for (int idx = 0; idx < tags.size(); idx++) {
@@ -424,23 +511,39 @@ public class SearchActivity extends ActionBarActivity implements
 		return selectedTagIDs;
 	}
 
+	/*
+	 * Adjusts all necessary data and a views based on the data within the
+	 * savesInstanceState Bundle, if the Activity is recreated (e.g. after an
+	 * orientation change).
+	 */
 	private void adjustDataAndViews(Bundle savedInstanceState) {
+		adjustSearchInProgress(savedInstanceState);
+		adjustSelectedIngs(savedInstanceState);
+		adjustSelectedTags(savedInstanceState);
+		adjustCategoryAndSearchView(savedInstanceState);
+		adjustSearchSettings(savedInstanceState);
+	}
 
+	/*
+	 * Checks if a search was in progress before the activity was destroyed and
+	 * (if that is the case) informs the CRDatabase Singleton about the
+	 * recreation of SearchActivity.
+	 */
+	private void adjustSearchInProgress(Bundle savedInstanceState) {
 		isSearchInProgress = savedInstanceState
 				.getBoolean(BUNDLE_KEY_INPROGRESS);
-		ArrayList<Integer> selectedIngs = savedInstanceState
-				.getIntegerArrayList(BUNDLE_KEY_SELECTED_INGS);
-		ArrayList<Integer> selectedTags = savedInstanceState
-				.getIntegerArrayList(BUNDLE_KEY_SELECTED_TAGS);
-		String queryText = savedInstanceState
-				.getString(BUNDLE_KEY_FILTER_STRING);
-		int selectedCategoryButtonIdx = savedInstanceState
-				.getInt(BUNDLE_KEY_SELECTED_CATEGORY_IDX);
-
 		if (isSearchInProgress) {
 			CRDatabase.getInstance(this).reactToSearchActivityRebuild(this);
 			searchProgress.show();
 		}
+	}
+
+	/*
+	 * Marks the necessary IngredientTypes as selected.
+	 */
+	private void adjustSelectedIngs(Bundle savedInstanceState) {
+		ArrayList<Integer> selectedIngs = savedInstanceState
+				.getIntegerArrayList(BUNDLE_KEY_SELECTED_INGS);
 		if (selectedIngs.size() > 0) {
 			for (IngredientType ingType : ings) {
 				if (selectedIngs.contains((Integer) ingType.getID())) {
@@ -449,6 +552,14 @@ public class SearchActivity extends ActionBarActivity implements
 			}
 			ingListAdapter.notifyDataSetChanged();
 		}
+	}
+
+	/*
+	 * Marks the necessary Tags as selected.
+	 */
+	private void adjustSelectedTags(Bundle savedInstanceState) {
+		ArrayList<Integer> selectedTags = savedInstanceState
+				.getIntegerArrayList(BUNDLE_KEY_SELECTED_TAGS);
 		if (selectedTags.size() > 0) {
 			for (Tag tag : tags) {
 				if (selectedTags.contains((Integer) tag.getTagID())) {
@@ -457,6 +568,19 @@ public class SearchActivity extends ActionBarActivity implements
 			}
 			tagListAdapter.notifyDataSetChanged();
 		}
+	}
+
+	/*
+	 * Sets the appropriate category button as selected and adjusts the query
+	 * text of the SearchView (this will automatically trigger the filtering of
+	 * the ingredient list)..
+	 */
+	private void adjustCategoryAndSearchView(Bundle savedInstanceState) {
+		int selectedCategoryButtonIdx = savedInstanceState
+				.getInt(BUNDLE_KEY_SELECTED_CATEGORY_IDX);
+		String queryText = savedInstanceState
+				.getString(BUNDLE_KEY_FILTER_STRING);
+
 		if (selectedCategoryButtonIdx != 0) {
 			setAllButtonsToNotSelected();
 			switch (selectedCategoryButtonIdx) {
@@ -482,12 +606,37 @@ public class SearchActivity extends ActionBarActivity implements
 		filterBar.setQuery(queryText, false);
 	}
 
+	/*
+	 * Adjusts the search settings.
+	 */
+	private void adjustSearchSettings(Bundle savedInstanceState) {
+		searchSettings.onRestoreInstanceState(savedInstanceState
+				.getBundle(BUNDLE_KEY_SEARCH_SETTINGS));
+
+		boolean[] searchSettingsBooleans = savedInstanceState
+				.getBooleanArray(BUNDLE_KEY_SEARCH_SETTING_BOOLEANS);
+		mustContainAllSelectedIngs = searchSettingsBooleans[0];
+		canContainNonSelectedIngs = searchSettingsBooleans[1];
+		mustContainAllSelectedTags = searchSettingsBooleans[2];
+		canContainNonSelectedTags = searchSettingsBooleans[3];
+	}
+
+	/*
+	 * This method is called after the AsyncTask (in CRDatabase) that handles
+	 * the recipe search has started.
+	 */
+
 	@Override
 	public void onSearchInitiated() {
 		isSearchInProgress = true;
 		searchProgress.show();
 	}
 
+	/*
+	 * This method is called after the AsyncTask (in CRDatabase) that handles
+	 * the recipe search has finished and there was no recipe that fit the
+	 * search parameters.
+	 */
 	@Override
 	public void onSearchFailed() {
 		setSearchNotInProgress();
@@ -495,12 +644,21 @@ public class SearchActivity extends ActionBarActivity implements
 				R.string.search_error_no_results_msg);
 	}
 
+	/*
+	 * This method is called after the AsyncTask (in CRDatabase) that handles
+	 * the recipe search has finished and there was at least one recipe that fit
+	 * the search parameters.
+	 */
 	@Override
 	public void onSearchCompleted() {
 		setSearchNotInProgress();
 		openRecipeBook(CocktailRecommenderValues.SEARCH_RESULTS);
 	}
 
+	/*
+	 * Saves the necessary data that is needed after the activity is recreated
+	 * into the savedInstanceState Bundle.
+	 */
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
@@ -514,5 +672,11 @@ public class SearchActivity extends ActionBarActivity implements
 				ingListAdapter.getSearchViewQueryText());
 		savedInstanceState.putInt(BUNDLE_KEY_SELECTED_CATEGORY_IDX,
 				ingListAdapter.getSelectedCategoryButton());
+		savedInstanceState.putBundle(BUNDLE_KEY_SEARCH_SETTINGS,
+				searchSettings.onSaveInstanceState());
+		savedInstanceState.putBooleanArray(BUNDLE_KEY_SEARCH_SETTING_BOOLEANS,
+				new boolean[] { mustContainAllSelectedIngs,
+						canContainNonSelectedIngs, mustContainAllSelectedTags,
+						canContainNonSelectedTags });
 	}
 }
