@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.Surface;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.CocktailRecommenderValues;
 import de.ur.mi.android.cocktailrecommender.data.Recipe;
@@ -51,13 +52,8 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	private ActionBar actionBar;
 	private RecipeIngredient[] selectedIngredients;
 	private AlertDialog.Builder alertDialogBuilder;
+	private Toast toast;
 	private int recipePageIdx = 0;
-
-	// Fragment type not final, using RecipeListFragment to test. Are custom
-	// types necessary?
-	// Can be deleted if default onBackPress() works and doesn't need to be
-	// overridden
-	private boolean onRecipePage = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +72,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 	}
 
-	// Put current tab into bundle to select correct tab after orientation
-	// change
+	/*
+	 *  Put current tab into bundle to select correct tab after orientation
+	 * change
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -184,21 +182,17 @@ public class RecipeBookActivity extends ActionBarActivity implements
 	}
 
 	/*
-<<<<<<< HEAD
-	 * Dialog erscheint wenn im RecipeFragment auf den
-	 * "Zutaten zu Einkaufsliste hinzufügen Button gedrückt wird" und bietet 2
-	 * Optionen an: Neue Liste erstellen oder zu einer vorhandenen hinzufügen
-=======
 	 * Standard dialog that appears after the shopping list creation button is
 	 * pressed. Two options: Create new list, or add to existing list. If no
 	 * ingredient was selected before pressing the button the user will get an
 	 * alert. Is called at setup and every canceled dialog to return to this
-	 * standard dialog
->>>>>>> origin/master
+	 * standard dialog.
 	 */
 	private void initDialog() {
 		final int OPTION_ONE = 0;
 		final int OPTION_TWO = 1;
+		if (toast == null)
+			toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		CharSequence[] options = {
 				getResources().getString(
 						R.string.shopping_list_creation_dialog_option_one),
@@ -253,10 +247,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		final ArrayList<ShoppingList> shoppingLists = CRDatabase.getInstance(
 				this).getAllShoppingLists();
 
-		if (shoppingLists == null) {
-			alertDialogBuilder
-					.setMessage(R.string.shopping_list_creation_dialog_no_lists);
-		}
 		CharSequence[] shoppingListNames = new CharSequence[shoppingLists
 				.size()];
 		for (int listIdx = 0; listIdx < shoppingLists.size(); listIdx++) {
@@ -265,6 +255,10 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		}
 		alertDialogBuilder
 				.setTitle(R.string.shopping_list_creation_dialog_selection_list);
+		if (shoppingLists.size() < 1) {
+			alertDialogBuilder
+					.setMessage(R.string.shopping_list_creation_dialog_no_lists);
+		}else{
 		alertDialogBuilder.setItems(shoppingListNames,
 				new DialogInterface.OnClickListener() {
 
@@ -275,12 +269,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 
 						CRDatabase.getInstance(RecipeBookActivity.this)
 								.addShoppingList(modifiedList, isNewList);
+						toast.setText(getResources().getString(R.string.shopping_list_added_to_existing));
+						toast.show();
 						initDialog();
-
 					}
 
-					// Soll doppelte Einträge in einer EInkaufsliste
-					// verhindern;
 					// Prevents duplicate entries in the shopping list
 					private ShoppingList modifyList(ShoppingList shoppingList) {
 						boolean isNotDuplicate = false;
@@ -307,7 +300,7 @@ public class RecipeBookActivity extends ActionBarActivity implements
 						return shoppingList;
 					}
 				});
-
+		}
 		alertDialogBuilder.setNegativeButton(R.string.generic_cancel,
 				new DialogInterface.OnClickListener() {
 
@@ -321,8 +314,9 @@ public class RecipeBookActivity extends ActionBarActivity implements
 		alertDialogBuilder.show();
 	}
 
-	// Dialog: User is prompted for a shopping list name; creates new shopping
-	// list.
+	/*
+	 *  Dialog: User is prompted for a shopping list name; creates new shopping list
+	 */
 	protected void createNewShoppingList() {
 		final EditText listName = new EditText(this);
 		final boolean isNewList = true;
@@ -352,9 +346,11 @@ public class RecipeBookActivity extends ActionBarActivity implements
 									genericId, name, selectedIngredients);
 							CRDatabase.getInstance(RecipeBookActivity.this)
 									.addShoppingList(shoppingList, isNewList);
+							toast.setText(getResources().getString(R.string.shopping_list_created));
+							toast.show();
 							initDialog();
 						} else {
-							createNewShoppingList();
+							createNewShoppingList();							
 						}
 					}
 
@@ -392,7 +388,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 			transaction
 					.replace(R.id.recipe_book_container_main, recipeFragment);
 			transaction.addToBackStack(null);
-			// onRecipePage = true;
 		}
 		transaction.commit();
 	}
@@ -411,15 +406,6 @@ public class RecipeBookActivity extends ActionBarActivity implements
 				.getDefaultDisplay().getRotation() == Surface.ROTATION_270);
 	}
 
-	/*
-	 * Apparently the default method doesn't need to be overridden for the
-	 * desired behaviour of the fragments; Delete code fragment if no bugs
-	 * occur.
-	 * 
-	 * @Override public void onBackPressed() { if (onRecipePage) {
-	 * getFragmentManager().popBackStackImmediate(); onRecipePage = false; }
-	 * else { super.onBackPressed(); } }
-	 */
 
 	/*
 	 * Fling methods allow the user to swipe left/right to navigate through

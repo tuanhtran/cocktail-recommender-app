@@ -1,5 +1,8 @@
 package de.ur.mi.android.cocktailrecommender.data;
 
+/*
+ * Bundles necessary information for shopping lists
+ */
 public class ShoppingList {
 	private int id;
 	private String name;

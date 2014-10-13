@@ -2,6 +2,11 @@ package de.ur.mi.android.cocktailrecommender.fragments;
 
 import java.util.ArrayList;
 
+/*
+ * RecipeFragment displays the recipe with its name, tags, ingredient list and the preparation text.
+ * Allows adding to Favorites and creating shopping lists.
+ */
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter.LengthFilter;

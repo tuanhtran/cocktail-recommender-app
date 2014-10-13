@@ -9,14 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 
+
+/*
+ * Adapter for the ingredient list in RecipeFragment
+ */
 public class RecipePageIngredientListAdapter extends
 		ArrayAdapter<RecipeIngredient> {
 
 	private Context context;
 	private ArrayList<RecipeIngredient> ingredients;
+	private Toast toast;
 
 	public RecipePageIngredientListAdapter(Context context,
 			ArrayList<RecipeIngredient> ingredients) {
@@ -51,7 +57,17 @@ public class RecipePageIngredientListAdapter extends
 
 		view.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				if (toast == null)
+					toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
 				ing.toggleSelection();
+				if (ing.isSelected())
+					toast.setText(context.getResources().getString(
+							R.string.toast_ing_select));
+				else
+					toast.setText(context.getResources().getString(
+							R.string.toast_ing_remove));
+				toast.show();
+
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ing.isSelected())));
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -68,7 +84,10 @@ public class RecipePageIngredientListAdapter extends
 		}
 
 	}
-
+	
+	/*
+	 * Method returns currently selected ingredients
+	 */
 	public RecipeIngredient[] getSelectedIngredients() {
 		ArrayList<RecipeIngredient> selectedIngredientsTemp = new ArrayList<RecipeIngredient>();
 		for (int ingIdx = 0; ingIdx < ingredients.size(); ingIdx++) {

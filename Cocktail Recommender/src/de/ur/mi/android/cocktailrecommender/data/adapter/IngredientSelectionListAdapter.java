@@ -16,6 +16,9 @@ import android.widget.Toast;
 import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.IngredientType;
 
+/*
+ * Adapter for the ingredient list in SearchActivity
+ */
 public class IngredientSelectionListAdapter extends
 		ArrayAdapter<IngredientType> implements Filterable {
 
@@ -70,14 +73,12 @@ public class IngredientSelectionListAdapter extends
 				v.setBackgroundColor(v.getResources().getColor(
 						getBGColor(ingType.isSelected())));
 				v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-				if (toast == null) {
+				if (toast == null)
 					toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
-				}
-				if (ingType.isSelected()) {
+				if (ingType.isSelected())
 					toast.setText(context.getResources().getString(
 							R.string.toast_ing_select));
-					toast.show();
-				} else
+				else
 					toast.setText(context.getResources().getString(
 							R.string.toast_ing_remove));
 				toast.show();
@@ -102,6 +103,10 @@ public class IngredientSelectionListAdapter extends
 		super.notifyDataSetChanged();
 	}
 
+	/*
+	 * Filters the ingredient list to show only ingredients that at least
+	 * partially match the entered query in the SearchView
+	 */
 	@Override
 	public Filter getFilter() {
 		resetFilter();

@@ -1,5 +1,7 @@
 package de.ur.mi.android.cocktailrecommender.data;
-
+/*
+ * Class bundles all necessary information for cocktail tags
+ */
 public class Tag implements Comparable<Tag>{
 	private int tagID;
 	private String tagName;

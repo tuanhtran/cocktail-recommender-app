@@ -2,10 +2,8 @@ package de.ur.mi.android.cocktailrecommender.data.adapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.HapticFeedbackConstants;
@@ -20,10 +18,15 @@ import de.ur.mi.android.cocktailrecommender.data.CRDatabase;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.ShoppingList;
 
+/*
+ * Adapter for shopping lists in ShoppingListActivity.
+ * Allows deletion of complete shopping lists or removal of ingredients from shopping lists
+ */
 public class ShoppingListAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
 	private ArrayList<ShoppingList> shoppingLists;
+	private AlertDialog.Builder alertDialogBuilder;
 
 	public ShoppingListAdapter(Context context,
 			ArrayList<ShoppingList> shoppingLists) {
@@ -88,8 +91,8 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 		ImageView shoppingListDelete = (ImageView) convertView
 				.findViewById(R.id.shopping_list_delete_button);
 		shoppingListDelete.setOnClickListener(new View.OnClickListener() {
-			
-			//AlertDialogs for the deletion of shopping list items
+
+			// AlertDialogs for the deletion of shopping list items
 			@Override
 			public void onClick(View v) {
 
@@ -154,11 +157,10 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 				.findViewById(R.id.shopping_list_ing_entry_delete_button);
 		ingDeleteButton.setOnClickListener(new View.OnClickListener() {
 
-			//AlertDialogs for the deletion of ingredient items
+			// AlertDialogs for the deletion of ingredient items
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-						context);
+				alertDialogBuilder = new AlertDialog.Builder(context);
 				alertDialogBuilder.setNegativeButton(R.string.generic_cancel,
 						new DialogInterface.OnClickListener() {
 
@@ -169,72 +171,66 @@ public class ShoppingListAdapter extends BaseExpandableListAdapter {
 
 							}
 						});
-				if (ingredients.length > 1) {
-					alertDialogBuilder.setTitle(ingredients[childPosition]
-							.getIngName()
-							+ " "
-							+ context
-									.getResources()
-									.getString(
-											R.string.shopping_list_ing_entry_deletion_title));
-					alertDialogBuilder.setPositiveButton(
-							R.string.generic_positive,
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-
-									ArrayList<RecipeIngredient> tempIngList = new ArrayList<RecipeIngredient>(
-											Arrays.asList(ingredients));
-									tempIngList.remove(childPosition);
-									RecipeIngredient[] modifiedIngList = tempIngList
-											.toArray(new RecipeIngredient[tempIngList
-													.size()]);
-									shoppingLists.get(groupPosition)
-											.setIngredients(modifiedIngList);
-									CRDatabase
-											.getInstance(context)
-											.addShoppingList(
-													shoppingLists
-															.get(groupPosition),
-													false);
-									notifyDataSetChanged();
-								}
-
-							});
-				} else {
-					alertDialogBuilder.setTitle(ingredients[childPosition]
-							.getIngName()
-							+ " "
-							+ context
-									.getResources()
-									.getString(
-											R.string.shopping_list_ing_entry_deletion_title));
-					alertDialogBuilder
-							.setMessage(R.string.shopping_list_ing_entry_last_item_deletion_message);
-					alertDialogBuilder.setPositiveButton(
-							R.string.generic_positive,
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									CRDatabase
-											.getInstance(context)
-											.deleteShoppingList(
-													shoppingLists
-															.get(groupPosition));
-									shoppingLists.remove(groupPosition);
-									notifyDataSetChanged();
-								}
-							});
-				}
+				deleteIngEntry(ingredients, groupPosition, childPosition);
 				alertDialogBuilder.create();
 				alertDialogBuilder.show();
 			}
 		});
 		return convertView;
+	}
+
+	/*
+	 * Handles removal of an ingredient entry.
+	 * If the ingredient is the only entry in the shopping list, the user is warned that a removal would delete
+	 * the complete shopping list.
+	 */
+	protected void deleteIngEntry(final RecipeIngredient[] ingredients,
+			final int groupPosition, final int childPosition) {
+		if (ingredients.length > 1) {
+			alertDialogBuilder.setTitle(ingredients[childPosition].getIngName()
+					+ " "
+					+ context.getResources().getString(
+							R.string.shopping_list_ing_entry_deletion_title));
+			alertDialogBuilder.setPositiveButton(R.string.generic_positive,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
+							ArrayList<RecipeIngredient> tempIngList = new ArrayList<RecipeIngredient>(
+									Arrays.asList(ingredients));
+							tempIngList.remove(childPosition);
+							RecipeIngredient[] modifiedIngList = tempIngList
+									.toArray(new RecipeIngredient[tempIngList
+											.size()]);
+							shoppingLists.get(groupPosition).setIngredients(
+									modifiedIngList);
+							CRDatabase.getInstance(context).addShoppingList(
+									shoppingLists.get(groupPosition), false);
+							notifyDataSetChanged();
+						}
+
+					});
+		} else {
+			alertDialogBuilder.setTitle(ingredients[childPosition].getIngName()
+					+ " "
+					+ context.getResources().getString(
+							R.string.shopping_list_ing_entry_deletion_title));
+			alertDialogBuilder
+					.setMessage(R.string.shopping_list_ing_entry_last_item_deletion_message);
+			alertDialogBuilder.setPositiveButton(R.string.generic_positive,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							CRDatabase.getInstance(context).deleteShoppingList(
+									shoppingLists.get(groupPosition));
+							shoppingLists.remove(groupPosition);
+							notifyDataSetChanged();
+						}
+					});
+		}
+
 	}
 
 	@Override

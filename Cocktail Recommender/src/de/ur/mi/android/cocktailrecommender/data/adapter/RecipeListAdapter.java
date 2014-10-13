@@ -15,6 +15,9 @@ import de.ur.mi.android.cocktailrecommender.R;
 import de.ur.mi.android.cocktailrecommender.data.RecipeIngredient;
 import de.ur.mi.android.cocktailrecommender.data.RecipeListEntry;
 
+/*
+ * Adapter for the recipe list in RecipeListFragment
+ */
 public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 		implements Filterable {
 
@@ -86,6 +89,10 @@ public class RecipeListAdapter extends ArrayAdapter<RecipeListEntry>
 		super.notifyDataSetChanged();
 	}
 
+	/*
+	 * Filters the recipe list to show only recipe that at least
+	 * partially match the entered query in the SearchView
+	 */
 	@Override
 	public Filter getFilter() {
 		resetFilter();

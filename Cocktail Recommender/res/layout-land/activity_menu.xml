@@ -45,7 +45,7 @@
             <Button
                 style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/main_menu_shopping_list_button"
-                android:drawableLeft="@drawable/ic_action_to_shop_list"
+                android:drawableRight="@drawable/ic_action_to_shop_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 				android:layout_weight="0.5" />
@@ -69,7 +69,7 @@
             <Button
                 style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/main_menu_history_button"
-                android:drawableLeft="@drawable/ic_history"
+                android:drawableRight="@drawable/ic_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5" />
